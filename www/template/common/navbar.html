@@ -1,0 +1,43 @@
+<div class="init_loading"><div><img src="<?php echo STATIC_PATH;?>images/loading_simple.gif"/></div></div>
+<div class="topbar">
+	<div class="content">
+		<div class="top_left">
+			<a href="javascript:void(0)" class="topbar_menu title">
+				<?php
+				$logoimage = STATIC_PATH."images/secros-logo.gif";
+				$oem  = config_get_value_from_file('/etc/system/oem.conf','OEM');
+				if (isset($oem)){
+					$logoimage = STATIC_PATH."images/".$oem."-logo.gif";
+				}
+				echo '<img src="'.$logoimage.'" />';
+				?>
+			</a>
+		</div>
+		<div class="top_right">
+			<div class="menu_group">
+				<?php if ($GLOBALS['is_root'] == 1) {?>
+						<a href="javascript:core.setting('system');"><img src="<?php echo STATIC_PATH;?>images/settings.png"></a>
+					<?php }
+					else {?>
+						<a href="javascript:core.setting('user');"><img src="<?php echo STATIC_PATH;?>images/settings.png"></a>
+					<?php }?>
+			</div>
+			<?php if ($GLOBALS['is_root'] == 1) {?>
+				<div class="menu_group">	
+					<a href="javascript:core.saveAll();"><img src="<?php echo STATIC_PATH;?>images/save.png"></a>
+				</div>
+			<?php }?>
+	<div class="menu_group">
+	<a href="javascript:core.downLoad();"><img src="<?php echo STATIC_PATH;?>images/tools.png"></a>
+	</div>
+
+      <div class="menu_group">
+              <a href="javascript:core.openLog();"><img src="<?php echo STATIC_PATH;?>images/log.png"></a>
+      </div>  
+			<div class="menu_group">
+				<a href="./index.php?user/logout"><img src="<?php echo STATIC_PATH;?>images/exit.png"></a>
+			</div>
+		</div>
+		<div style="clear:both"></div>
+	</div>
+</div>
