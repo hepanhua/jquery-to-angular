@@ -37,9 +37,10 @@ if (isset($av_status) && ($av_status == 2)){
     	}
     ?>
 	</div>
-	<div class="box_line">
+	<div class="box_line" style="display:flex;align-items:center">
 		<span class='infotitle'><?php echo $L['antivirus_file'];?>:</span>
-		<input type="checkbox" id='antivirus_file' name="antivirus_file" 
+		<div style="display:flex;align-items:center">
+		<input  type="checkbox" id='antivirus_file' name="antivirus_file" 
 		<?php
 		if ($antivirus_file==1) {
 		?>	
@@ -55,7 +56,9 @@ if (isset($av_status) && ($av_status == 2)){
 		}
 		?>
 		/>           
-		<span class="text"><?php echo $L['antivirus_file_tips'];?></span>
+		<span class="text" style="margin-left:8px;"><?php echo $L['antivirus_file_tips'];?></span>
+		</div>
+	
 	</div>
   <div class="box_line">
     <a href="javascript:void(0);" class="av_save button"><?php echo $L['button_save'];?></a>

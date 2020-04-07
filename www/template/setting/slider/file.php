@@ -5,7 +5,7 @@
     <div style="clear:both;"></div>
 </div>
 
-<!-- È¨ÏÞ×é±à¼­ -->
+<!-- È¨ï¿½ï¿½ï¿½ï¿½à¼­ -->
 <div class="section file_editor">
     <div class="together">
         <div class="tagdiv" style="margin:2px 0 5px">
@@ -170,10 +170,13 @@
         <a href="javascript:;" class="button warning" title='<?php echo $L['file_ext_tips'];?>' style="margin-left: 20px;padding: 3px 5px;background: #ccc;border:none;color:#fff;"><i class="icon-warning-sign"></i><?php echo $L['tips'];?>!</a>
         <div style="clear:both;"></div>
     </div>
-    <div class="together">
-		<div class='title'><i><?php echo $L['file_deepcheck'];?><i></div>
-			<input type="checkbox" id='file_deepcheck' name="file_deepcheck" />
+    <div class="together" style="display:flex;align-items:center;">
+        <div class='title' style="flex-shrink:0;"><i><?php echo $L['file_deepcheck'];?><i></div>
+        <div style="display:flex;align-items:center">
+        <input type="checkbox" id='file_deepcheck' name="file_deepcheck" style="margin: 0;"/>
 		  <span class="text"><?php echo $L['file_deepcheck_tips'];?></span>
+        </div>
+			
       <div style="clear:both;"></div>
 	</div>
     <a href="javascript:;" class="edit_save button"><?php echo $L['button_save'];?></a>
