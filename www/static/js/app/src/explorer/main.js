@@ -1181,7 +1181,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			}
 		},
 		update: function() {
-			/*var e = base64_decode("aHR0cDovL3d3dy5hbnlzZWMuY29tL3VwZGF0ZS9tYWluLmpz") + "?a=" + UUID();
+			/*var e = base64_decode("aHR0cDovL3d3dy5zZWNyb3MuY29tL3VwZGF0ZS9tYWluLmpz") + "?a=" + UUID();
 			require.async(e, function() {
 				try {} catch (e) {}
 			})*/
