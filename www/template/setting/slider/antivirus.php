@@ -54,8 +54,7 @@ if (isset($av_status) && ($av_status == 2)){
 		disabled 
 		<?php
 		}
-		?>
-		/>           
+		?>/>         
 		<span class="text" style="margin-left:8px;"><?php echo $L['antivirus_file_tips'];?></span>
 		</div>
 	

@@ -176,7 +176,7 @@
         <input type="checkbox" id='file_deepcheck' name="file_deepcheck" style="margin: 0;"/>
 		  <span class="text"><?php echo $L['file_deepcheck_tips'];?></span>
         </div>
-			
+        
       <div style="clear:both;"></div>
 	</div>
     <a href="javascript:;" class="edit_save button"><?php echo $L['button_save'];?></a>
