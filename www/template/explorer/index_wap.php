@@ -16,7 +16,9 @@
 			<div><h3 class="name"><?php echo $_SESSION['secros_user']['name'];?></h3></div>
 		</div>
 		<ul>			
-			<li data-action="public"><i class="font-icon icon-group"></i><?php echo $L['public_path'];?></li>
+			<li data-action="public"  style="display: flex;align-items: center;"><i class="font-icon icon-group"></i>
+			<div id="usbname" style="width:120px;"></div>
+			</li>
 			<li data-action="exit"><i class="font-icon icon-signout"></i><?php echo $L['ui_logout'];?></li>
 		</ul>
 	</div>
@@ -67,6 +69,17 @@
 		]
 	});
 	seajs.use("<?php echo STATIC_JS;?>/src/explorer_wap/main");
+</script>
+<script src="../../../static/js/lib/jquery-1.8.0.min.js"></script>
+<script>
+	$.ajax({
+				url: 'index.php?explorer/treeList&app=explorer&type=init',
+				dataType: "json",
+				success: function(e) {
+					console.log(e);
+					$('#usbname').text(e.data[0].name);
+				}
+			});
 </script>
 </body>
 </html>

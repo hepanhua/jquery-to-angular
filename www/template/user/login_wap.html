@@ -12,10 +12,26 @@
 </head>
 
 <body>
-	<div class="loginbox" >
+	<?php 
+		$image = STATIC_PATH."images/wall_page/secros.jpg";
+		$loginimage = STATIC_PATH.'images/secros-login.png';
+		$oem  = config_get_value_from_file('/etc/system/oem.conf','OEM');
+		if (isset($oem)){
+			$image = STATIC_PATH."images/wall_page/".$oem.".jpg";
+			$loginimage = STATIC_PATH."images/".$oem."-login.png";
+		}
+		echo '<div class="background" style="background:url('.$image.');background-size: cover; background-position: 20%; z-index: -1; width: 100%; height: 100%;"></div>';
+	?>
+	<div class="loginbox"  style="margin-top: 60px;">
 		<div class="title">
-			<div class="logo"><?php $image = STATIC_PATH.'images/secros-login.png';echo '<img src="'.$image.'" />';?></div>
-			<div class='info'>——<?php echo $L['secros_name_desc'];?></div>
+			<div class="logo"><?php echo '<img src="'.$loginimage.'" />';?></div>
+			<div class='info'  
+			<?php 
+			if (isset($oem) == 'jiangmin'){
+				echo "style=display:none;";
+			}
+			echo '';?>
+			>——<?php echo $L['secros_name_desc'];?></div>
 		</div>
 		<div class="form">
 			<div class="inputs">

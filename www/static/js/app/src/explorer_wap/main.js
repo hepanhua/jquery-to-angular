@@ -134,6 +134,7 @@ define("app/src/explorer_wap/ui", [], function(require, exports) {
         t += "</div>"
     }
     ;
+    var usbname = '';
     var _mainSetData = function(e) {
         G.json_data && G.json_data.filelist && G.json_data.folderlist || _mainSetDataShare();
         var t = ""
@@ -156,6 +157,14 @@ define("app/src/explorer_wap/ui", [], function(require, exports) {
         _ajaxLive()
     }
       , _f5 = function(e, t) {
+        $.ajax({
+            url: 'index.php?explorer/treeList&app=explorer&type=init',
+            dataType: "json",
+            success: function(e) {
+                usbname =e.data[0].name;
+            }
+        });
+
         void 0 == e && (e = !0),
         void 0 == t && (t = !1),
         _jsonSortTitle(),
@@ -359,7 +368,7 @@ define("app/src/explorer_wap/ui", [], function(require, exports) {
                     var i = a[0] + "/"
                       , n = t.replace(/@1@/g, i)
                       , o = a[0];
-                    "" != a[0] ? "*share*" == o ? o = LNG.my_share : "*usbox*" == o ? o = LNG.public_path : "*recycle*" == o && (o = LNG.recycle) : o = LNG.root_path,
+                    "" != a[0] ? "*share*" == o ? o = LNG.my_share : "*usbox*" == o ? o = LNG.public_path : "*recycle*" == o && (o = LNG.recycle) : o = usbname,
                     n = n.replace("{$2}", a.length),
                     n = n.replace("{$3}", o);
                     for (var s = n, r = 1, l = a.length - 1; a.length > r; r++,
