@@ -17,7 +17,9 @@
 		</div>
 		<ul>			
 			<li data-action="public"  style="display: flex;align-items: center;"><i class="font-icon icon-group"></i>
-			<div id="usbname" style="width:120px;"></div>
+			<div id="usbname" style="width:120px;">
+			<?php echo $L['secros_name_desc'];?>
+		</div>
 			</li>
 			<li data-action="exit"><i class="font-icon icon-signout"></i><?php echo $L['ui_logout'];?></li>
 		</ul>
@@ -69,17 +71,6 @@
 		]
 	});
 	seajs.use("<?php echo STATIC_JS;?>/src/explorer_wap/main");
-</script>
-<script src="../../../static/js/lib/jquery-1.8.0.min.js"></script>
-<script>
-	$.ajax({
-				url: 'index.php?explorer/treeList&app=explorer&type=init',
-				dataType: "json",
-				success: function(e) {
-					console.log(e);
-					$('#usbname').text(e.data[0].name);
-				}
-			});
 </script>
 </body>
 </html>
