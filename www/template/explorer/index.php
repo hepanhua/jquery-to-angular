@@ -16,9 +16,9 @@
 	<link href="<?php echo STATIC_PATH;?>style/bootstrap.css?ver=<?php echo SECROS_VERSION;?>" rel="stylesheet"/>
 	<link rel="stylesheet" href="./static/style/font-awesome/css/font-awesome.css">
 	<link href="<?php echo STATIC_PATH;?>style/skin/<?php echo $config['user']['theme'];?>app_explorer.css?ver=<?php echo SECROS_VERSION;?>" rel="stylesheet" id='link_css_list'/>
-	
+
 </head>
-<?php 
+<?php
 	if (file_exists('/etc/system/Test.key')){
 		$licencetype = 2;
 		$licencestatus = config_get_unsign_int_from_file('/var/run/roswan','licencestatus');
@@ -26,6 +26,7 @@
 	if (file_exists('/etc/system/Licence.key')){
 		$licencetype = 1;
 	}
+	$antivirus  = config_get_unsign_int_from_file('/etc/system/quota.conf','antivirus');
 	/*if (file_exists('/mnt/config/antivirus.conf')){
 		$currenttime = strtotime("now");
 		$expiretime = config_get_value_from_file('/mnt/config/antivirus.conf','License_expireGMT');
@@ -73,7 +74,7 @@
 					</button>
 				</div>
 			</div><!-- /header left -->
-			
+
 			<div class='header-middle'>
 				<button class="btn btn-default" id='home' title='<?php echo $L['secros_name_desc'];?>'>
 					<i class="font-icon icon-home"></i>
@@ -88,7 +89,7 @@
 						<i class="font-icon icon-refresh"></i>
 					</button>
 				<div class="path_tips" title="<?php echo $L['only_read_desc'];?>"><i class="icon-warning-sign"></i><?php echo $L['only_read'];?></div>
-			</div><!-- /header-middle end-->		
+			</div><!-- /header-middle end-->
 			<div class='header-right'>
 			</div>
 		</div>
@@ -96,7 +97,7 @@
 
 	<div class="frame-main">
 		<div class='frame-left'>
-		
+
 			<ul id="folderList" class="ztree"></ul>
 			<div class="bottom_box">
 				<div class="box_content">
@@ -132,12 +133,18 @@
 					        <button id='download' class="btn btn-default" type="button">
 					        	<i class="font-icon icon-cloud-download"></i><?php echo $L['download'];?>
 					        </button>
-									<button id='scanvirus' class="btn btn-default" type="button">
+							<?php
+							if ($antivirus == 1) {
+							?>
+							<button id='scanvirus' class="btn btn-default" type="button">
 					        	<i class="font-icon icon-bolt"></i><?php echo $L['scanvirus'];?>
 					        </button>
+							<?php
+							}
+							?>
 					        <div class="btn-group btn-group-sm">
 						    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-						      <i class="font-icon icon-tasks"></i>more&nbsp;<span class="caret"></span>	      
+						      <i class="font-icon icon-tasks"></i>more&nbsp;<span class="caret"></span>
 						    </button>
 						    <ul class="dropdown-menu pull-right drop-menu-action fadein">
 							    <li id="copy"><a href='javascript:;'><i class="font-icon icon-copy"></i><?php echo $L['copy'];?></a></li>
@@ -162,7 +169,7 @@
 						  </button>
 						  <div class="btn-group btn-group-sm">
 						    <ul class="dropdown-menu pull-right dropdown-menu-theme fadein">
-							    <?php 
+							    <?php
 									$tpl="<li class='list {this}' theme='{0}'><a href='javascript:void(0);'>{1}</a></li>\n";
 									echo getTplList(',',':',$config['setting_all']['themeall'],$tpl,$config['user']['theme'],'this');
 								?>
