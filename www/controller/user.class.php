@@ -182,6 +182,7 @@ class user extends Controller
      * 退出处理
      */
     public function logout(){
+        write_audit('信息','退出','成功','用户退出');
         session_start();
         user_logout();
     }
@@ -219,9 +220,11 @@ class user extends Controller
                 if ($this->in['rember_password'] == '1') {
                     setcookie('secros_token',md5($user['password'].get_client_ip()),time()+3600*24*365);
                 }
+                write_audit('信息','登录','成功','ip:'.get_client_ip());
                 header('location:./index.php');
                 return;
             }else{
+                write_audit('信息','登录','失败','ip:'.get_client_ip());
                 $msg = $this->L['password_error'];
             }
             $_SESSION['code_error_time'] = intval($_SESSION['code_error_time']) + 1;

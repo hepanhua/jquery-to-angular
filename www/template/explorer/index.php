@@ -16,7 +16,7 @@
 	<link href="<?php echo STATIC_PATH;?>style/bootstrap.css?ver=<?php echo SECROS_VERSION;?>" rel="stylesheet"/>
 	<link rel="stylesheet" href="./static/style/font-awesome/css/font-awesome.css">
 	<link href="<?php echo STATIC_PATH;?>style/skin/<?php echo $config['user']['theme'];?>app_explorer.css?ver=<?php echo SECROS_VERSION;?>" rel="stylesheet" id='link_css_list'/>
-
+	<script src="<?php echo STATIC_PATH;?>js/lib/pahomqtt.js?ver=<?php echo SECROS_VERSION;?>"></script>
 </head>
 <?php
 	if (file_exists('/etc/system/Test.key')){
@@ -186,6 +186,54 @@
 			</div>
 		</div><!-- / frame-right end-->
 	</div><!-- / frame-main end-->
+
+
+	
+	<div class="canvasframe hidden">
+        <div class="canvasframe_flex">
+		  <div class="radar" id="radar">
+<div class="rad1"></div>
+<div class="rad2"></div>
+	</div>
+            <div class="progress">
+                <div class="progress_bar" id="reboot_progress_bar">
+                    <div class="progress_value" id="reboot_progress_value">0</div>
+                </div>
+			</div>
+			<div class="infected_txt"></div>
+			<div class="loading_btn_frame  hidden">
+	<div class="loading_btn loading_btn_ok"  style="margin-right:48px">确认</div>
+	<div class="loading_btn loading_btn_cancle">取消</div>
+	</div>
+		</div>
+		
+	</div>
+
+	<div class="updateframe hidden">
+    <div class="updateframe_flex">
+            <div class="updateloading"  >
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+		  </div>
+		  <div  id="update_text">文件上传中</div>
+                <div class="updateprogress">
+                    <div class="updateprogress_bar" id="update_progress_bar">
+                        <div class="updateprogress_value" id="update_progress_value">0</div>
+                    </div>
+                </div>
+            </div>
+    </div>
+	
+	<div class="file_loading hidden">
+	<div class="file_loading_sf">
+	<span>文件传输中</span>
+	<div ><img src="./static/images/loading_simple.gif"></div>
+	</div>
+	</div>
+
 <?php include(TEMPLATE.'common/footer.html');?>
 <script src="<?php echo STATIC_PATH;?>js/lib/seajs/sea.js?ver=<?php echo SECROS_VERSION;?>"></script>
 <script src="./index.php?user/common_js&type=explorer&id=<?php echo rand_string(8);?>"></script>

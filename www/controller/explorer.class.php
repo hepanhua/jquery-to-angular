@@ -493,6 +493,8 @@ class explorer extends Controller{
         show_json($msg,$state,$data);
     }
     public function fileDownload(){
+    $patharry = explode("/",$this->path);
+    write_audit('信息','下载','成功','下载'.end($patharry));
         file_put_out($this->path,true);
     }
     public function scanvirus(){
@@ -735,6 +737,14 @@ class explorer extends Controller{
     }
 
 
+
+    function delectprogress(){
+        $file_path= "/tmp/avprogress/*";
+        system("rm -f " .$file_path);
+        show_json('success',true);
+    }
+
+    
     //代理输出
     public function fileProxy(){
         file_put_out($this->path);

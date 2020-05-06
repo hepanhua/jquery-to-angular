@@ -1707,9 +1707,11 @@ define("app/src/setting/system", [], function() {
         $(".upgrade_software").die("click").live("click", function() {
             art.dialog.open("./index.php?setting/upgrade", {
                 title: LNG.upgrade_software,
-                width: "70%",
-                height: "65%",
-                resize: !0
+                width: "400px",
+                height: "380px",
+                drag:!1,
+                resize: !1,
+                lock:!0
             })
         })
     }

@@ -556,6 +556,7 @@ $L= array(
 	"log_downloadgj"             => '工具下载',
 	"log_type_web"							 => "WEB传输日志",
 	"log_type_ftp"							 => "FTP传输日志",
+	"log_type_audit"						 => "操作日志",
 	"log_type_samba"						 => "磁盘映射传输日志",
 	"log_type_deepcheck"				 => "深度检测日志",
 	"log_type_transfer"					 => "摆渡日志",

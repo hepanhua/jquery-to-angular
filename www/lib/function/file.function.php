@@ -661,7 +661,7 @@ function file_put_out($file,$download=false){
 		$mime = get_file_mime(get_path_ext($file));
 		if ($GLOBALS['config']['system_info']['deepcheck']==1 && $type[0] != $mime) {
 			$filename = get_path_this($file);
-			//write_audit("警告","下载","失败","非法文件: " .$filename);
+			write_audit('警告','上传','失败','上传非法文件'.$file_name);
 			write_dblog("下载",$filename,"阻断","非法文件");
 			show_json('deepcheck nodownload');
 		}
@@ -863,11 +863,11 @@ function upload_chunk($fileInput, $path = './',$temp_path){
 					show_json($L['deepcheck_nodownload'],false);
 				}
 			}
-			//write_audit("信息","上传","成功",$file_name);
+			write_audit('信息','上传','成功','上传'.$file_name);
 			write_dblog("上传",$file_name,"通过","");
 			show_json($L['upload_success'],true,iconv_app($save_path));
 		}else {
-			//write_audit("错误","上传","失败",$file_name);
+			write_audit('警告','上传','失败','上传'.$file_name);
 			write_dblog("上传",$filename,"出错","文件错误");
 			show_json($L['move_error'],false);
 		}
@@ -887,11 +887,11 @@ function upload_chunk($fileInput, $path = './',$temp_path){
 				show_json($L['deepcheck_nodownload'],false);
 			}
 		}
-		//write_audit("信息","上传","成功",$file_name);
+		write_audit('信息','上传','成功','上传'.$file_name);
 		write_dblog("上传",$file_name,"通过","");
 		show_json($L['upload_success'],true,iconv_app($save_path));
 	}else {
-		//write_audit("错误","上传","失败",$file_name);
+		write_audit('警告','上传','失败','上传'.$file_name);
 		write_dblog("上传",$filename,"出错","文件错误");
 		show_json($L['move_error'],false);
 	}
@@ -928,12 +928,28 @@ function write_log($log, $type = 'default', $level = 'log'){
 	return error_log("$now_time $log\n", 3, $target);
 }
 
-function write_audit($type, $action, $result, $desc)
+// function write_audit($type, $action, $result, $desc)
+// {
+// 	$now_time = date('y-m-d H:i:s');
+// 	$target = $now_time . '|' . $type . '|' . $_SESSION['secros_user']['name'] . '|' .get_client_ip() . '|' . $action . '|' . $result . "|" . $desc . "\n";
+// 	return error_log($target, 3, "/var/log/auditlog");
+// }
+
+
+//写入操作日志
+function write_audit($type, $event, $result, $desc)
 {
-	$now_time = date('y-m-d H:i:s');
-	$target = $now_time . '|' . $type . '|' . $_SESSION['secros_user']['name'] . '|' .get_client_ip() . '|' . $action . '|' . $result . "|" . $desc . "\n";
-	return error_log($target, 3, "/var/log/auditlog");
+	// get_client_ip() //获取ip
+	if ($event == "")
+		return;
+	$now_time = date('Y-m-d H:i:s');
+	$db = new SQLite3('/var/spool/antivirus/log.db');
+	if ($db){
+		$db->exec("insert into auditlog (user,type,time,event,result,desc) values ('" . $_SESSION['secros_user']['name']  . "','" . $type . "','" . $now_time  . "','" . $event . "','" . $result . "','" . $desc . "')");
+	}
+	$db->close();
 }
+
 
 function write_dblog($direct, $filename, $action, $desc)
 {

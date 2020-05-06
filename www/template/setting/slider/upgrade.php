@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" scroll="no">
+<html xmlns="http://www.w3.org/1999/xhtml" scroll="no" style="width:100%;height:100%;">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="renderer" content="webkit">
@@ -10,37 +10,101 @@
 	<link rel="stylesheet" href="./static/style/font-awesome/css/font-awesome.css">
 	<link href="<?php echo STATIC_PATH;?>style/skin/<?php echo $config['user']['theme'];?>app_setting.css?ver=<?php echo SECROS_VERSION;?>" rel="stylesheet" id='link_css_list'/>
 </head>
-<BODY>
-<TABLE border=0 width=100% height=100% align=center cellpadding=2 cellspacing=0>
-<TR valign=middle><TD>
-<TABLE cellPadding=3 width=400 NOWRAP align=center border=0>
-<TR><TD>&nbsp;</TD></TR>
-
-<FORM method=post id=upload name=upload action="/cgi-bin/upgrade.cgi"  enctype="multipart/form-data">
-<TR><TD>导入升级文件：</TD></TR>
-<TR><TD><input id=upgradefile_id name=upgradefile type=file size=32></TD></TR>
-<TR><TD>&nbsp;</TD></TR>
-<TR>
-<TD align=center valign=bottom>
-		<a href="javascript:formSubmit();" class="button">确定</a>
-</TD>
-</TR>
-<TR><TD>
-<div id=upgrade_tip>
-<TR><TD><font color="#ff0000" size=5pt><b>注意：</b></font></TD></TR>
-<TR><TD><font color="#ff0000" size=4pt><b>设备升级时请拔出所有USB设备</b></font></TD></TR>
-<TR><TD><font color="#ff0000" size=4pt><b>以免造成升级失败！</b></font></TD></TR>
+<body>
+<div style="width:100%;height:100%;display:flex;justify-content: center;align-items: center;flex-direction: column;">
+<input id=upgradefile_id   type=file size=32 style="display:none">
+<div style="display:flex;align-items: center;width:320px;margin-bottom: 36px;">
+<div class="upload_file_btn" id="upload_file_btn_click">上传</div>
+<div class="select_file_name"><p class="select_file_nametext" style="margin:0;white-space: nowrap; text-overflow: ellipsis; overflow: hidden;text-indent: 16px;"></p> </div>
 </div>
-</TD></TR>
-</FORM>
-</TABLE></TD></TR></TABLE></td></tr></TABLE>
-	</body>
+
+<div style="display:flex;flex-direction:column;justify-content:center;align-items:flex-start;color:red;font-size:16px;">
+<div>注意：</div>
+<div>设备升级时请拔出所有USB设备</div>
+<div>以免造成升级失败！</div>
+</div>
+
+
+<div class="upload_file_btn btn_no_drop" id="upload_file_btn_post" style="position: absolute;bottom: 24px;">确认</div>
+</div>
+
+<div style="position: fixed;top:0;left:0;wdith:100%;height:100%;z-index:1001;background:red"></div>
+</body>
 </html>
+<script src="<?php echo STATIC_PATH;?>js/lib/jquery-1.8.0.min.js?ver=<?php echo SECROS_VERSION;?>"></script>
 <script type="text/javascript">
-function formSubmit()
-{
-	document.getElementById("upload").submit();
-	var obj = document.getElementById("upgrade_tip");
-	obj.innerHTML='<TR><TD><font color=\"#ff0000\" size=5pt><b>设备升级中，请勿断电。。。</b></font></TD></TR><TR><TD><center><img src=\"/static/images/lazy.gif\" /></center></TD></TR>';
+
+$(document).on("click",'#upload_file_btn_click',function(e){
+	document.getElementById("upgradefile_id").click();
+});
+
+$(document).on("change",'#upgradefile_id',function(e){
+	let ls = e.currentTarget.files[0].name;
+	if(ls){
+		$('#upload_file_btn_post').removeClass('btn_no_drop');
+		$('.select_file_nametext').text(e.currentTarget.files[0].name);
+	}else{
+		$('#upload_file_btn_post').addClass('btn_no_drop');
+		$('.select_file_nametext').text('');
+	}
+});
+
+$(document).on("click",'#upload_file_btn_post',function(e){
+let ck = $('.select_file_nametext').text();
+if(!ck){
+	return;
 }
+
+			$('#update_text', window.parent.document).text("正在升级中，请勿切断电源");
+			$('.updateframe', window.parent.document).removeClass('hidden');
+						
+var formData = new FormData();
+formData.append("upgradefile",$('#upgradefile_id')[0].files[0]);
+	$.ajax({
+        url:'/cgi-bin/upgrade.cgi',
+        dataType:'json',
+        type:'POST',
+		data: formData,
+		contentType: false,
+        processData: false,
+        xhr: function() {
+	      var xhr = $.ajaxSettings.xhr();
+	      if (xhr.upload) {
+	          xhr.upload.onprogress = function(e) {
+                //   console.log(e);
+	              if (e.lengthComputable) {
+	                 let progresswidth = Math.floor( e.loaded / e.total * 100);
+                   
+                      if (progresswidth < 100) {
+                                progresswidth += 1;
+                                $('#update_progress_bar', window.parent.document).css('width', progresswidth + '%');
+                                $('#update_progress_value', window.parent.document).text(progresswidth + '%');
+    }
+
+	              }
+	          };
+	      }
+	      return xhr;
+	  },
+        success: function(res){
+                       if(res.code == 200){
+                        $('#update_progress_bar', window.parent.document).css('width', '100%');
+                                $('#update_progress_value', window.parent.document).text('100%');
+                 alert('升级成功,请重启设备后生效');
+                 $('.updateframe',window.parent.document).addClass('hidden');
+                 $('.aui_close',window.parent.document)[0].click();
+                                    }
+                                  if (res.code == 400) {
+                        alert(res.msg);
+                        $('.updateframe', window.parent.document).addClass('hidden');
+                    }
+        },
+        error:function(response){
+			$('.updateframe', window.parent.document).addClass('hidden');
+            console.log(response);
+        }
+    });
+});
+
+
 </script>

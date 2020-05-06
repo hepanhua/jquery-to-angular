@@ -3502,21 +3502,131 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			return "lib" == e.iconSkin ? (ui.tree.init(), void 0) : (s.reAsyncChildNodes(e, "refresh"), void 0)
 		},
 		m = function(e) {
-			var checkusb = setInterval(function () {
-				$.ajax({
-				url: Config.treeAjaxURL + "&type=check",
-				dataType: "json",
-				success: function(e){
-					if (e.code){
-						t = e.data;
-						if (t.usbcount != usbcount){
-							usbcount = t.usbcount;
-							ui.tree.init();
-						}
-					}
+			// mqtt===============
+			let clientrad = (Math.random() * 10000000).toString(16).substr(0, 4) + '-' + (new Date()).getTime() + '-' + Math.random().toString().substr(2, 5);
+			var option = {
+				"ServerUri": window.location.host,
+				"ServerPort": 881,
+				"UserName": "",
+				"Password": "",
+				"ClientId": clientrad,
+				"TimeOut": 5,
+				"KeepAlive": 100,
+				"CleanSession": false,
+				"SSL": false
+			};
+			var client = null;
+			client = new Paho.MQTT.Client(option.ServerUri, option.ServerPort, option.ClientId)
+			client.onConnectionLost = onConnectionLost;
+			client.onMessageArrived = onMessageArrived;
+			client.connect({
+				invocationContext: {
+					host: option.ServerUri,//IP地址
+					port: option.ServerPort,//端口号
+					clientId: option.ClientId//标识
+				},
+				timeout: option.TimeOut,//连接超时时间
+				keepAliveInterval: option.KeepAlive,//心跳间隔
+				cleanSession: option.CleanSession,//是否清理Session
+				useSSL: option.SSL,//是否启用SSL
+				userName: option.UserName,  //用户名
+				password: option.Password,  //密码
+				onSuccess: onConnect,//连接成功回调事件
+				onFailure: onError//连接失败回调事件
+			});
+			//连接成功事件
+			function onConnect() {
+				// console.log("连接成功！");
+				client.subscribe("sample-values/USBOX/usbevent/#"); 
+				client.subscribe("sample-values/USBOX/avscan/#"); 
+			}
+			//连接失败事件
+			function onError(e) {
+				console.log("连接失败：");
+				console.log(e);
+			}
+			//连接断开事件
+			function onConnectionLost(e) {
+				if (e.errorCode !== 0) {
+					console.log(e.errorMessage);
 				}
-			})
-			},3000);
+			}
+
+			//接收消息事件
+			function onMessageArrived(data) {
+				// console.log(data);
+				if (data.payloadString) {
+					let json = JSON.parse(data.payloadString);
+					switch (json.sampleUnitId) {
+						case "usbevent":
+							// console.log(json);
+							ui.tree.init();//刷新树目录
+							if (json.value == 0) {//拔出某个U盘
+								let nowpath = $('#yarnball_input #path').val();
+								let lsarr = nowpath.split('/');
+								if (lsarr[0] == '*usbox*' || lsarr[1] == json.channelId) {
+									ui.path.list('*usbox*');
+									core.tips.tips(json.channelId + '已经拔出', true);
+								}
+							}
+							break;
+						case "avscan":
+							//存在进程文件
+							// console.log(json);
+							if(json.value.progress == -1){
+							
+								if(usbout == json.channelId){
+									$('.canvasframe').addClass('hidden');//隐藏loading界面
+									$('.loading_btn_frame').addClass('hidden');//隐藏loading按钮
+									return;
+								}
+								return;
+								
+							}
+							if ($('.canvasframe').length == 0) {
+								let hhh = '<div class="canvasframe hidden"> <div class="canvasframe_flex"> <div class="radar" id="radar"> <div class="rad1"></div> <div class="rad2"></div> </div> <div class="progress"> <div class="progress_bar" id="reboot_progress_bar"> <div class="progress_value" id="reboot_progress_value">0</div> </div> </div> <div class="infected_txt"></div> <div class="loading_btn_frame hidden"> <div class="loading_btn loading_btn_ok" style="margin-right:48px">确认</div> <div class="loading_btn loading_btn_cancle">取消</div> </div> </div> </div>';
+								$("body").append(hhh);
+							}
+							$('.canvasframe').removeClass('hidden');
+							$('.rad1').addClass('radar_ani');
+							$('.rad2').addClass('boo_ani');
+
+							usbout = json.channelId;
+							let lshtml = null;
+							if (json.value.infected > 0) {
+								lshtml = '<div>'+usbout+'扫描进行中,发现<span style="color:red">' + json.value.infected + '个</span>危险项,已移入隔离区</div>';
+							} else {
+								lshtml = '<div>'+usbout+'扫描进行中，暂未发现危险项</div>';
+							}
+
+							
+							let pen = json.value.progress + '%';
+							$('#reboot_progress_bar').css('width', pen);
+							$('#reboot_progress_value').text(pen);
+
+							if (pen == '100%') {
+								if (json.value.infected > 0) {
+									lshtml = '<div>'+usbout+'扫描已完成,发现<span style="color:red">' + json.value.infected + '个</span>危险项,已移入隔离区</div>';
+								} else {
+									lshtml = '<div>'+usbout+'扫描已完成，暂未发现危险项</div>';
+								}
+								$('.rad1').removeClass('radar_ani');
+								$('.rad2').removeClass('boo_ani');
+								$('.loading_btn_frame').removeClass('hidden');
+							} else {
+								$('.loading_btn_frame').addClass('hidden');
+							}
+
+							$('.infected_txt').html(lshtml);
+							//end
+							break;
+						default:
+							break;
+					}
+
+
+				}
+			}
 		},
 		u = function() {
 			"explorer" == Config.pageApp && ui.f5()
@@ -5110,4 +5220,62 @@ define("app/src/explorer/path", ["../../common/pathOperate", "../../tpl/fileinfo
 		setSelectByFilename: r,
 		clipboard: t.clipboard
 	}
+});
+
+
+
+//确认则进入
+$(document).on('click', '.loading_btn_ok', function () {
+	$('.canvasframe').addClass('hidden');//隐藏loading界面
+	$('.loading_btn_frame').addClass('hidden');//隐藏loading按钮
+	$.ajax({
+		url: "index.php?explorer/delectprogress",
+		dataType: "json",
+		success: function (e) {
+			usbout = null;
+		}
+	});
+
+});
+
+//取消
+var usbout = null;
+$(document).on('click', '.loading_btn_cancle', function () {
+	if (usbout) {
+		$.dialog({
+			id: "loading_btn_cancle_dialog",
+			fixed: !0,
+			icon: "question",
+			title: '警告',
+			zIndex: 1000,
+			padding: 20,
+			width: 240,
+			lock: !0,
+			background: "#000",
+			opacity: .3,
+			content: '确认放弃对该' + usbout + '的访问吗?',
+			ok: function () {
+				$.ajax({
+					url: "index.php?explorer/treeList&app=explorer&type=umount&usbid=" + usbout,
+					dataType: "json",
+					success: function (e) {
+						// console.log(e);
+						$('.canvasframe').addClass('hidden');//隐藏loading界面
+						$('.loading_btn_frame').addClass('hidden');//隐藏loading按钮
+					
+						$.ajax({
+							url: "index.php?explorer/delectprogress",
+							dataType: "json",
+							success: function (e) {
+								usbout = null;
+							}
+						});
+					}
+				});
+			},
+			cancel: !0
+		})
+	}
+
+
 });

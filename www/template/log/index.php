@@ -19,6 +19,7 @@ $antivirus  = config_get_unsign_int_from_file('/etc/system/quota.conf','antiviru
 			<a href="javascript:httpLog.init();" class="this" data-page="web"><?php echo $L['log_type_web'];?></a>
 			<a href="javascript:ftpLog.init();" data-page="ftp"><?php echo $L['log_type_ftp'];?></a>
 			<a href="javascript:sambaLog.init();" data-page="samba"><?php echo $L['log_type_samba'];?></a>
+			<a href="javascript:auditLog.init();" data-page="audit"><?php echo $L['log_type_audit'];?></a>
 			<?php
 			if ($antivirus == 1) {
 			?>
@@ -64,6 +65,40 @@ $antivirus  = config_get_unsign_int_from_file('/etc/system/quota.conf','antiviru
 					<table id='list' align="center" border=0 cellspacing=0 cellpadding=0 ></table>
 				</div>
 				<div class="section ftp hidden">
+					<div class="tools" id="tools">
+						<div class="tools-left"><?php echo $L['log_counttip'];?><label id="count">0</label> <div style="display:none">( <label id="fnum">0</label> - <label id="lnum">0</label>) </div></div>  
+							<div class="tools-right">
+							<button class="btn btn-default" id="log_filter" title=<?php echo $L['log_filter'];?> type="button">
+									<i class="font-icon icon-filter"></i>
+								</button>
+								<button class="btn btn-default" id="log_clean" title=<?php echo $L['log_clean'];?> type="button">
+									<i class="font-icon icon-trash"></i>
+								</button>
+								<button class="btn btn-default" id="log_fresh" title=<?php echo $L['log_fresh'];?> type="button">
+									<i class="font-icon icon-refresh"></i>
+								</button>
+								<button class="btn btn-default" id="log_first" title=<?php echo $L['log_first'];?> type="button">
+									<i class="font-icon icon-step-backward"></i>
+								</button>
+								<button class="btn btn-default" id="log_prev" title=<?php echo $L['log_prev'];?> type="button">
+									<i class="font-icon icon-chevron-left"></i>
+								</button>
+								<button class="btn btn-default" id="log_next" title=<?php echo $L['log_next'];?> type="button">
+									<i class="font-icon icon-chevron-right"></i>
+								</button>
+								<button class="btn btn-default" id="log_last" title=<?php echo $L['log_last'];?> type="button">
+									<i class="font-icon icon-step-forward"></i>
+								</button>
+								<button class="btn btn-default" id="log_download" title=<?php echo $L['log_download'];?> type="button">
+									<i class="font-icon icon-download-alt"></i>
+								</button>
+							</div>
+							<div style="clear:both">
+						</div>
+					</div>
+					<table id='list' align="center" border=0 cellspacing=0 cellpadding=0 ></table>
+				</div>
+				<div class="section audit hidden">
 					<div class="tools" id="tools">
 						<div class="tools-left"><?php echo $L['log_counttip'];?><label id="count">0</label> <div style="display:none">( <label id="fnum">0</label> - <label id="lnum">0</label>) </div></div>  
 							<div class="tools-right">

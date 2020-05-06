@@ -1,4 +1,4 @@
-define("app/src/log/main", ["lib/jquery-lib", "lib/util", "lib/artDialog/jquery-artDialog", "../../common/core", "../../tpl/copyright.html", "../../tpl/search.html", "../../tpl/search_list.html", "../../tpl/upload.html", "./httplog", "./ftplog", "./sambalog", "./avlog"],
+define("app/src/log/main", ["lib/jquery-lib", "lib/util", "lib/artDialog/jquery-artDialog", "../../common/core", "../../tpl/copyright.html", "../../tpl/search.html", "../../tpl/search_list.html", "../../tpl/upload.html", "./httplog", "./ftplog", "./sambalog","./auditlog", "./avlog"],
 function(e) {
     e("lib/jquery-lib"),
     e("lib/util"),
@@ -7,11 +7,13 @@ function(e) {
     httpLog = e("./httplog"),
     ftpLog = e("./ftplog"),
     sambaLog = e("./sambalog"),
+    auditLog = e("./auditlog"),
     avLog = e("./avlog"),
     httpLog.init(),
     httpLog.bindEvent(),
     ftpLog.bindEvent(),
     sambaLog.bindEvent(),
+    auditLog.bindEvent(),
     avLog.bindEvent()
 }),
 define("app/common/core", [],
@@ -1439,6 +1441,259 @@ function() {
         bindEvent: m
     }
 }),
+//start
+define("app/src/log/auditlog", [],
+function() {
+    var datestart="";
+    var dateend="";
+    var username="";
+    var filename="";
+    var event="";
+    var result="";
+    var e, t = "index.php?auditlog/", 
+    a = "", 
+    i = {}, 
+    n = function() {
+        var z="get&datestart="+datestart+"&dateend="+dateend+"&username="+username+"&event="+event+"&result="+result;
+     
+        $.ajax({
+            url: t + z + "&direct=init",
+            dataType: "json",
+            async: !1,
+            success: function(t) {
+                return t.code ? (e = t.data, b(t.info),
+                o(),i = t.data,
+                void 0) : (tips(t),
+                void 0)
+            },
+            error: function() {
+                return !1
+            }
+        })
+    }
+    ,
+    b = function(i) {
+    	$(".audit label#count").html(i.count);
+    	$(".audit label#fnum").html(i.fnum);
+    	$(".audit label#lnum").html(i.lnum);
+    }
+    ,
+    s = function(t, type,h, j, event, res, desc) {
+        void 0 == t && (t = ""),
+        void 0 == type && (type = ""),
+        void 0 == h && (h = ""),
+        void 0 == j && (j = ""),
+        void 0 == event && (event = "");
+        void 0 == res && (res = "");
+        void 0 == desc && (desc = "");
+        var o = "<tr>" + "<td>" + t + "</td>" +  "<td>" + type + "</td>" + "<td>" + h + "</td>" + "<td>" + j + "</td>"   +  "<td>" + event + "</td>" +  "<td>" + res + "</td>" +  "<td>" + desc + "</td>" + "</tr>";
+        return o
+    }
+    , 
+    o = function() {
+
+				var t =  "<tr class='title'><td width='5%'>" + LNG.log_id + "</td>" + "<td width='17%'>" + '类型' + "</td>" + "<td width='17%'>" + LNG.log_time + "</td>" + "<td width='10%'>" + LNG.log_username + "</td>"  + "<td width='10%'>" + '事件' + "</td>" + "<td width='10%'>" + '结果' + "</td>" + "<td width='20%'>" + LNG.log_desc + "</td>" + "</tr>"
+				;
+        for (var o in e)
+            t += s(e[o].id, e[o].type,e[o].time, e[o].user, e[o].event, e[o].result, e[o].desc);
+        $(".audit table#list").html(t)
+    }
+      , 
+    l = function(e) {
+        $(".nav .this").removeClass("this"),
+        e.addClass("this");
+        var t = e.attr("data-page");
+        $(".section").addClass("hidden"),
+        $("." + t).removeClass("hidden")
+    }
+    ,
+    f = function() {
+    	$.dialog({
+            fixed: !0,
+            icon: "question",
+            drag: !0,
+            title: LNG.warning,
+            content: LNG.if_remove + LNG.log_all + LNG.log_type_audit + "?" +"<br/>",
+            ok: function() {
+                $.ajax({
+			            url: t + "clean",
+			            dataType: "json",
+			            async: !1,
+			            success: function(t) {
+			                return t.code ? (e = t.data, b(t.info),
+			                o(),i = t.data,
+			                void 0) : (tips(t),
+			                void 0)
+			            },
+			            error: function() {
+			                return !1
+			            }
+			        })
+            },
+            cancel: !0
+        })
+   	}
+   	,
+   	a = function() {
+        document.location.href = t + "export";
+    }
+   	, 
+   	c = function() {
+   		var fnum = $(".audit label#fnum").html();
+        var lnum = $(".audit label#lnum").html();
+        var z="&datestart="+datestart+"&dateend="+dateend+"&username="+username+"&filename="+filename+"&event="+event+"&result="+result;
+   		var r = "get&fnum=" + fnum + "&lnum=" + lnum + z +"&direct=prev";
+   		$.ajax({
+            url: t + r,
+            dataType: "json",
+            async: !1,
+            success: function(t) {
+                return t.code ? (e = t.data, b(t.info),
+                o(),i = t.data,
+                void 0) : (tips(t),
+                void 0)
+            },
+            error: function() {
+                return !1
+            }
+        })
+   	}
+   	, 
+   	h = function() {
+   		var fnum = $(".audit label#fnum").html();
+           var lnum = $(".audit label#lnum").html();
+           var z="&datestart="+datestart+"&dateend="+dateend+"&username="+username+"&filename="+filename+"&event="+event+"&result="+result;
+   		var r = "get&fnum=" + fnum + "&lnum=" + lnum + z +"&direct=next";
+   		$.ajax({
+            url: t + r,
+            dataType: "json",
+            async: !1,
+            success: function(t) {
+                return t.code ? (e = t.data, b(t.info),
+                o(),i = t.data,
+                void 0) : (tips(t),
+                void 0)
+            },
+            error: function() {
+                return !1
+            }
+        })
+   	}
+   	, 
+    m = function() {
+        $(".audit button#log_filter").live("click", filter),
+    	$(".audit button#log_clean").live("click", f),
+    	$(".audit button#log_fresh").live("click", n),
+    	$(".audit button#log_first").live("click", n),
+    	$(".audit button#log_prev").live("click", c),
+    	$(".audit button#log_next").live("click", h),
+    	$(".audit button#log_last").live("click", d),
+    	$(".audit button#log_download").live("click", a),
+    	$(".nav a").live("click", function() {
+            l($(this))
+        })
+    },
+    filter=function(){
+        //弹窗内容
+        var content ='<div class=fliterdiog> <div class="f_row"> <div class="fd_title">时间</div> <input type="datetime-local" id="fd_filterdatestart" value=""> <div style="margin-left:5px;margin-right:5px;">至</div> <input type="datetime-local" id="fd_filterdateend" value=""> </div> <div class="f_row"><div class="fd_title">用户名</div> <input type="text" id="fd_username"> </div><div class="f_row"> <div class="fd_title">类型</div> <select id="fd_type"><option> </option> <option>提示</option> <option>警告</option> </select> </div><div class="f_row"> <div class="fd_title">事件</div> <input type="text" id="fd_event"></div> <div class="f_row"> <div class="fd_title">结果</div> <input type="text" id="fd_result"> </div></div>';
+        //时间拼接
+        var getaa=function(s) {
+            return s < 10 ? '0' + s: s;
+        }
+        //时间拼接
+        var nowtimepick=function(obj){
+            var datefff=document.getElementById(obj);
+            var myDate = new Date();
+            var time=myDate.toLocaleDateString(); 
+            var h=myDate.getHours();      
+            var m=myDate.getMinutes();    
+            var s=myDate.getSeconds(); 
+            
+            
+            var x=time.split('/');
+            if(x[1]<10){
+                x[1]='0'+x[1];
+            }
+            if(x[2]<10){
+                x[2]='0'+x[2];
+            }
+           time=x.join('-');
+          time=time + "T" +getaa(h)+':'+getaa(m)+":"+getaa(s);
+           
+        datefff.value=time;
+        };
+        
+                $.dialog({
+                    fixed: !0,
+                    icon: '',
+                    drag: !0,
+                    title: '查询',
+                    content: content,
+                    ok: function() {
+                        datestart=document.getElementById("fd_filterdatestart").value;
+                        dateend=document.getElementById("fd_filterdateend").value;
+                        username=document.getElementById("fd_username").value;
+                        type=document.getElementById("fd_type").value;
+                        event=document.getElementById("fd_event").value;
+                        result=document.getElementById("fd_result").value;
+        //改参数
+                var fnum = $(".audit label#fnum").html();
+                var lnum = $(".audit label#lnum").html();
+        var z="&datestart="+datestart+"&dateend="+dateend+"&username="+username+"&event="+event+"&result="+result + "&type="+type;
+                    var r = "get&fnum=" + fnum + "&lnum=" + lnum + z + "&direct=init";
+                        $.ajax({
+                         url: t + r,
+                         dataType: "json",
+                         async: !1,
+                         success: function(t) {
+                           
+                             return t.code ? (e = t.data, b(t.info),
+                             o(),i = t.data,
+                             void 0) : (tips(t),
+                             void 0)
+                         },
+                         error: function() {
+                             return !1
+                         }
+                     })
+        
+                    },
+                    cancel: !0
+                })
+        datestart=document.getElementById("fd_filterdatestart").value;
+        dateend=document.getElementById("fd_filterdateend").value;
+        if(datestart==''){
+            nowtimepick('fd_filterdatestart');
+        }
+        if(dateend==''){
+            nowtimepick('fd_filterdateend');
+        }
+            }
+    , 
+    d = function() {
+ var z="get&datestart="+datestart+"&dateend="+dateend+"&username="+username+"&filename="+filename+"&event="+event+"&result="+result;
+       $.ajax({
+            url: t + z + "&direct=last",
+            dataType: "json",
+            async: !1,
+            success: function(t) {
+                return t.code ? (e = t.data, b(t.info),
+                o(),i = t.data,
+                void 0) : (tips(t),
+                void 0)
+            },
+            error: function() {
+                return !1
+            }
+        })
+    }
+    ;
+    return {
+        init: n,
+        bindEvent: m
+    }
+}),
+//edn
 define("app/src/log/avlog", [],
 function() {
     var datestart="";
