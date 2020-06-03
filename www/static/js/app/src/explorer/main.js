@@ -3582,7 +3582,9 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			function onMessageArrived(data) {
 				// console.log(data);
 				if (data.payloadString) {
-					let json = JSON.parse(data.payloadString);
+					let payloadString = data.payloadString;
+					payloadString = payloadString.replace(/\\/g,"");
+					let json = JSON.parse(payloadString);
 					// console.log(json);
 					switch (json.sampleUnitId) {
 						case "virus":

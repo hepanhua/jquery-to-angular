@@ -66,7 +66,7 @@
   <div class="box_line">
     <a href="javascript:void(0);" class="system_save button"><?php echo $L['button_save'];?></a>
   
-   <!-- <a href="javascript:void(0);" class="reboot button"><?php echo $L['reboot'];?></a>   -->
+   <a href="javascript:void(0);" class="reboot button"><?php echo $L['reboot'];?></a>
   </div>
   <div style="clear:both;"></div>
 </div>
