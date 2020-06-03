@@ -1595,7 +1595,7 @@ function() {
     },
     filter=function(){
         //弹窗内容
-        var content ='<div class=fliterdiog> <div class="f_row"> <div class="fd_title">时间</div> <input type="datetime-local" id="fd_filterdatestart" value=""> <div style="margin-left:5px;margin-right:5px;">至</div> <input type="datetime-local" id="fd_filterdateend" value=""> </div> <div class="f_row"><div class="fd_title">用户名</div> <input type="text" id="fd_username"> </div><div class="f_row"> <div class="fd_title">类型</div> <select id="fd_type"><option> </option> <option>提示</option> <option>警告</option> </select> </div><div class="f_row"> <div class="fd_title">事件</div> <input type="text" id="fd_event"></div> <div class="f_row"> <div class="fd_title">结果</div> <input type="text" id="fd_result"> </div></div>';
+        var content ='<div class=fliterdiog> <div class="f_row"> <div class="fd_title">时间</div> <input type="datetime-local" id="fd_filterdatestart" value=""> <div style="margin-left:5px;margin-right:5px;">至</div> <input type="datetime-local" id="fd_filterdateend" value=""> </div> <div class="f_row"><div class="fd_title">用户名</div> <input type="text" id="fd_username"> </div><div class="f_row"> <div class="fd_title">类型</div> <select id="fd_type"><option> </option> <option>信息</option> <option>警告</option> </select> </div><div class="f_row"> <div class="fd_title">事件</div> <input type="text" id="fd_event"></div> <div class="f_row"> <div class="fd_title">结果</div> <input type="text" id="fd_result"> </div></div>';
         //时间拼接
         var getaa=function(s) {
             return s < 10 ? '0' + s: s;
@@ -1845,7 +1845,7 @@ var z="get&datestart="+datestart+"&dateend="+dateend+"&virusname="+virusname+"&f
     },
     filter=function(){
         //弹窗内容
-        var content ='<div class=fliterdiog> <div class="f_row"> <div class="fd_title">时间</div> <input type="datetime-local" id="fd_filterdatestart" value=""> <div style="margin-left:5px;margin-right:5px;">至</div> <input type="datetime-local" id="fd_filterdateend" value=""> </div> <div class="f_row"> <div class="fd_title">病毒名称</div> <input type="text" id="fd_virusname"> </div> <div class="f_row"> <div class="fd_title">文件名</div> <input type="text" id="fd_filename"> </div>  <div class="f_row"> <div class="fd_title">处理方式</div> <select id="fd_action"><option> </option> <option>尝试杀毒</option> </select> </div> </div>';
+        var content ='<div class=fliterdiog> <div class="f_row"> <div class="fd_title">时间</div> <input type="datetime-local" id="fd_filterdatestart" value=""> <div style="margin-left:5px;margin-right:5px;">至</div> <input type="datetime-local" id="fd_filterdateend" value=""> </div> <div class="f_row"> <div class="fd_title">病毒名称</div> <input type="text" id="fd_virusname"> </div> <div class="f_row"> <div class="fd_title">文件名</div> <input type="text" id="fd_filename"> </div>  <div class="f_row"> <div class="fd_title">处理方式</div> <select id="fd_action"><option> </option> <option>删除文件</option>  <option>隔离文件</option></select> </div> </div>';
         //时间拼接
         var getaa=function(s) {
             return s < 10 ? '0' + s: s;

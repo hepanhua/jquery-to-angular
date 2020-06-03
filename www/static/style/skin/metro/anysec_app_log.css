@@ -488,7 +488,7 @@ body { -khtml-user-select: text; -webkit-user-select: text; -moz-user-select: te
 #body table tr.title { background: #eee; color: #224;  text-align: center;}
 #body table tr.title td { border-bottom: 1px solid #ddd; font-weight: 800;  text-align: center;}
 #body table tr.title span { color: #999; font-size: 13px; padding-left: 4px; font-weight: 400;}
-#body table tr td { border-bottom: 1px solid #eee; line-height: 2.5em; height: 2.5em; padding-left: 0%;  text-align: center;}
+#body table tr td { border-bottom: 1px solid #eee; line-height: 2.5em; height: 2.5em; padding-left: 0%;  text-align: center;word-break: break-all;}
 #body table tr td.name { width: 30%;}
 #body table tr td.name,#body table tr td.path { border-right: 1px solid #ddd;}
 #body table tr td.action { line-height: 1.3em;}
@@ -513,13 +513,14 @@ body { -khtml-user-select: text; -webkit-user-select: text; -moz-user-select: te
     box-shadow: none;
     border: 1px solid #bbb;
     padding: 8px;
-    font-family: 'Helvetica Neue', "Microsoft Yahei", "微软雅黑", "STXihei", "WenQuanYi Micro Hei", sans-serif;
 }
 .fliterdiog select{
-    font-family: 'Helvetica Neue', "Microsoft Yahei", "微软雅黑", "STXihei", "WenQuanYi Micro Hei", sans-serif;
     padding: 8px;
     font-weight: 200;
     width: 220px;
+    border: 1px solid #bbb!important;
+    box-shadow: none!important;
+    outline: none!important;
 }
 .f_row{
     display: flex;
@@ -541,5 +542,4 @@ body { -khtml-user-select: text; -webkit-user-select: text; -moz-user-select: te
     margin-right: 10px;
     line-height: 32px;
     color: #333;
-    font-family: 'Helvetica Neue', "Microsoft Yahei", "微软雅黑", "STXihei", "WenQuanYi Micro Hei", sans-serif;
 }
