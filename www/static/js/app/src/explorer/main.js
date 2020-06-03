@@ -3520,16 +3520,25 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 		m = function(e) {
 			// mqtt===============
 			let clientrad = (Math.random() * 10000000).toString(16).substr(0, 4) + '-' + (new Date()).getTime() + '-' + Math.random().toString().substr(2, 5);
+			let ishttps = 'https:' == document.location.protocol ? true : false;
+			let openssl = null;
+			let sslport = null;
+			if(ishttps) {
+				openssl = true;
+				sslport = 883;
+			} else {
+				openssl = false;
+			}
 			var option = {
 				"ServerUri": window.location.host,
-				"ServerPort": 881,
+				"ServerPort": sslport?sslport:882,
 				"UserName": "",
 				"Password": "",
 				"ClientId": clientrad,
 				"TimeOut": 5,
 				"KeepAlive": 100,
 				"CleanSession": false,
-				"SSL": false
+				"SSL": openssl
 			};
 			var client = null;
 			client = new Paho.MQTT.Client(option.ServerUri, option.ServerPort, option.ClientId)
@@ -3574,6 +3583,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				// console.log(data);
 				if (data.payloadString) {
 					let json = JSON.parse(data.payloadString);
+					// console.log(json);
 					switch (json.sampleUnitId) {
 						case "virus":
 							let time = json.timestamp;
