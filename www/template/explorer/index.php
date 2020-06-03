@@ -111,6 +111,13 @@
 			<div class="frame-right-main">
 				<div class="tools">
 					<div class="tools-left">
+<!-- 回收站还原 -->
+					<div class="btn-group btn-group-sm secros_recycle_restore  hidden">
+							<button id='recycle_restore' class="btn btn-default" type="button">
+					        	<i class="font-icon icon-folder-close-alt"></i><?php echo $L['recycle_restore'];?>
+					        </button>
+						</div>
+
 						<!-- 回收站tool -->
 						<div class="btn-group btn-group-sm secros_recycle_tool hidden">
 							<button id='recycle_clear' class="btn btn-default" type="button">
@@ -118,6 +125,8 @@
 					        </button>
 						</div>
 
+
+						
 						<!-- 分享 tool -->
 						<div class="btn-group btn-group-sm secros_share_tool hidden">
 							<button id='refresh' class="btn btn-default" type="button">
@@ -202,12 +211,31 @@
 			</div>
 			<div class="infected_txt"></div>
 			<div class="loading_btn_frame  hidden">
-	<div class="loading_btn loading_btn_ok"  style="margin-right:48px">确认</div>
-	<div class="loading_btn loading_btn_cancle">取消</div>
+	<div class="loading_btn loading_btn_ok">确认</div>
+	<div class="loading_btn loading_btn_cancle" style="margin-left:48px">取消</div>
+	<div class="loading_btn loading_btn_details hidden" style="margin-left:48px">查看详情</div>
 	</div>
 		</div>
 		
 	</div>
+
+
+	<div class="av_details hidden">
+        <div class="av_flex">
+		<div class="av_hidden">
+		<img src="./static/images/CLOSE.png" style="width:18px;height:18px;">
+		</div>
+		 <div style="height:20%;font-size: 22px;align-items: center;display: flex;">病毒详情</div>
+		 <div class="av_title">
+		<div>病毒名称</div>
+		<div>路径</div>
+		<div>日期</div>
+		 </div>
+		 <div class="av_content">
+		 </div>
+		</div>
+	</div>
+
 
 	<div class="updateframe hidden">
     <div class="updateframe_flex">

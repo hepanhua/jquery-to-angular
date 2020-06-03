@@ -1608,29 +1608,36 @@ define("app/src/setting/antivirus", [], function() {
     var e, a, t = "/cgi-bin/avverify.cgi", 
     d = function() {
         var key = $("#key").val();
+        var dealmethod = $("input[name='deal']:checked").val();
         if ($("#antivirus_file").attr("checked")) {
          a = 1;
         }
         else {
         	a = 0;
         }
-        if ("" == key)
+        if ("" == key){
             return tips(LNG.antivirus_not_null, "error");
+        }
+        if(!dealmethod){
+            return tips(LNG.antivirus_deal_not_null, "error");
+        }
 				$.ajax({
-            url: t + "?key=" + key + "&antivirus_file=" + a,
+            url: t + "?key=" + key + "&antivirus_file=" + a + "&antivirus_policy=" + dealmethod,
             dataType: "json",
             success: function(e) {
-                if (e.code)
-                	 $("#signatures").val(e.signature),
-                	 $("#update").val(e.updatetime),
-                	 $("#expire").val(e.expiredate),
-                   tips(LNG.success);
-                else
-                	tips(LNG.antivirus_invalid_key,"error");
+                if (e.code){
+                    $("#signatures").val(e.signature);
+                    $("#update").val(e.updatetime);
+                    $("#expire").val(e.expiredate);
+                    tips(LNG.success);
+                }
+                else{
+                    tips(LNG.antivirus_invalid_key,"error");
+                }
+                
             }
         })
-    }
-    , 
+    },
     m = function() {
         $(".antivirus a.av_save").live("click", d)
     }

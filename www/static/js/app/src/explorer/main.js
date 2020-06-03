@@ -296,7 +296,12 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			var e = "menuBodyMain menuRecycleBody menuShareBody",
 				t = "folderBox menufolder fileBox menufile",
 				a = $(".html5_drag_upload_box");
-			"*recycle*/" == G.this_path ? (a.removeClass(e).addClass("menuRecycleBody"), $(".tools-left>.btn-group").addClass("hidden").parent().find(".secros_recycle_tool").removeClass("hidden"), $(".fileContiner .file").removeClass(t).addClass("menuRecyclePath")) : "*share*/" == G.this_path ? (a.removeClass(e).addClass("menuShareBody"), $(".tools-left>.btn-group").addClass("hidden").parent().find(".secros_share_tool").removeClass("hidden"), $(".fileContiner .file").removeClass(t).addClass("menuSharePath")) : (a.removeClass(e).addClass("menuBodyMain"), $(".tools-left>.btn-group").addClass("hidden").parent().find(".secros_path_tool").removeClass("hidden"))
+			"*recycle*/" == G.this_path ? (a.removeClass(e).addClass("menuRecycleBody"),$(".tools-left>.btn-group").addClass("hidden").parent().find(".secros_recycle_tool").removeClass("hidden"),
+			$(".secros_recycle_restore").removeClass("hidden"),
+			$(".fileContiner .file").removeClass(t).addClass("menuRecyclePath")) : "*share*/" == G.this_path ? (a.removeClass(e).addClass("menuShareBody"), 
+			$(".tools-left>.btn-group").addClass("hidden").parent().find(".secros_share_tool").removeClass("hidden"),
+			$(".fileContiner .file").removeClass(t).addClass("menuSharePath")) : (a.removeClass(e).addClass("menuBodyMain"),
+			$(".tools-left>.btn-group").addClass("hidden").parent().find(".secros_path_tool").removeClass("hidden"))
 		},
 		_mainSetData = function(e) {
 			G.json_data && G.json_data.filelist && G.json_data.folderlist || _mainSetDataShare();
@@ -357,6 +362,9 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 		},
 		_toolsAction = function(e) {
 			switch (e) {
+			case "recycle_restore":
+				ui.path.recycle_restore();
+				break;	
 			case "recycle_clear":
 				ui.path.recycle_clear();
 				break;
@@ -1718,11 +1726,16 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					_menuPath(e)
 				},
 				items: {
-					cute: {
-						name: LNG.cute + "<b>Ctrl+X</b>",
-						className: "cute",
-						icon: "cut",
-						accesskey: "k"
+					// cute: {
+					// 	name: LNG.cute + "<b>Ctrl+X</b>",
+					// 	className: "cute",
+					// 	icon: "cut",
+					// 	accesskey: "k"
+					// },
+					restore: {
+						name: LNG.recycle_restore,
+						className: "restore",
+						icon: "copy"
 					},
 					remove: {
 						name: LNG.recycle_remove + "<b>Del</b>",
@@ -2374,8 +2387,11 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			default:
 			}
 		},
-		_menuPath = function(e) {
+		_menuPath = function(e){
 			switch (e) {
+			case "restore":
+				ui.path.recycle_restore();
+				break;
 			case "open":
 				ui.path.open();
 				break;
@@ -3538,7 +3554,8 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			function onConnect() {
 				// console.log("连接成功！");
 				client.subscribe("sample-values/USBOX/usbevent/#"); 
-				client.subscribe("sample-values/USBOX/avscan/#"); 
+				client.subscribe("sample-values/USBOX/avscan/#");
+				client.subscribe("sample-values/USBOX/virus/#");
 			}
 			//连接失败事件
 			function onError(e) {
@@ -3558,6 +3575,13 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				if (data.payloadString) {
 					let json = JSON.parse(data.payloadString);
 					switch (json.sampleUnitId) {
+						case "virus":
+							let time = json.timestamp;
+							time = time.replace(/T/g," ");
+							time = time.replace(/Z/g," ");
+							let ls = '<div class="list"><div>'+json.value.virusname+'</div><div>'+json.value.filepath+'</div><div>'+time+'</div></div>';
+							$('.av_content').append(ls);
+							break;
 						case "usbevent":
 							// console.log(json);
 							ui.tree.init();//刷新树目录
@@ -3570,21 +3594,16 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 								}
 							}
 							break;
-						case "avscan":
-							//存在进程文件
-							// console.log(json);
+						case "avscan": //存在进程文件
 							if(json.value.progress == -1){
-							
 								if(usbout == json.channelId){
 									$('.canvasframe').addClass('hidden');//隐藏loading界面
 									$('.loading_btn_frame').addClass('hidden');//隐藏loading按钮
-									return;
 								}
-								return;
-								
+								break;
 							}
 							if ($('.canvasframe').length == 0) {
-								let hhh = '<div class="canvasframe hidden"> <div class="canvasframe_flex"> <div class="radar" id="radar"> <div class="rad1"></div> <div class="rad2"></div> </div> <div class="progress"> <div class="progress_bar" id="reboot_progress_bar"> <div class="progress_value" id="reboot_progress_value">0</div> </div> </div> <div class="infected_txt"></div> <div class="loading_btn_frame hidden"> <div class="loading_btn loading_btn_ok" style="margin-right:48px">确认</div> <div class="loading_btn loading_btn_cancle">取消</div> </div> </div> </div>';
+								let hhh = '<div class="canvasframe hidden"> <div class="canvasframe_flex"> <div class="radar" id="radar"> <div class="rad1"></div> <div class="rad2"></div> </div> <div class="progress"> <div class="progress_bar" id="reboot_progress_bar"> <div class="progress_value" id="reboot_progress_value">0</div> </div> </div> <div class="infected_txt"></div> <div class="loading_btn_frame hidden"> <div class="loading_btn loading_btn_ok" style="margin-right:48px">确认</div> <div class="loading_btn loading_btn_cancle">取消</div><div class="loading_btn loading_btn_details hidden" style="margin-left:48px">查看详情</div> </div> </div> </div>';
 								$("body").append(hhh);
 							}
 							$('.canvasframe').removeClass('hidden');
@@ -3594,9 +3613,11 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 							usbout = json.channelId;
 							let lshtml = null;
 							if (json.value.infected > 0) {
-								lshtml = '<div>'+usbout+'扫描进行中,发现<span style="color:red">' + json.value.infected + '个</span>危险项,已移入隔离区</div>';
+								lshtml = '<div>'+usbout+'扫描进行中,发现<span style="color:red">' + json.value.infected + '个</span>危险项</div>';
+								$('.loading_btn_details').removeClass('hidden');
 							} else {
 								lshtml = '<div>'+usbout+'扫描进行中，暂未发现危险项</div>';
+								$('.loading_btn_details').addClass('hidden');
 							}
 
 							
@@ -3606,13 +3627,20 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 
 							if (pen == '100%') {
 								if (json.value.infected > 0) {
-									lshtml = '<div>'+usbout+'扫描已完成,发现<span style="color:red">' + json.value.infected + '个</span>危险项,已移入隔离区</div>';
+									lshtml = '<div>'+usbout+'扫描已完成,发现<span style="color:red">' + json.value.infected + '个</span>危险项</div>';
 								} else {
 									lshtml = '<div>'+usbout+'扫描已完成，暂未发现危险项</div>';
 								}
 								$('.rad1').removeClass('radar_ani');
 								$('.rad2').removeClass('boo_ani');
 								$('.loading_btn_frame').removeClass('hidden');
+								if(json.value.username){
+if(json.value.username == 'root'){
+	$('.loading_btn_cancle').addClass('hidden');
+}else{
+	$('.loading_btn_cancle').removeClass('hidden');
+}
+								}
 							} else {
 								$('.loading_btn_frame').addClass('hidden');
 							}
@@ -3885,7 +3913,8 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				var	i = LNG.remove_title,
 					s = aa + "<br/><br/>" + LNG.remove_info,
 					o = "index.php?explorer/pathDelete";
-				"*recycle*/" == G.this_path && (s = LNG.recycle_remove + "?", o = "index.php?explorer/pathDeleteRecycle", i = LNG.recycle_remove), "share" == e[0].type && (s = LNG.share_remove_tips, o = "index.php?userShare/del", i = LNG.share_remove), e.length > 1 && (s += ' ... <span class="badge">' + e.length + "</span>"), $.dialog({
+				"*recycle*/" == G.this_path && (s = LNG.recycle_remove + ",确认删除后无法恢复?", o = "index.php?explorer/pathDeleteRecycle", i = LNG.recycle_remove), "share" == e[0].type && (s = LNG.share_remove_tips, o = "index.php?userShare/del", i = LNG.share_remove), e.length > 1 && (s += ' ... <span class="badge">' + e.length + "</span>"), 
+				$.dialog({
 					id: "dialog_path_remove",
 					fixed: !0,
 					icon: "question",
@@ -3919,6 +3948,130 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				})
 			}
 		},
+		//还原
+		select_path = null,
+		tree_asy = {
+			async: {
+				enable: !0,
+				dataType: "json",
+				url: Config.treeAjaxURL,
+				autoParam: ["ajax_name=name", "ajax_path=path", "this_path"],
+				dataFilter: function (e, t, a) {
+					return a.code ? a.data : null
+				}
+			},
+			edit: {
+				enable: !0,
+				showRemoveBtn: !1,
+				showRenameBtn: !1,
+				drag: {
+					isCopy: !1,
+					isMove: !1
+				}
+			},
+			view: {
+				showLine: !1,
+				selectedMulti: !1,
+				dblClickExpand: !1,
+				addDiyDom: function (e, t) {
+					var a = Global.treeSpaceWide,
+						i = $("#" + t.tId + "_switch"),
+						n = $("#" + t.tId + "_ico");
+					if (i.remove(), n.before(i), "file" == t.type && n.removeClass("button ico_docu").addClass("file " + t.ext), "oexe" == t.ext && n.removeClass("button ico_docu").addClass("file oexe").removeAttr("style"), t.level >= 1) {
+						var s = "<span class='space' style='display: inline-block;width:" + a * t.level + "px'></span>";
+						i.before(s)
+					}
+					// var o = "";
+					// void 0 != t.menuType ? o = t.menuType : (("file" == t.type || "oexe" == t.ext) && (o = "menuTreeFile"), "folder" == t.type && (o = "menuTreeFolder"));
+					// var r = LNG.name + ":" + t.name + "\n" + LNG.size + ":" + t.size_friendly + "\n" + LNG.modify_time + ":" + t.mtime;
+					// "file" != t.type && (r = t.name), i.parent().addClass(o).attr("title", r)
+				}
+			},
+			callback: {
+				onClick: function (e, t, a) {
+					// console.log(e); //事件
+					// console.log(t);// dom 对象
+					select_path = a.path + a.name + '/';
+					return s.selectNode(a), s.expandNode(a),
+						"folder" != a.type || "editor" != Config.pageApp ? 0 == a.level ? ("explorer" == Config.pageApp && void 0 != a.this_path,
+							!1) : ("editor" == Config.pageApp ? ui.tree.openEditor() : "explorer" == Config.pageApp , void 0) : void 0
+				},
+				beforeAsync: function (e, t) {
+					t.ajax_name = urlEncode(t.name), t.ajax_path = urlEncode(t.path)
+				},
+				onAsyncSuccess: function (e, a, i, n) {
+					return 0 == n.data.length ? (s.removeChildNodes(i), void 0) : ("function" == typeof t && (t(), t = void 0), void 0)
+				}
+			}
+		},
+		restore = function (fp) {
+			$.dialog({
+				fixed: !0,
+				icon: "question",
+				title: '还原',
+				padding: 20,
+				lock: !0,
+				background: "#000",
+				opacity: .3,
+				content:"该文件包含病毒，您确认要还原吗?",
+				ok: function() {
+					$.ajax({
+						url: Config.treeAjaxURL + "&type=init",
+						dataType: "json",
+						success: function (e) {
+							select_path = null;
+							$.dialog({
+								lock: !0,
+								padding: 5,
+								resize: !0,
+								ico: core.ico("up"),
+								id: "dialog_file_download_tree",
+								fixed: !0,
+								title: "还原文件",
+								content: '<div  class="download_modal"><div id="folderListaa" class="ztree"></div></div>',
+								init: function () {
+									document.getElementById("folderListaa").oncontextmenu = function () {
+										event.returnValue = false;
+									}
+									if (!e.code) return $("#folderListaa").html('<div style="text-align:center;">' + LNG.system_error + "</div>"), void 0;
+									var t = e.data;
+									$.fn.zTree.init($("#folderListaa"), tree_asy, t), s = $.fn.zTree.getZTreeObj("folderListaa")
+								},
+								ok: function () {
+									if (!select_path) {
+										core.tips.tips('请选择路径', false);
+										return;
+									}
+									// if (core.authCheck("explorer:fileDownload") == true) {//检查下载权限
+										if (1 > fp.length) {
+											return;
+										}
+										$('.file_loading').removeClass('hidden');
+										$.ajax({
+											url: "index.php?explorer/pathToSelectUsb",
+											type: "POST",
+											dataType: "json",
+											data: n(fp) + '&usbPath=' + urlEncode2(select_path),
+											error: core.ajaxError,
+											success: function (e) {
+												$('.file_loading').addClass('hidden');
+												core.tips.tips(e)
+											}
+										});
+									// } else {
+									// 	$('.file_loading').addClass('hidden');
+									// 	core.tips.tips('没有权限', false);
+									// }
+								},
+								cancel: !0
+							})
+						}
+					});
+				},
+				cancel: !0
+			})
+		},
+		//还原end
 		c = function(e) {
 			1 > e.length || $.ajax({
 				url: "index.php?explorer/pathCopy",
@@ -4437,6 +4590,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			})
 		};
 	return {
+		apprestore:restore,
 		appEdit: T,
 		appList: E,
 		appAddURL: z,
@@ -4525,7 +4679,35 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			})
 		},
 		i = function(e) {
-			if (core.authCheck("explorer:fileDownload", LNG.no_permission_download) && e) {
+	if (core.authCheck("explorer:fileDownload", LNG.no_permission_download) && e) {
+			let arr = e.split('/');
+			if(arr[0] == "*recycle*"){ //隔离区
+				//s
+				$.dialog({
+					fixed: !0,
+					icon: "question",
+					title: '下载',
+					padding: 20,
+					lock: !0,
+					background: "#000",
+					opacity: .3,
+					content:"该文件包含病毒，您确认要下载吗?",
+					ok: function() {
+							var t = "index.php?explorer/fileDownload&path=" + urlEncode2(e);
+							G.share_page !== void 0 && (t = "index.php?share/fileDownload&user=" + G.user + "&sid=" + G.sid + "&path=" + urlEncode2(e));
+							var a = '<iframe src="' + t + '" style="width:0px;height:0px;border:0;" frameborder=0></iframe>' + LNG.download_ready + "...",
+								i = $.dialog({
+									icon: "succeed",
+									title: !1,
+									time: 1,
+									content: a
+								});
+							i.DOM.wrap.find(".aui_loading").remove()
+					},
+					cancel: !0
+				});
+				//e
+			}else{
 				var t = "index.php?explorer/fileDownload&path=" + urlEncode2(e);
 				G.share_page !== void 0 && (t = "index.php?share/fileDownload&user=" + G.user + "&sid=" + G.sid + "&path=" + urlEncode2(e));
 				var a = '<iframe src="' + t + '" style="width:0px;height:0px;border:0;" frameborder=0></iframe>' + LNG.download_ready + "...",
@@ -4537,6 +4719,8 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					});
 				i.DOM.wrap.find(".aui_loading").remove()
 			}
+
+		}
 		},
 		b = function(e) {
 			if (core.scanvirusCheck() && e) {
@@ -5121,6 +5305,14 @@ define("app/src/explorer/path", ["../../common/pathOperate", "../../tpl/fileinfo
 				r(i)
 			})
 		},
+		recycle_restore:function(){
+			var e = b(!0);
+			if (0 < e.length){
+				t.apprestore(b(!0))
+				}else{
+					core.tips.tips("请选择文件或文件夹!", "warning");
+				}
+		},
 		recycle_clear: function() {
 			$.dialog({
 				id: "dialog_path_remove",
@@ -5278,4 +5470,16 @@ $(document).on('click', '.loading_btn_cancle', function () {
 	}
 
 
+});
+
+
+
+$(document).on('click', '.loading_btn_details', function () {
+	// $('.av_content').html('');//清空
+	// let ls = '<div class="list"><div>asd</div><div>asd</div><div>asd</div></div>';
+	// $('.av_content').append(ls);	//一条条添加
+	$('.av_details').removeClass('hidden');
+});
+$(document).on('click', '.av_hidden', function () {
+	$('.av_details').addClass('hidden');
 });

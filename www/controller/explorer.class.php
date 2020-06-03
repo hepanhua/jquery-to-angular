@@ -848,4 +848,64 @@ class explorer extends Controller{
         _DIR_OUT($list);
         return $list;
     }
+
+
+    //还原
+   public function pathToSelectUsb(){
+    $copy_list = json_decode($this->in['list'],true);
+    $list_num = count($copy_list);
+    for ($i=0; $i < $list_num; $i++) { 
+        $copy_list[$i]['path'] =$copy_list[$i]['path'];
+    }
+
+    $error = '';
+    $data = array();
+    $clipboard = $copy_list;
+    $copy_type = 'copy';
+    $path_past= $this->in['usbPath'];
+    $path_past= _DIR($path_past); //解码
+    if (!is_writable($path_past)) show_json($this->L['no_permission_write'],false,$data);
+    
+    $list_num = count($clipboard);
+    if ($list_num == 0) {
+        show_json($this->L['clipboard_null'],false,$data);
+    }
+    for ($i=0; $i < $list_num; $i++) {
+        $path_copy = _DIR($clipboard[$i]['path']);  
+        $filename  = get_path_this($path_copy);
+        $filename_out  = iconv_app($filename);
+
+        if (!file_exists($path_copy) && !is_dir($path_copy)){
+            $error .=$path_copy."<li>{$filename_out}'.$this->L['copy_not_exists'].'</li>"; //没有读写权限
+            continue;
+        }
+        if ($clipboard[$i]['type'] == 'folder'){
+            if ($path_copy == substr($path_past,0,strlen($path_copy))){
+                $error .="<em style='color:#fff;'>{$filename_out}".$this->L['current_has_parent']."</em>";
+                continue;
+            }
+        }
+
+        $auto_path = get_filename_auto($path_past.$filename);
+        $filename = get_path_this($auto_path);
+        if ($copy_type == 'copy') {
+            if ($clipboard[$i]['type'] == 'folder') {
+                copy_dir($path_copy,$path_past);
+            }else{
+                copy($path_copy,$auto_path);
+            }                
+        }else{
+            rename($path_copy,$auto_path);           
+        }
+        $data[] = iconv_app($filename);
+    }
+
+$patharry = explode("/",$auto_path);
+$endpatharry =array_slice($patharry,3);
+    write_audit('信息','还原','成功','隔离区文件还原到'.implode('/',$endpatharry));
+    $state = ($error ==''?true:false);
+    show_json($this->L['usb_success'],$state,$data);
+}
+
+
 }

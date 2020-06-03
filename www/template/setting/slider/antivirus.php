@@ -5,6 +5,7 @@
 </div>
 <?php
 $antivirus_key  = config_get_value_from_file('/mnt/config/antivirus.conf','Key');
+$antivirus_policy = config_get_value_from_file('/mnt/config/antivirus.conf','antivirus_policy');
 $antivirus_signatures = config_get_value_from_file('/mnt/config/antivirus.conf','Signature_number');
 $antivirus_updatetime = config_get_value_from_file('/mnt/config/antivirus.conf','Update_time');
 $antivirus_expiretime = config_get_value_from_file('/mnt/config/antivirus.conf','License_expiredate');
@@ -40,7 +41,7 @@ if (isset($av_status) && ($av_status == 2)){
 	<div class="box_line" style="display:flex;align-items:center">
 		<span class='infotitle'><?php echo $L['antivirus_file'];?>:</span>
 		<div style="display:flex;align-items:center">
-		<input  type="checkbox" id='antivirus_file' name="antivirus_file" 
+		<input style="margin:0;" type="checkbox" id='antivirus_file' name="antivirus_file" 
 		<?php
 		if ($antivirus_file==1) {
 		?>	
@@ -59,6 +60,30 @@ if (isset($av_status) && ($av_status == 2)){
 		</div>
 	
 	</div>
+
+	<div class="box_line" style="display:flex;align-items:center">
+		<span class='infotitle'><?php echo $L['antivirus_dealmethod'];?>:</span>
+		<div style="display:flex;align-items:center">
+<input type="radio" name="deal" value="0"  style="margin: 0;border: none!important;box-shadow: none!important;"
+<?php
+		if ($antivirus_policy=="0") {
+		?>	
+		checked='true' 
+		<?php
+		}
+		?>/> <?php echo $L['antivirus_isolate'];?>
+<input type="radio" name="deal" value="1"  style="margin: 0;margin-left:22px;border: none!important;box-shadow: none!important;"
+<?php
+		if ($antivirus_policy=="1") {
+		?>	
+		checked='true' 
+		<?php
+		}
+		?>/> <?php echo $L['antivirus_delete'];?>
+		</div>
+	</div>
+
+
   <div class="box_line">
     <a href="javascript:void(0);" class="av_save button"><?php echo $L['button_save'];?></a>
   </div>
