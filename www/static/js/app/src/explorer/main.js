@@ -5487,9 +5487,6 @@ $(document).on('click', '.loading_btn_cancle', function () {
 
 
 $(document).on('click', '.loading_btn_details', function () {
-	// $('.av_content').html('');//清空
-	// let ls = '<div class="list"><div>asd</div><div>asd</div><div>asd</div></div>';
-	// $('.av_content').append(ls);	//一条条添加
 	$('.av_details').removeClass('hidden');
 });
 $(document).on('click', '.av_hidden', function () {
