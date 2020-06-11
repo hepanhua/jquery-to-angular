@@ -1714,7 +1714,7 @@ define("app/src/setting/system", [], function() {
                                     setTimeout(() => {
                                      $('.rebootdom',window.parent.document).addClass('hidden');
                                     //  $('.aui_close',window.parent.document)[0].click();
-                                    window.location.reload();
+                                    window.parent.location.reload();
                                     }, 1000); 
                             }
                                     
