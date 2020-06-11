@@ -1687,7 +1687,7 @@ define("app/src/setting/system", [], function() {
                     dataType: "json",
                     async: !1,
                     success: function(t) {
-                        tips(t)
+                        tips(t);
                         $('.rebootdom',window.parent.document).removeClass('hidden');
           var progresswidth = 0;
           var rebootsever = setInterval(() => {

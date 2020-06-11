@@ -34,6 +34,7 @@
 <script src="<?php echo STATIC_PATH;?>js/lib/jquery-1.8.0.min.js?ver=<?php echo SECROS_VERSION;?>"></script>
 <script type="text/javascript">
 var upsever = null;
+var  progresswidth = 0;
 $(document).on("click",'#upload_file_btn_click',function(e){
 	document.getElementById("upgradefile_id").click();
 });
@@ -74,15 +75,32 @@ formData.append("upgradefile",$('#upgradefile_id')[0].files[0]);
 	          xhr.upload.onprogress = function(e) {
                 //   console.log(e);
 	              if (e.lengthComputable) {
-	                 let progresswidth = Math.floor( e.loaded / e.total * 100);
-                   
+	                  progresswidth = Math.floor( e.loaded / e.total * 100);
                       if (progresswidth < 100) {
 								progresswidth += 1;
                                 $('.updatedom #update_progress_bar', window.parent.document).css('width', progresswidth + '%');
                                 $('.updatedom #update_progress_value', window.parent.document).text(progresswidth + '%');
 	}
-	  if(progresswidth  == 100){
-		progresswidth = 0;
+	//   if(progresswidth  == 100){
+	// 	progresswidth = 0;
+	// 	  if(!upsever){
+	// 		upsever = setInterval(() => {
+	// 			if(progresswidth + 3 < 99){
+	// 				$('.updatedom #update_text', window.parent.document).text("正在升级中，请勿切断电源");
+	// 				progresswidth += 3;
+	// 			$('.updatedom #update_progress_bar', window.parent.document).css('width', progresswidth + '%');
+    //             $('.updatedom #update_progress_value', window.parent.document).text(progresswidth + '%');
+	// 			}
+	// 		},1000);
+	// 	  }
+	//   }
+	              }
+	          };
+	      }
+	      return xhr;
+	  },
+        success: function(res){
+			progresswidth = 0;
 		  if(!upsever){
 			upsever = setInterval(() => {
 				if(progresswidth + 3 < 99){
@@ -93,15 +111,6 @@ formData.append("upgradefile",$('#upgradefile_id')[0].files[0]);
 				}
 			},1000);
 		  }
-		
-	  }
-
-	              }
-	          };
-	      }
-	      return xhr;
-	  },
-        success: function(res){
 			setTimeout(() => {
 				upgradeCheck();
 			}, 2000); 
@@ -109,6 +118,8 @@ formData.append("upgradefile",$('#upgradefile_id')[0].files[0]);
         error:function(response){
 			$('.updatedom', window.parent.document).addClass('hidden');
 			alert('上传文件失败');
+		clearInterval(upsever);
+		upsever = null;
         }
     });
 });
@@ -139,8 +150,11 @@ success: function(t) {
 		}
 				
 	                  if (t.code == 400) {
-                        alert(t.msg);
-                        $('.updatedom', window.parent.document).addClass('hidden');
+						alert(t.msg);
+						clearInterval(upsever);
+		upsever = null;
+						$('.updatedom', window.parent.document).addClass('hidden');
+						progresswidth = 0;
                     }
 }
 });
