@@ -237,7 +237,27 @@
 	</div>
 
 
-	<div class="updateframe hidden">
+	<div class="updateframe rebootdom hidden">
+    <div class="updateframe_flex">
+	<div class="rebootsever_Ani">
+  <div class="a1"></div>
+  <div class="a2"></div>
+  <div class="a3"></div>
+  <div class="w1"></div>
+  <div class="w2"></div>
+  <div class="w3"></div>
+</div>
+		  <div  id="rebootdom_text">重启中</div>
+                <div class="updateprogress">
+                    <div class="updateprogress_bar" id="rebootdom_progress_bar">
+                        <div class="updateprogress_value" id="rebootdom_progress_value">0</div>
+                    </div>
+                </div>
+            </div>
+    </div>
+	
+
+	<div class="updateframe updatedom hidden">
     <div class="updateframe_flex">
             <div class="updateloading"  >
               <div></div>
@@ -253,8 +273,9 @@
                     </div>
                 </div>
             </div>
-    </div>
+	</div>
 	
+
 	<div class="file_loading hidden">
 	<div class="file_loading_sf">
 	<span>文件传输中</span>

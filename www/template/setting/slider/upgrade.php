@@ -33,7 +33,7 @@
 </html>
 <script src="<?php echo STATIC_PATH;?>js/lib/jquery-1.8.0.min.js?ver=<?php echo SECROS_VERSION;?>"></script>
 <script type="text/javascript">
-
+var upsever = null;
 $(document).on("click",'#upload_file_btn_click',function(e){
 	document.getElementById("upgradefile_id").click();
 });
@@ -55,11 +55,12 @@ if(!ck){
 	return;
 }
 
-			$('#update_text', window.parent.document).text("正在升级中，请勿切断电源");
-			$('.updateframe', window.parent.document).removeClass('hidden');
+			$('.updatedom #update_text', window.parent.document).text("正在上传中，请勿切断电源");
+			$('.updatedom', window.parent.document).removeClass('hidden');
 						
 var formData = new FormData();
 formData.append("upgradefile",$('#upgradefile_id')[0].files[0]);
+
 	$.ajax({
         url:'/cgi-bin/upgrade.cgi',
         dataType:'json',
@@ -76,10 +77,24 @@ formData.append("upgradefile",$('#upgradefile_id')[0].files[0]);
 	                 let progresswidth = Math.floor( e.loaded / e.total * 100);
                    
                       if (progresswidth < 100) {
-                                progresswidth += 1;
-                                $('#update_progress_bar', window.parent.document).css('width', progresswidth + '%');
-                                $('#update_progress_value', window.parent.document).text(progresswidth + '%');
-    }
+								progresswidth += 1;
+                                $('.updatedom #update_progress_bar', window.parent.document).css('width', progresswidth + '%');
+                                $('.updatedom #update_progress_value', window.parent.document).text(progresswidth + '%');
+	}
+	  if(progresswidth  == 100){
+		progresswidth = 0;
+		  if(!upsever){
+			upsever = setInterval(() => {
+				if(progresswidth + 3 < 99){
+					$('.updatedom #update_text', window.parent.document).text("正在升级中，请勿切断电源");
+					progresswidth += 3;
+				$('.updatedom #update_progress_bar', window.parent.document).css('width', progresswidth + '%');
+                $('.updatedom #update_progress_value', window.parent.document).text(progresswidth + '%');
+				}
+			},1000);
+		  }
+		
+	  }
 
 	              }
 	          };
@@ -87,24 +102,47 @@ formData.append("upgradefile",$('#upgradefile_id')[0].files[0]);
 	      return xhr;
 	  },
         success: function(res){
-                       if(res.code == 200){
-                        $('#update_progress_bar', window.parent.document).css('width', '100%');
-                                $('#update_progress_value', window.parent.document).text('100%');
-                 alert('升级成功,请重启设备后生效');
-                 $('.updateframe',window.parent.document).addClass('hidden');
-                 $('.aui_close',window.parent.document)[0].click();
-                                    }
-                                  if (res.code == 400) {
-                        alert(res.msg);
-                        $('.updateframe', window.parent.document).addClass('hidden');
-                    }
+			setTimeout(() => {
+				upgradeCheck();
+			}, 2000); 
         },
         error:function(response){
-			$('.updateframe', window.parent.document).addClass('hidden');
-            console.log(response);
+			$('.updatedom', window.parent.document).addClass('hidden');
+			alert('上传文件失败');
         }
     });
 });
 
 
+function upgradeCheck(){
+	$.ajax({
+url: "cgi-bin/upgrade_check.cgi",
+dataType:'json',
+type:'GET',
+success: function(t) {
+	if(t.code == 201){
+		setTimeout(() => {
+			upgradeCheck();
+		}, 3000);
+	}
+
+	if(t.code == 200){
+		clearInterval(upsever);
+		upsever = null;
+                        $('.updatedom #update_progress_bar', window.parent.document).css('width', '100%');
+                                $('.updatedom #update_progress_value', window.parent.document).text('100%');
+                setTimeout(() => {
+					alert('升级成功,请重启设备后生效');
+                 $('.updatedom',window.parent.document).addClass('hidden');
+                 $('.aui_close',window.parent.document)[0].click();
+				}, 1000); 
+		}
+				
+	                  if (t.code == 400) {
+                        alert(t.msg);
+                        $('.updatedom', window.parent.document).addClass('hidden');
+                    }
+}
+});
+}
 </script>

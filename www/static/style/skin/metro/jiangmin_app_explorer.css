@@ -719,6 +719,85 @@ html { overflow-x: hidden; overflow-y: hidden;}
 #update_text{
     padding-top: 32px;z-index: 99;font-size:16px;
 }
+
+
+.rebootsever_Ani {
+  width: 220px;
+  height: 220px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+}
+
+.rebootsever_Ani>div{
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 50%;
+}
+
+.a1 {
+	width: 165px;
+	height: 165px;
+  border: 1px solid #0000FF;
+  -webkit-animation: spin3D 3s linear .2s infinite;
+}
+
+.a2 {
+	width: 120px;
+	height: 120px;
+  border: 1px solid #7CFC00;
+  -webkit-animation: spin3D 2s linear 0s infinite;
+}
+
+.a3 {
+	width: 90px;
+	height: 90px;
+  border: 1px solid #ff9b30a5;
+  -webkit-animation: spin3D 1s linear 0s infinite;
+}
+
+.w1 {
+    width: 60px;
+	height: 60px;
+  border: 2px solid #ffffff;
+    background: rgba(0, 255, 98, 0.3);
+     -webkit-animation: spin360 1s linear 0s infinite;
+}
+
+.w2 {
+    width: 60px;
+	height: 60px;
+  border: 2px solid #ffffff;
+    background: rgba(0, 140, 255, 0.3);
+    -webkit-animation: spin360 2s linear 0s infinite;
+}
+
+.w3 {
+    width: 60px;
+	height: 60px;
+  border: 2px solid #ffffff;
+    background: rgba(251, 255, 1, 0.3);
+    -webkit-animation: spin360 3s linear 0s infinite;
+}
+
+@keyframes spin3D {
+  from {
+    transform: rotate3d(.5,.5,.5, 360deg);
+  }
+  to{
+    transform: rotate3d(0deg);
+  }
+}
+
+ @keyframes spin360 {
+  to{
+    transform: rotate3d(1,1,1,360deg);
+  }
+}
+
 .updateloading {
     width: 120px;
     height: 50px;

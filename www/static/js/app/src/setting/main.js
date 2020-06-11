@@ -1688,8 +1688,47 @@ define("app/src/setting/system", [], function() {
                     async: !1,
                     success: function(t) {
                         tips(t)
+                        $('.rebootdom',window.parent.document).removeClass('hidden');
+          var progresswidth = 0;
+          var rebootsever = setInterval(() => {
+				if(progresswidth + 3 < 99){
+					$('.rebootdom #rebootdom_text', window.parent.document).text("正在重启中");
+					progresswidth += 3;
+				$('.rebootdom #rebootdom_progress_bar', window.parent.document).css('width', progresswidth + '%');
+                $('.rebootdom #rebootdom_progress_value', window.parent.document).text(progresswidth + '%');
+                }
+                
+                $.ajax({
+                    url: "cgi-bin/ready.cgi",
+                    dataType:'json',
+                    type:'GET',
+                    success: function(t) {
+                        if(t.code == 200){
+                            if(!rebootsever){
+                                return false;
+                            }
+                            clearInterval(rebootsever);
+                            rebootsever = null;
+                                            $('.rebootdom #rebootdom_progress_bar', window.parent.document).css('width', '100%');
+                                                    $('.rebootdom #rebootdom_progress_value', window.parent.document).text('100%');
+                                    setTimeout(() => {
+                                     $('.rebootdom',window.parent.document).addClass('hidden');
+                                    //  $('.aui_close',window.parent.document)[0].click();
+                                    window.location.reload();
+                                    }, 1000); 
+                            }
+                                    
+                                          if (t.code == 400) {
+                                            alert(t.msg);
+                                            $('.rebootdom', window.parent.document).addClass('hidden');
+                                        }
                     }
-                })
+                    });
+			},2000);
+		  
+                        
+                    }
+                });
             },
             cancel: !0
         })
@@ -1754,8 +1793,7 @@ define("app/src/setting/system", [], function() {
         $(".system_menu_save").live("click", function() {
             var e = [];
             $(".setting_menu .menu_list").each(function() {
-                var t = $(this)
-                  , 
+                var t = $(this), 
                 a = {};
                 t.hasClass("menu_default") || (t.find("input").each(function() {
                     a[$(this).attr("name")] = urlEncode($(this).attr("value"))
