@@ -57,7 +57,7 @@ if(!ck){
 }
 
 if(($('#upgradefile_id')[0].files[0].size / 1024 /1024).toFixed(0)>200){
-alert(<?php echo '"'.$L['group_upload_tips'].'"';?>);
+alert('非法文件');
 return false;
 }
 

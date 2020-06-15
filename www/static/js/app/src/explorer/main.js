@@ -1425,7 +1425,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 		upload: function() {
 			G.upload_path = G.this_path;
 			var e = urlDecode(G.upload_path);
-			if (uploader.option("server", "index.php?explorer/fileUpload&path=" + urlEncode(G.upload_path)), 30 >= e.length ? e : "..." + e.substr(e.length - 30), 0 != $(".dialog_file_upload").length) return $.dialog.list.dialog_file_upload.display(!0), void 0;
+			if (uploader.option("server","index.php?explorer/fileUpload&path=" + urlEncode(G.upload_path)), 30 >= e.length ? e : "..." + e.substr(e.length - 30), 0 != $(".dialog_file_upload").length) return $.dialog.list.dialog_file_upload.display(!0), void 0;
 			var t = require("../tpl/upload.html"),
 				a = template.compile(t),
 				i = WebUploader.Base.formatSize(G.upload_max);
@@ -1518,6 +1518,10 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				if (!core.upload_check()) return uploader.skipFile(t), uploader.removeFile(t), void 0;
 				var a, n = $(e),
 					a = t.fullPath;
+				if((t.size / 1024 /1024).toFixed(0)>200){
+					alert(LNG.group_upload_tips);
+					return;
+				}
 				t.finished = !1, (void 0 == a || "undefined" == a) && (a = t.name), i++, $(e).find(".item").length > 0 && (n = $(e).find(".item:eq(0)"));
 				var s = '<div id="' + t.id + '" class="item"><div class="info">' + '<span class="title" title="' + G.upload_path + a + '">' + core.pathThis(a) + "</span>" + '<span class="size">' + core.file_size(t.size) + "</span>" + '<span class="state">' + LNG.upload_ready + "</span>" + '<a class="remove font-icon icon-remove" href="javascript:void(0)"></a>' + '<div style="clear:both"></div></div></div>';
 				$(e).find(".item").length > 0 ? $(s).insertBefore($(e).find(".item:eq(0)")) : $(e).append(s), uploader.upload()
