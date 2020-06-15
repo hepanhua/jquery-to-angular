@@ -1138,7 +1138,13 @@ define("app/src/setting/file", [], function() {
         		}
             document.getElementById("upload").submit();
             var obj = document.getElementById("ai_tip");
-						obj.innerHTML='<img src=\"/static/images/lazy.gif\" />';*/
+                        obj.innerHTML='<img src=\"/static/images/lazy.gif\" />';*/
+                
+if(($('#upload #uploadfile')[0].files[0].size / 1024 /1024).toFixed(0)>200){
+    alert(LNG.group_upload_tips);
+    return false;
+    }
+
 						var formData = new FormData($('#upload')[0]);
 			     //如果上传的文件不为空
 			     if($("input[type='file']").val() != ""){  
