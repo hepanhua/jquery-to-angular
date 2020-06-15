@@ -56,6 +56,12 @@ if(!ck){
 	return;
 }
 
+if(($('#upgradefile_id')[0].files[0].size / 1024 /1024).toFixed(0)>200){
+alert(<?php echo '"'.$L['group_upload_tips'].'"';?>);
+return false;
+}
+
+
 			$('.updatedom #update_text', window.parent.document).text("正在上传中，请勿切断电源");
 			$('.updatedom', window.parent.document).removeClass('hidden');
 						
