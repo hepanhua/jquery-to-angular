@@ -97,13 +97,15 @@ return false;
 		}
 		start = end; 
   end = start + LENGTH; 
-		responseget(xhr,start,end,file,filename,totalSize);
+		responseget(xhr,start,end,file);
   xhr.send(fd);
 
 });
 
 
-function responseget(xhr,start,end,file,filename,totalSize){
+function responseget(xhr,start,end,file){
+	let filename = file.name;
+	let totalSize = file.size;
 	//返回
 	xhr.onreadystatechange = function() {
 		setTimeout(() => {
@@ -134,7 +136,7 @@ function responseget(xhr,start,end,file,filename,totalSize){
 		}
   start = end; 
   end = start + LENGTH; 
-		responseget(xhrb,start,end,file,filename,totalSize);
+		responseget(xhrb,start,end,file);
 		xhrb.send(fd);
 		}
 				  }
