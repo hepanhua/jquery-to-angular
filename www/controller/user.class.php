@@ -332,13 +332,6 @@ if($_POST['end']==true){
     show_json('200');
 } 
 show_json('201');
-            // test end
-            // $target_path  = "/mnt/abc/";
-            // if(move_uploaded_file($_FILES["upgradefile"]["tmp_name"], $target_path.$_FILES['upgradefile']['name'])) {
-            // show_json('ok');
-            // }else{    
-            // show_json($_FILES["upgradefile"]["error"],false);
-            // }
         }
      
     }
