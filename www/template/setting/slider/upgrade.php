@@ -35,6 +35,7 @@
 <script type="text/javascript">
 var upsever = null;
 var  progresswidth = 0;
+var LENGTH = 1024 * 1024 * 2;//每次上传的大小 
 $(document).on("click",'#upload_file_btn_click',function(e){
 	document.getElementById("upgradefile_id").click();
 });
@@ -62,51 +63,88 @@ return false;
 }
 
 
-			$('.updatedom #update_text', window.parent.document).text("正在上传中，请勿切断电源");
-			$('.updatedom', window.parent.document).removeClass('hidden');
-						
-var formData = new FormData();
-formData.append("upgradefile",$('#upgradefile_id')[0].files[0]);
+//start
+      
+      var file = $('#upgradefile_id')[0].files[0];//文件对象 
+      var filename=$('#upgradefile_id')[0].files[0].name; 
+      var totalSize = file.size;//文件总大小 
+      var start = 0;//每次上传的开始字节 
+      var end = start + LENGTH;//每次上传的结尾字节 
+      var fd = null//创建表单数据对象 
+      var blob = null;//二进制对象 
+      var xhr = null;//xhr对象 
+  
+        fd = new FormData();
+		xhr = new XMLHttpRequest();
+        xhr.open('POST','index.php?user/downloadfile',false); 
+        blob = file.slice(start,end);//根据长度截取每次需要上传的数据 
+        fd.append('upgradefile',blob); 
+		fd.append('filename',filename);  
 
-	$.ajax({
-        url:'/cgi-bin/upgrade.cgi',
-        dataType:'json',
-        type:'POST',
-		data: formData,
-		contentType: false,
-        processData: false,
-        xhr: function() {
-	      var xhr = $.ajaxSettings.xhr();
-	      if (xhr.upload) {
-	          xhr.upload.onprogress = function(e) {
-                //   console.log(e);
-	              if (e.lengthComputable) {
-	                  progresswidth = Math.floor( e.loaded / e.total * 100);
-                      if (progresswidth < 100) {
-								progresswidth += 1;
-                                $('.updatedom #update_progress_bar', window.parent.document).css('width', progresswidth + '%');
+		$('.updatedom #update_text', window.parent.document).text("正在上传中，请勿切断电源");
+		$('.updatedom', window.parent.document).removeClass('hidden');
+		fd.append('first',true); 
+
+		progresswidth = Math.floor( start / totalSize * 100);
+        if (progresswidth < 100) {
+			progresswidth += 1;
+            $('.updatedom #update_progress_bar', window.parent.document).css('width', progresswidth + '%');
+            $('.updatedom #update_progress_value', window.parent.document).text(progresswidth + '%');
+		}
+
+		if(start + LENGTH >= totalSize){
+			fd.append('end',true); 
+		}
+		start = end; 
+  end = start + LENGTH; 
+		responseget(xhr,start,end,file,filename,totalSize);
+  xhr.send(fd);
+
+});
+
+
+function responseget(xhr,start,end,file,filename,totalSize){
+	//返回
+	xhr.onreadystatechange = function() {
+		setTimeout(() => {
+              if(xhr.status == 200) {
+            	  let responseText = xhr.responseText;//返回结果
+				  let obj = JSON.parse(responseText); 
+				  if(obj.data == 400){
+					$('.updatedom', window.parent.document).addClass('hidden');
+			alert('上传文件失败');
+		clearInterval(upsever);
+		upsever = null;
+				  }
+				  if(obj.data == 201){
+					  if(start < totalSize){
+		let fd = new FormData();
+		let xhrb = new XMLHttpRequest();
+        xhrb.open('POST','index.php?user/downloadfile',false); 
+        let blob = file.slice(start,end);//根据长度截取每次需要上传的数据 
+        fd.append('upgradefile',blob); 
+		fd.append('filename',filename);  
+		progresswidth = Math.floor( start / totalSize * 100);
+        if (progresswidth < 100) {
+            $('.updatedom #update_progress_bar', window.parent.document).css('width', progresswidth + '%');
+            $('.updatedom #update_progress_value', window.parent.document).text(progresswidth + '%');
+		}
+	if(start + LENGTH >= totalSize){
+			fd.append('end',true); 
+		}
+  start = end; 
+  end = start + LENGTH; 
+		responseget(xhrb,start,end,file,filename,totalSize);
+		xhrb.send(fd);
+		}
+				  }
+				  if(obj.data == 200){
+					startck(filename);
+					progresswidth = 100;
+					$('.updatedom #update_progress_bar', window.parent.document).css('width', progresswidth + '%');
                                 $('.updatedom #update_progress_value', window.parent.document).text(progresswidth + '%');
-	}
-	//   if(progresswidth  == 100){
-	// 	progresswidth = 0;
-	// 	  if(!upsever){
-	// 		upsever = setInterval(() => {
-	// 			if(progresswidth + 3 < 99){
-	// 				$('.updatedom #update_text', window.parent.document).text("正在升级中，请勿切断电源");
-	// 				progresswidth += 3;
-	// 			$('.updatedom #update_progress_bar', window.parent.document).css('width', progresswidth + '%');
-    //             $('.updatedom #update_progress_value', window.parent.document).text(progresswidth + '%');
-	// 			}
-	// 		},1000);
-	// 	  }
-	//   }
-	              }
-	          };
-	      }
-	      return xhr;
-	  },
-        success: function(res){
-			progresswidth = 0;
+			setTimeout(() => {
+				progresswidth = 0;
 		  if(!upsever){
 			upsever = setInterval(() => {
 				if(progresswidth + 3 < 99){
@@ -117,19 +155,24 @@ formData.append("upgradefile",$('#upgradefile_id')[0].files[0]);
 				}
 			},1000);
 		  }
-			setTimeout(() => {
 				upgradeCheck();
-			}, 2000); 
-        },
-        error:function(response){
-			$('.updatedom', window.parent.document).addClass('hidden');
-			alert('上传文件失败');
-		clearInterval(upsever);
-		upsever = null;
-        }
-    });
+			}, 1000); 
+				  }
+			  } 
+		},500);
+			
+			}
+   //end
+}
+function startck(e){
+	$.ajax({
+url: "index.php?user/startck&filename="+e,
+dataType:'json',
+type:'GET',
+success: function(t){
+}
 });
-
+}
 
 function upgradeCheck(){
 	$.ajax({

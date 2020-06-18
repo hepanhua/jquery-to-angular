@@ -314,4 +314,40 @@ class user extends Controller
         $_SESSION['check_code'] = strtolower($code);
         check_code($code);
     }
+
+    public function downloadfile(){
+        // show_json(ini_get('upload_max_filesize').'///'.ini_get('post_max_size'));
+        if ($_FILES["upgradefile"]["error"] > 0) {
+            show_json('400',false);
+        }else{
+            $filename = '/tmp/'.$_POST['filename'];//确定上传的文件名 
+//第一次上传时没有文件，就创建文件，此后上传只需要把数据追加到此文件中 
+if(!file_exists($filename) || $_POST['first']==true){ 
+ move_uploaded_file($_FILES['upgradefile']['tmp_name'],$filename); 
+}else{ 
+ file_put_contents($filename,file_get_contents($_FILES['upgradefile']['tmp_name']),FILE_APPEND); 
+} 
+
+if($_POST['end']==true){
+    show_json('200');
+} 
+show_json('201');
+            // test end
+            // $target_path  = "/mnt/abc/";
+            // if(move_uploaded_file($_FILES["upgradefile"]["tmp_name"], $target_path.$_FILES['upgradefile']['name'])) {
+            // show_json('ok');
+            // }else{    
+            // show_json($_FILES["upgradefile"]["error"],false);
+            // }
+        }
+     
+    }
+
+    public function startck(){
+        $a = "/tmp/".$this->in['filename'];
+        system("/bin/upgrade_kernel ".$a.' >>/dev/null &');
+    }
+    // public function getmd5(){
+    //     show_json(md5_file('/tmp/Android-SDK@1.9.9.64803_20190614.zip'));
+    // }
 }
