@@ -3341,9 +3341,8 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					dataType: "json",
 					error: function() {},
 					success: function(e) {
-						// console.log(e);
 	$(".usbStorage").empty();
-	if(!e.data[0].name){
+	if(e.data.length == 0){
 		$(".usbStorage").addClass('hidden');
 		return;
 	}else{
@@ -3660,34 +3659,34 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 									core.tips.tips(json.channelId + '已经拔出', true);
 								}
 								//拔出时立即usb占用刷新
-								$.ajax({
-									url: "/cgi-bin/getdiskusages.cgi",
-									dataType: "json",
-									error: function() {},
-									success: function(e) {
-					$(".usbStorage").empty();
-					if(!e.data[0].name){
-						$(".usbStorage").addClass('hidden');
-						return;
-					}else{
-						$(".usbStorage").removeClass('hidden');
-					}
-					for(let k=0;k<e.data.length;k++){
-						$(".usbStorage").append('<div>'+e.data[k].name+'</div>')
-						for(let g=0;g<e.data[k].usages.length;g++){
-							let color = "";
-							if(e.data[k].usages[g].usage < 50){
-									color = "background:green!important;";
-							}else{
-								if(e.data[k].usages[g].usage < 80){
-									color = "background:orange!important;";
-								}
-							}
-							$(".usbStorage").append('<div class="usbRow"><div>'+e.data[k].usages[g].dev+'</div><div class="usbProgress"><div style="width:'+e.data[k].usages[g].usage+'%;'+color+'"></div></div><div class="usbPercent">'+e.data[k].usages[g].usage+'%</div></div>');
-						}
-					}
-									}
-								});
+					// 			$.ajax({
+					// 				url: "/cgi-bin/getdiskusages.cgi",
+					// 				dataType: "json",
+					// 				error: function() {},
+					// 				success: function(e) {
+					// $(".usbStorage").empty();
+					// if(!e.data[0].name){
+					// 	$(".usbStorage").addClass('hidden');
+					// 	return;
+					// }else{
+					// 	$(".usbStorage").removeClass('hidden');
+					// }
+					// for(let k=0;k<e.data.length;k++){
+					// 	$(".usbStorage").append('<div>'+e.data[k].name+'</div>')
+					// 	for(let g=0;g<e.data[k].usages.length;g++){
+					// 		let color = "";
+					// 		if(e.data[k].usages[g].usage < 50){
+					// 				color = "background:green!important;";
+					// 		}else{
+					// 			if(e.data[k].usages[g].usage < 80){
+					// 				color = "background:orange!important;";
+					// 			}
+					// 		}
+					// 		$(".usbStorage").append('<div class="usbRow"><div>'+e.data[k].usages[g].dev+'</div><div class="usbProgress"><div style="width:'+e.data[k].usages[g].usage+'%;'+color+'"></div></div><div class="usbPercent">'+e.data[k].usages[g].usage+'%</div></div>');
+					// 	}
+					// }
+					// 				}
+					// 			});
 							}
 							break;
 						case "avscan": //存在进程文件
