@@ -14,6 +14,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 		TreeId: "folderList",
 		pageApp: "explorer",
 		treeAjaxURL: "index.php?explorer/treeList&app=explorer",
+		usbMountTime:null,
 		AnimateTime: 200
 	}, Global = {
 		fileListAll: "",
@@ -3332,7 +3333,40 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					var t = e.data;
 					$.fn.zTree.init($("#folderList"), c, t), s = $.fn.zTree.getZTreeObj("folderList")
 				}
-			}), $(".ztree .switch").die("mouseenter").live("mouseenter", function() {
+			}),
+			setTimeout(() => {
+				$(".usbStorage").empty();
+				$.ajax({
+					url: "/cgi-bin/getdiskusages.cgi",
+					dataType: "json",
+					error: function() {},
+					success: function(e) {
+						// console.log(e);
+	$(".usbStorage").empty();
+	if(!e.data[0].name){
+		$(".usbStorage").addClass('hidden');
+		return;
+	}else{
+		$(".usbStorage").removeClass('hidden');
+	}
+	for(let k=0;k<e.data.length;k++){
+		$(".usbStorage").append('<div>'+e.data[k].name+'</div>')
+		for(let g=0;g<e.data[k].usages.length;g++){
+			let color = "";
+							if(e.data[k].usages[g].usage < 50){
+									color = "background:green!important;";
+							}else{
+								if(e.data[k].usages[g].usage < 80){
+									color = "background:orange!important;";
+								}
+							}
+			$(".usbStorage").append('<div class="usbRow"><div>'+e.data[k].usages[g].dev+'</div><div class="usbProgress"><div style="width:'+e.data[k].usages[g].usage+'%;'+color+'"></div></div><div class="usbPercent">'+e.data[k].usages[g].usage+'%</div></div>');
+		}
+	}
+	
+					}
+				});
+			},500), $(".ztree .switch").die("mouseenter").live("mouseenter", function() {
 				$(this).addClass("switch_hover")
 			}).die("mouseleave").live("mouseleave", function() {
 				$(this).removeClass("switch_hover")
@@ -3599,15 +3633,61 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 							$('.av_content').append(ls);
 							break;
 						case "usbevent":
-							// console.log(json);
-							ui.tree.init();//刷新树目录
+							if(json.value == 1){
+								$(".usb_mount").removeClass('hidden');
+								if(!Config.usbMountTime){
+									Config.usbMountTime = setTimeout(() => {
+										$(".usb_mount").addClass('hidden');
+									ui.tree.init();//刷新树目录
+									Config.usbMountTime = null;
+									}, 15000);
+								}else{
+									clearTimeout(Config.usbMountTime);
+									Config.usbMountTime = setTimeout(() => {
+										$(".usb_mount").addClass('hidden');
+									ui.tree.init();//刷新树目录
+									Config.usbMountTime = null;
+									}, 15000);
+								}
+							}
+							//usb+容量接口
 							if (json.value == 0) {//拔出某个U盘
+								ui.tree.init();//刷新树目录
 								let nowpath = $('#yarnball_input #path').val();
 								let lsarr = nowpath.split('/');
 								if (lsarr[0] == '*usbox*' || lsarr[1] == json.channelId) {
 									ui.path.list('*usbox*');
 									core.tips.tips(json.channelId + '已经拔出', true);
 								}
+								//拔出时立即usb占用刷新
+								$.ajax({
+									url: "/cgi-bin/getdiskusages.cgi",
+									dataType: "json",
+									error: function() {},
+									success: function(e) {
+					$(".usbStorage").empty();
+					if(!e.data[0].name){
+						$(".usbStorage").addClass('hidden');
+						return;
+					}else{
+						$(".usbStorage").removeClass('hidden');
+					}
+					for(let k=0;k<e.data.length;k++){
+						$(".usbStorage").append('<div>'+e.data[k].name+'</div>')
+						for(let g=0;g<e.data[k].usages.length;g++){
+							let color = "";
+							if(e.data[k].usages[g].usage < 50){
+									color = "background:green!important;";
+							}else{
+								if(e.data[k].usages[g].usage < 80){
+									color = "background:orange!important;";
+								}
+							}
+							$(".usbStorage").append('<div class="usbRow"><div>'+e.data[k].usages[g].dev+'</div><div class="usbProgress"><div style="width:'+e.data[k].usages[g].usage+'%;'+color+'"></div></div><div class="usbPercent">'+e.data[k].usages[g].usage+'%</div></div>');
+						}
+					}
+									}
+								});
 							}
 							break;
 						case "avscan": //存在进程文件

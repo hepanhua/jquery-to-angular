@@ -1177,3 +1177,46 @@ animation: boo  4s  infinite;
 .av_hidden{
   position: absolute;right:16px;top:16px;cursor: pointer;
 }
+/* 7.31 */
+.usbStorage{
+  position: absolute;bottom: 85px;padding: 10px 0;width: 100%;opacity: 0.9; overflow: hidden; border-right: 1px solid #ddd; border-top: 1px solid #e6e6e6; background: #f6f6f6;display: flex; align-items: center;flex-direction: column;
+}
+.usbStorage .usbRow{
+  width: 100%; display: flex;justify-content:center;align-items: center;margin: 3px 0;
+}
+.usbStorage .usbPercent{
+  width: 40px;
+}
+.usbStorage .usbRow>div:first-child{
+  width: 40px;
+  text-align: right;
+}
+.usbStorage .usbProgress{
+  width: 100px;margin: 0 8px;border: 1px solid #ccc;border-radius: 15px;overflow: hidden;height: 6px;
+}
+.usbStorage .usbProgress div{
+  height: 100%;background: red;
+}
+.usb_mount{
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;display: flex;justify-content: center;align-items: center;z-index: 1001;background: rgba(255,255,255,0.5);
+}
+.usb_mount .usb_mount_sf{
+  background: #000;
+  opacity: 0.6;
+  margin: 0 auto;
+  color: #FFF;
+  border-radius: 6px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 70px;
+  padding:6px 20px;
+}
+.usb_mount  .usb_mount_sf div{
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  font-size: 0;
+}

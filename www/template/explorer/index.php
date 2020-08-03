@@ -97,8 +97,11 @@
 
 	<div class="frame-main">
 		<div class='frame-left'>
-
 			<ul id="folderList" class="ztree"></ul>
+			
+			<div class="usbStorage hidden">
+			</div>
+
 			<div class="bottom_box">
 				<div class="box_content">
 					<a href="javascript:ui.path.list('*recycle*');" class="cell menuRecycleButton"><i class="font-icon icon-bug"></i><span><?php echo $L['recycle'];?></span></a>
@@ -275,6 +278,12 @@
             </div>
 	</div>
 	
+	<div class="usb_mount hidden">
+	<div class="usb_mount_sf">
+	<span>USB挂载中</span>
+	<div ><img src="./static/images/loading_simple.gif"></div>
+	</div>
+	</div>
 
 	<div class="file_loading hidden">
 	<div class="file_loading_sf">
