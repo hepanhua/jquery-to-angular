@@ -1084,20 +1084,26 @@ define("app/src/setting/file", [], function() {
     }
     ,
      s = function() {
-        var o = $(".file_editor #ext_allow").val()
-        ,
-        s = {}
-          , 
-        r = ""
-          , 
+        var o = $(".file_editor #ext_allow").val().toLowerCase(),
+        cg = function(){
+            if(o.length>0){
+                let arr = o.split(",");
+                for(let k = 0;k<arr.length;k++){
+                    arr[k] = arr[k].split(".")[arr[k].split(".").length - 1];
+                }
+                o = arr.join(",");
+            }
+        },
+        s = {}, 
+        r = "", 
         l = "add";
+        cg();
         if ($(".file_editor #file_deepcheck").attr("checked")) {
          a = 1;
         }
         else {
         	a = 0;
         }
-        	
         if ($(".file_editor .tag.this").each(function() {
             for (var e = $(this).attr("data-role").split(";"), t = 0; e.length > t; t++)
                 s[e[t]] = 1
