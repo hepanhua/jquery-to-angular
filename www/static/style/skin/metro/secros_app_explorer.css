@@ -1220,7 +1220,7 @@ animation: boo  4s  infinite;
   padding: 0;
   font-size: 0;
 }
-.getusbsid_frame{
+.getusbsid_frame,.getusbsid_frame_warning{
   position: fixed;
   z-index: 9999;
   width: 100%;
@@ -1232,21 +1232,22 @@ animation: boo  4s  infinite;
   justify-content: center;
   align-items: center;
 }
-.getusbsid_frame .frame_context{
+.getusbsid_frame .frame_context,.getusbsid_frame_warning .frame_context{
   width: 360px;
     height: 260px;
     background: #fff;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    border-radius: 15px;
 }
 
-.getusbsid_frame .frame_context_control{
+.getusbsid_frame .frame_context_control,.getusbsid_frame_warning .frame_context_control{
   display: flex;
   justify-content: space-around;
   height: 60px;
 }
-.getusbsid_frame .frame_context_value{
+.getusbsid_frame .frame_context_value,.getusbsid_frame_warning .frame_context_value{
   flex: 1; justify-content: center; align-items: center;display: flex;flex-direction: column;color: #000;font-size: 14px;
 }
 .getusbsid_frame .frame_context_value .value_row{
@@ -1263,7 +1264,7 @@ animation: boo  4s  infinite;
 .getusbsid_frame .frame_context_value img{
   width: 80%;max-height: 150px;margin-bottom: 18px;
 }
-.getusbsid_frame a.button{
+.getusbsid_frame a.button,.getusbsid_frame_warning a.button{
   width: 90px;
   height: 26px;
   line-height: 26px;

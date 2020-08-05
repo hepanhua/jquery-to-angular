@@ -1,3 +1,4 @@
+var mqttclient = null;
 define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztree", "lib/contextMenu/jquery-contextMenu", "lib/artDialog/jquery-artDialog", "lib/picasa/picasa", "./ui", "./fileSelect", "../../common/taskTap", "../../common/core", "../../tpl/copyright.html", "../../tpl/search.html", "../../tpl/search_list.html", "../../tpl/upload.html", "../../common/rightMenu", "../../common/tree", "../../common/pathOperate", "../../tpl/fileinfo/file_info.html", "../../tpl/fileinfo/path_info.html", "../../tpl/fileinfo/path_info_more.html", "../../tpl/share.html", "../../tpl/app.html", "../../common/pathOpen", "../../common/CMPlayer", "./path"], function(e) {
 	Config = {
 		BodyContent: ".bodymain",
@@ -3577,11 +3578,10 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				"CleanSession": false,
 				"SSL": openssl
 			};
-			var client = null;
-			client = new Paho.MQTT.Client(option.ServerUri, option.ServerPort, option.ClientId)
-			client.onConnectionLost = onConnectionLost;
-			client.onMessageArrived = onMessageArrived;
-			client.connect({
+			mqttclient = new Paho.MQTT.Client(option.ServerUri, option.ServerPort, option.ClientId)
+			mqttclient.onConnectionLost = onConnectionLost;
+			mqttclient.onMessageArrived = onMessageArrived;
+			mqttclient.connect({
 				invocationContext: {
 					host: option.ServerUri,//IP地址
 					port: option.ServerPort,//端口号
@@ -3599,9 +3599,9 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			//连接成功事件
 			function onConnect() {
 				// console.log("连接成功！");
-				client.subscribe("sample-values/USBOX/usbevent/#"); 
-				client.subscribe("sample-values/USBOX/avscan/#");
-				client.subscribe("sample-values/USBOX/virus/#");
+				mqttclient.subscribe("sample-values/USBOX/usbevent/#"); 
+				mqttclient.subscribe("sample-values/USBOX/avscan/#");
+				mqttclient.subscribe("sample-values/USBOX/virus/#");
 			}
 			//连接失败事件
 			function onError(e) {
@@ -3617,7 +3617,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 
 			//接收消息事件
 			function onMessageArrived(data) {
-				// console.log(data);
+				// console.log(data.destinationName);
 				if (data.payloadString) {
 					let payloadString = data.payloadString;
 					payloadString = payloadString.replace(/\\/g,"");
@@ -3639,6 +3639,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 										$(".usb_mount").addClass('hidden');
 									ui.tree.init();//刷新树目录
 									Config.usbMountTime = null;
+									// cleanusbevent();
 									}, 15000);
 								}else{
 									clearTimeout(Config.usbMountTime);
@@ -3646,6 +3647,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 										$(".usb_mount").addClass('hidden');
 									ui.tree.init();//刷新树目录
 									Config.usbMountTime = null;
+									// cleanusbevent();
 									}, 15000);
 								}
 							}
@@ -3658,35 +3660,25 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 									ui.path.list('*usbox*');
 									core.tips.tips(json.channelId + '已经拔出', true);
 								}
-								//拔出时立即usb占用刷新
-					// 			$.ajax({
-					// 				url: "/cgi-bin/getdiskusages.cgi",
-					// 				dataType: "json",
-					// 				error: function() {},
-					// 				success: function(e) {
-					// $(".usbStorage").empty();
-					// if(!e.data[0].name){
-					// 	$(".usbStorage").addClass('hidden');
-					// 	return;
-					// }else{
-					// 	$(".usbStorage").removeClass('hidden');
-					// }
-					// for(let k=0;k<e.data.length;k++){
-					// 	$(".usbStorage").append('<div>'+e.data[k].name+'</div>')
-					// 	for(let g=0;g<e.data[k].usages.length;g++){
-					// 		let color = "";
-					// 		if(e.data[k].usages[g].usage < 50){
-					// 				color = "background:green!important;";
-					// 		}else{
-					// 			if(e.data[k].usages[g].usage < 80){
-					// 				color = "background:orange!important;";
-					// 			}
-					// 		}
-					// 		$(".usbStorage").append('<div class="usbRow"><div>'+e.data[k].usages[g].dev+'</div><div class="usbProgress"><div style="width:'+e.data[k].usages[g].usage+'%;'+color+'"></div></div><div class="usbPercent">'+e.data[k].usages[g].usage+'%</div></div>');
-					// 	}
-					// }
-					// 				}
-					// 			});
+							}
+
+							if(json.value == -1){
+								let img = '<img style="width:48px;margin-bottom:18px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAADbUlEQVRoQ+2Zz2sTQRTHvy+/'+
+								'tgakVQTBg6InmwhGPYvJyWPt1SY1PfhPiNIUxH/CQ6uNXk2PnhLxrG7BJp4s7UEQRBKE2iRNnsxuW2K6m52Z3dhUMhBy2Jl57/N+zLyZIZzwRidcf4wBjtuDYw/0eqC5MT+DUDcFRo'+
+								'qBKWJMie9MqBNQB8FEN2QayZdrQXnOtwdatbkHzHQPED+VxiUAL4xEUfxrN22Adi2b7jAWCZTWli68A66ECUvR6WJFZx5lAN7MT7V+7y2rW9xLPS7FTkUW6PJK3atn73clgNbn+ymm0'+
+								'DKIUipCpPsym8Tdhdi116bsGGkAW/lwGWQn5tAao07cychCSAHoKk/GRYuTm9tqvAoQngBWzO/slVXDJjR5G5ELDy3F9749R7fxXhGCzVg8kvHKCU+A3Wq2rLPSRC89AsWv2h7Y+YL21'+
+								'jM1AHtkyUgUZwcNHAgglsouU1lDMoIBAELEmUFL7EAAXesL4KAAxD4xkShm3IzoCtCq5fLMWNaxfpAAtnyedduxXQGaG7kSCDMjAcBYM5KrjqWKO0A1x7rKB+4BRt1Irp5x0scRoFnNiuL'+
+								'szcgADAgjZ4CNbAFEiyMFwLxkJIuFfp1cAPzFf+AhZOWxcx44AuxWcxUC7oySBxh4N5FYPVK6u4XQJ9XSoR82qH3gcF5m00gWb0iGUNYE0fVR8gCY141k8UgZ/7+G0AlP4mYAy2j4/BzCZ+9'+
+								'aUdj5+Rad76/8RCSgtIwGsJEJbcWZQDTls4AjqnM9NLRSwp+5+0dzw0gUHY+yQyvmAgXQK+b810PBQWiU00K4rx05eg7h0zftJP71EWj/0OJx24EPJhvekfLKUxzeSuxuob35RAvA15FSSNQ9'+
+								'2MSmX/6lcKs2rw4wIPalPGAVgfa1SkW1tIj2eqC5jfbXx2oAzOuxeCTt+1pFSLUutkKhCkCT0lpYOXBrPwc+KOYAN6jbTcvcznneCx0orAUhTdvbUV55MUoa4NATFFpRDSdpDuZ14m5exvLSOX'+
+								'BkT7RyorPi58bCuVLAWiweznvFfP9YJQ/0DrYfOKjg9+Qm1vkwceGfPXD0W8C6wWDKgzgtn+TcAFMFxCvH9sTkFAY2DFIApZjEIx/vP/JRnRh1gE3x0OdX6V7Z2iEknZhD7jgGGLKBPacfe8DTR'+
+								'EPu8AftL7xA1u1hrQAAAABJRU5ErkJggg=="/>';
+								let h = '<div class="frame_context">'+
+								'<div style="display:none;" class="channelId">'+json.channelId+'</div>'+
+								'<div class="frame_context_value">'+img+'<div>'+json.channelId+'非法接入,请联系管理员授权</div></div>'+
+								'<div class="frame_context_control"><a class="button usbwhitekonw">确认</a></div></div>';
+								$(".getusbsid_frame_warning").html(h);
+								$(".getusbsid_frame_warning").removeClass('hidden');
 							}
 							break;
 						case "avscan": //存在进程文件
@@ -5516,7 +5508,7 @@ $(document).on('click', '.loading_btn_ok', function () {
 	$('.canvasframe').addClass('hidden');//隐藏loading界面
 	$('.loading_btn_frame').addClass('hidden');//隐藏loading按钮
 	$.ajax({
-		url: "index.php?explorer/delectprogress",
+		url: "index.php?explorer/deleteprogress",
 		dataType: "json",
 		success: function (e) {
 			usbout = null;
@@ -5551,7 +5543,7 @@ $(document).on('click', '.loading_btn_cancle', function () {
 						$('.loading_btn_frame').addClass('hidden');//隐藏loading按钮
 					
 						$.ajax({
-							url: "index.php?explorer/delectprogress",
+							url: "index.php?explorer/deleteprogress",
 							dataType: "json",
 							success: function (e) {
 								usbout = null;
@@ -5575,3 +5567,22 @@ $(document).on('click', '.loading_btn_details', function () {
 $(document).on('click', '.av_hidden', function () {
 	$('.av_details').addClass('hidden');
 });
+$(document).on('click', '.getusbsid_frame_warning .usbwhitekonw', function () {
+	let channelId = $('.channelId').text();
+	// console.log(channelId);
+	cleanusbevent(channelId);
+	$(".getusbsid_frame_warning").addClass('hidden');
+});
+
+function cleanusbevent(usb) {
+	let msg = {
+		"sampleUnitId": "usbevent",
+		"state": 0,
+		"value": null
+		};
+		var message = new Paho.MQTT.Message(JSON.stringify(msg));
+		message.destinationName = "sample-values/USBOX/usbevent/"+ usb;
+		message.qos = 0;
+		message.retained = true;
+		mqttclient.send(message);
+}

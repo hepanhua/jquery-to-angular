@@ -794,6 +794,7 @@ define("app/src/setting/setting", [], function() {
         G.is_root ? $("ul.setting #system").show() : $("ul.setting #system").hide(),
         G.is_root ? $("ul.setting #antivirus").show() : $("ul.setting #antivirus").hide(),
         G.is_root ? $("ul.setting #net").show() : $("ul.setting #net").hide(),
+        G.is_root ? $("ul.setting #usblist").show() : $("ul.setting #usblist").hide(),
         G.is_root ? $("ul.setting #file").show() : $("ul.setting #file").hide(),
         G.is_root || 1 == AUTH["member:get"] ? $("ul.setting #member").show() : $("ul.setting #member").hide(),
         e = location.hash.split("#", 2)[1],

@@ -200,6 +200,8 @@
 	</div><!-- / frame-main end-->
 
 
+	<div class="getusbsid_frame_warning hidden"></div>
+
 	
 	<div class="canvasframe hidden">
         <div class="canvasframe_flex">

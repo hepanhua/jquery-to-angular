@@ -738,7 +738,7 @@ class explorer extends Controller{
 
 
 
-    function delectprogress(){
+    function deleteprogress(){
         $file_path= "/tmp/avprogress/*";
         system("rm -f " .$file_path);
         show_json('success',true);
