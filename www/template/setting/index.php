@@ -20,7 +20,7 @@ $antivirus  = config_get_unsign_int_from_file('/etc/system/quota.conf','antiviru
 				<li id="system"><i class="font-icon icon-cog"></i><?php echo $L['system_setting'];?></li>
 				<li id="net"><i class="font-icon icon-picture"></i><?php echo $L['setting_net'];?></li>
 				<li id="file"><i class="font-icon icon-dashboard"></i><?php echo $L['setting_file'];?></li>
-				<li id="user"><i class="font-icon icon-user"></i><?php echo $L['setting_user'];?></li>
+				<li id="usblist"><i class="font-icon icon-anchor"></i><?php echo $L['setting_usblist'];?></li>
 				<li id="member"><i class="font-icon icon-group"></i><?php echo $L['setting_member'];?></li>
 				<?php
 				if ($antivirus == 1) {
@@ -29,6 +29,7 @@ $antivirus  = config_get_unsign_int_from_file('/etc/system/quota.conf','antiviru
 				<?php
 				}
 				?>
+					<li id="user"><i class="font-icon icon-user"></i><?php echo $L['setting_user'];?></li>
 			</ul>
 		</div>		
 		<div class='main'></div>

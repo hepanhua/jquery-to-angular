@@ -1,4 +1,4 @@
-define("app/src/setting/main", ["lib/jquery-lib", "lib/util", "lib/artDialog/jquery-artDialog", "../../common/core", "../../tpl/copyright.html", "../../tpl/search.html", "../../tpl/search_list.html", "../../tpl/upload.html", "./setting", "./fav", "./group", "./member", "./antivirus", "./file","./system"], function(e) {
+define("app/src/setting/main", ["lib/jquery-lib", "lib/util", "lib/artDialog/jquery-artDialog", "../../common/core", "../../tpl/copyright.html", "../../tpl/search.html", "../../tpl/search_list.html", "../../tpl/upload.html", "./setting", "./fav", "./group", "./member", "./antivirus", "./file","./system","./usblist"], function(e) {
     e("lib/jquery-lib"),
     e("lib/util"),
     e("lib/artDialog/jquery-artDialog"),
@@ -8,12 +8,14 @@ define("app/src/setting/main", ["lib/jquery-lib", "lib/util", "lib/artDialog/jqu
     Group = e("./group"),
     Member = e("./member"),
     Filetype = e("./file"),
+    Usblist = e("./usblist"),
     System = e("./system"),
     Antivirus = e("./antivirus"),
     Setting.init(),
     Fav.bindEvent(),
     Member.bindEvent(),
     Filetype.bindEvent(),
+    Usblist.bindEvent(),
     Group.bindEvent(),
     Antivirus.bindEvent(),
     System.bindEvent()
@@ -782,6 +784,7 @@ define("app/src/setting/setting", [], function() {
                 "fav" == t && Fav.init(e),
                 "member" == t && Group.init(),
                 "file" == t && Filetype.init(),
+                "usblist" == t && Usblist.init(),
                 e = t
             }
         })
@@ -1205,6 +1208,206 @@ if(($('#upload #uploadfile')[0].files[0].size / 1024 /1024).toFixed(0)>200){
         bindEvent: c
     }
 }),
+define("app/src/setting/usblist", [], function() {
+    var e = "index.php?usbwhitelist/", 
+t = {}, 
+a = function() {
+    $.ajax({
+        url: e + "get",
+        dataType: "json",
+        async: !1,
+        success: function(e) {
+            if (!e.code)
+            return tips(e),
+            void 0;
+            var r = e.data;
+            o(r);
+        },
+        error: function() {
+            return !1
+        }
+    });
+    $.ajax({
+        url: "/index.php?usbpolicy/get",
+        dataType: "json",
+        async: !1,
+        success: function(e) {
+            $("input[type=radio][name=settingUsbStatus][value="+e.data+"]").attr("checked",true);
+        },
+        error: function() {
+            return !1
+        }
+    });
+},
+o = function(data){
+var t = "<tr><td>U盘SID</td><td width='20%'>使用人</td><td width='20%'>备注</td><td width='20%'>" + LNG.action + "</td></tr>";
+if(data){
+for(let k in data){
+   t +=  "<tr><td class='usb_name'>"+data[k].name+"</td><td width='20%' class='usb_user'>"+data[k].user+"</td><td width='20%' class='usb_desc'>"+data[k].desc+"</td><td width='20%'>"+ 
+   "<a href='javascript:void(0)' class='button edit' >" + "编辑" + "</a><a href='javascript:void(0)' class='button delete'>" + "删除" + "</a></td></tr>";
+}
+}
+  $(".setting_usblist_whitelist table#list").html(t);
+},
+edit = function(){
+    let name = $(this).parent().parent().find('.usb_name').text();
+    let user= $(this).parent().parent().find('.usb_user').text();
+    let desc = $(this).parent().parent().find('.usb_desc').text();
+    let t =  "<td class='usb_name'>"+name+"</td><td width='20%'><input type='text' class='usb_user'  value='"+user+"' data-old='"+user+"'/></td><td width='20%'>"+
+    "<input type='text' class='usb_desc' value='"+desc+"' data-old='"+desc+"'/></td><td width='20%'>"+ 
+    "<a href='javascript:void(0)' class='button editsave' >" + "确认编辑" + "</a><a href='javascript:void(0)' class='button editcancle'>" + "取消" + "</a></td>";
+    $(this).parent().parent().html(t);
+},
+getusbsid = function(){
+    let h = '<div class="getusbsid_frame"><div class="frame_context">'+
+    '<div class="frame_context_value"><img src="./static/images/bar_loading.gif"><div>智能学习中。。。</div></div>'+
+    '<div class="frame_context_control"><a class="button hidden getusbsidok">确认</a><a class="button  getusbsidcancle">取消</a></div></div></div>';
+    $("body",parent.document).append(h);
+
+    $.ajax({
+        url: "/cgi-bin/getusid.cgi",
+        dataType: "json",
+        async: !1,
+        success: function(e) {
+            if(e.code == 200){
+                let h = '<div class="value_row"><div>U盘SID</div><div class="usb_sid">'+e.data.sid+'</div></div>';
+                if(e.data.vendor){
+                    h += '<div class="value_row"><div>供应商</div><div>'+e.data.vendor+'</div></div>';
+                }
+                $('.getusbsid_frame .frame_context_value',parent.document).html(h);
+        $('.getusbsid_frame .getusbsidok',parent.document).removeClass('hidden');
+            }else{
+        $('.getusbsid_frame',parent.document).remove();
+        tips(e.msg,false);
+            }
+        },
+        error: function() {
+            return !1
+        }
+    });
+},
+add = function(usb) {
+    var e = "<tr><td><div class='usb_name'>"+usb+"</div></td>"+
+    "<td><input type='text' class='usb_user'  value=''/></td><td><input type='text' class='usb_desc' value=''/></td>"+
+    "<td> <a href='javascript:void(0)' class='button addsave' >" + "确认添加" + "</a><a href='javascript:void(0)' class='button addcancle'>" + "取消" + "</a></td></tr>";
+    $(e).insertAfter(".setting_usblist_whitelist table#list tr:last");
+},
+editsave = function(){
+    let name = $(this).parent().parent().find(".usb_name").text();
+    let user = $(this).parent().parent().find(".usb_user").val();
+    let desc = $(this).parent().parent().find(".usb_desc").val();
+    $.ajax({
+        url: e + "edit&name="+ name + "&user=" + user + "&desc=" + desc,
+        dataType: "json",
+        async: !1,
+        success: function(e) {
+            if(e.code){
+                a();
+                tips(e.data);
+            }else{
+                tips(e.data,false);
+            }
+        },
+        error: function() {
+            return !1
+        }
+    });
+},
+addsave = function(){
+    let name = $(this).parent().parent().find(".usb_name").text();
+    let user = $(this).parent().parent().find(".usb_user").val();
+    let desc = $(this).parent().parent().find(".usb_desc").val();
+    $.ajax({
+        url: e + "add&name="+ name + "&user=" + user + "&desc=" + desc,
+        dataType: "json",
+        async: !1,
+        success: function(e) {
+            if(e.code){
+                a();
+                tips(e.data);
+            }else{
+                tips(e.data,false);
+            }
+        },
+        error: function() {
+            return !1
+        }
+    });
+},
+addcancle = function(){
+    $(this).parent().parent().remove();
+},
+listdelete = function(){
+    let name = $(this).parent().parent().find('.usb_name').text();
+    $.ajax({
+        url: e + "del&name="+ name,
+        dataType: "json",
+        async: !1,
+        success: function(e) {
+            if(e.code){
+                a();
+                tips(e.data);
+            }else{
+                tips(e.data,false);
+            }
+        },
+        error: function() {
+            return !1
+        }
+    });
+},
+editcancle = function(){
+    let name = $(this).parent().parent().find('.usb_name').text();
+    let user= $(this).parent().parent().find('.usb_user').data('old');
+    let desc = $(this).parent().parent().find('.usb_desc').data('old');
+    let t =  "<td class='usb_name'>"+name+"</td><td width='20%' class='usb_user'>"+user+"</td><td width='20%' class='usb_desc'>"+desc+"</td><td width='20%'>"+ 
+    "<a href='javascript:void(0)' class='button edit' >" + "编辑" + "</a><a href='javascript:void(0)' class='button delete'>" + "删除" + "</a></td>";
+    $(this).parent().parent().html(t);
+},
+getusbsidcancle = function(){
+$('.getusbsid_frame',parent.document).remove();
+},
+getusbsidok = function(){
+  let name = $(".getusbsid_frame .frame_context_value .usb_sid",parent.document).text();
+  add(name);
+  $('.getusbsid_frame',parent.document).remove();
+},
+c = function() {
+    $(".setting_usblist_whitelist a.add").live("click",getusbsid);
+    // $(".setting_usblist_whitelist a.add").live("click",add);
+    $(".setting_usblist_whitelist a.edit").live("click",edit);
+    $(".setting_usblist_whitelist a.addsave").live("click",addsave);
+    $(".setting_usblist_whitelist a.editsave").live("click",editsave);
+    $(".setting_usblist_whitelist a.delete").live("click",listdelete);
+    $(".setting_usblist_whitelist a.editcancle").live("click",editcancle);
+    $(".setting_usblist_whitelist a.addcancle").live("click",addcancle);
+    $(".getusbsid_frame .getusbsidok",parent.document).live("click",getusbsidok);
+    $(".getusbsid_frame .getusbsidcancle",parent.document).live("click",getusbsidcancle);
+    $('input:radio[name="settingUsbStatus"]').live("click",function(){
+        var checkValue = $('input:radio[name="settingUsbStatus"]:checked').val();
+        $.ajax({
+            url: "/index.php?usbpolicy/edit&policy="+ checkValue,
+            dataType: "json",
+            async: !1,
+            success: function(e) {
+                tips(e.data);
+            },
+            error: function() {
+                return !1
+            }
+        });
+    });
+},
+d = function() {
+    return t
+}
+;
+return {
+    getData: d,
+    init: a,
+    bindEvent: c
+}
+}),
 define("app/src/setting/group", [], function() {
     var e = "index.php?group/"
       , 
@@ -1442,7 +1645,7 @@ define("app/src/setting/member", [], function() {
     }
     , 
     o = function() {
-        var t = "<tr class='title'><td width=''>" + LNG.username + "</td>" + "<td width='25%'>" + LNG.group_name + "</td>" + "<td width='35%'>" + LNG.action + "</td>" + "</tr>"
+        var t = "<tr class='title'><td width=''>" + LNG.username + "</td>" + "<td width='20%'>" + LNG.group_name + "</td>" + "<td width='35%'>" + LNG.action + "</td>" + "</tr>"
           , 
         n = objectKeys(i);
         a = "";
@@ -1485,8 +1688,7 @@ define("app/src/setting/member", [], function() {
     l = function() {
         var e = r("add");
         $(e).insertAfter(".member table#list tr:last")
-    }
-    , 
+    }, 
     c = function() {
         var e = $(this).parent().parent();
         $(e).detach()

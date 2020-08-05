@@ -231,7 +231,7 @@ $L= array(
 	"save_success"               =>	"设置成功!",	
 	"success"                    =>	"操作成功",
 	"error"                      =>	"操作失败",
-	"error_repeat"               =>	"'操作失败，请注意名称不能重复！'",	
+	"error_repeat"               =>	"操作失败，请注意名称不能重复!",	
 	"system_error"               =>	"系统错误",
 	"name"                       =>	"名称",
 	"type"                       =>	"类型",
@@ -414,7 +414,10 @@ $L= array(
 
 	//设置
 	"setting"                    =>	"系统设置", 	
-	"setting_title"              =>	"选项",     
+	"setting_title"              =>	"选项",
+	"setting_usblist"  			 =>	"USB管理",
+	"setting_usblist_method"  	 =>	"U盘接入策略",
+	"setting_usblist_whitelist"  =>	"U盘白名单",
 	"setting_user"               =>	"密码修改",
 	"setting_password"           =>	"修改密码",	
 	"setting_password_old"       =>	"原密码",
