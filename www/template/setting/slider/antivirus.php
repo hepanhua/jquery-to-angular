@@ -43,19 +43,10 @@ if (isset($av_status) && ($av_status == 2)){
 		<div style="display:flex;align-items:center">
 		<input style="margin:0;" type="checkbox" id='antivirus_file' name="antivirus_file" 
 		<?php
-		if ($antivirus_file==1) {
-		?>	
+		if ($antivirus_file==1) { ?>	
 		checked='true' 
-		<?php
-		}
-		?>
-		<?php
-		if ($antivirus_key==NULL) {
-		?>	
-		disabled 
-		<?php
-		}
-		?>/>         
+		<?php } ?>/>
+		<!-- if ($antivirus_key==NULL) {disabled } -->
 		<span class="text" style="margin-left:8px;"><?php echo $L['antivirus_file_tips'];?></span>
 		</div>
 	
