@@ -3765,9 +3765,9 @@ if(json.value.username == 'root'){
 					if (e.code){
 						t = e.data;
 						if (t.result == 0){
-							core.tips.tips(LNG.umount_success);
+							core.tips.tips(usbid + LNG.umount_success);
 						}else{
-							core.tips.tips(LNG.umount_failed, "warning");
+							core.tips.tips(usbid + LNG.umount_failed, "warning");
 						}
 					}
 				}

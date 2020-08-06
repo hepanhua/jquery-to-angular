@@ -171,10 +171,15 @@ class explorer extends Controller{
       return;
     }
     private function _umount_usb($usbid){
-    	system('/bin/usbumount ' .$usbid, $retval);
+        system('/bin/usbumount ' .$usbid, $retval);
+        if($retval == 0){
+            write_audit('信息','安全弹出','成功',$usbid.'卸载成功');
+        }else{
+            write_audit('信息','安全弹出','失败',$usbid.'卸载失败');
+        }
     	$data = array(
     		'result' => $retval
-    	);
+        );
     	show_json($data);
       return;
     }

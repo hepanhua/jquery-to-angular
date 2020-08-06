@@ -339,8 +339,8 @@ $L= array(
 	"double_click_rename"        =>	"双击名称重命名",
 	"double_click_open"          =>	"双击打开",
 	"path_null"                  =>	"该文件夹为空，可以拖拽文件到该窗口上传。",	
-	"umount_success"						 => "USB卸载成功，请拔出U盘",
-	"umount_failed"						   => "USB卸载失败，U盘中有文件正在使用中，请稍后再试。",
+	"umount_success"						 => "卸载成功，请拔出U盘",
+	"umount_failed"						   => "卸载失败，U盘中有文件正在使用中，请稍后再试。",
 
 	//上传下载
 	"upload"                     =>	"上传",
