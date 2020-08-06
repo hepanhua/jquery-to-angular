@@ -1233,6 +1233,22 @@ a = function() {
         dataType: "json",
         async: !1,
         success: function(e) {
+            // console.log(e);
+            if(!e.data){
+                $("input[type=radio][name=settingUsbStatus][value='0']").attr("checked",true);
+        $.ajax({
+            url: "/index.php?usbpolicy/edit&policy=0",
+            dataType: "json",
+            async: !1,
+            success: function(e) {
+                tips(e.data);
+            },
+            error: function() {
+                return !1
+            }
+        });
+                return;
+            }
             $("input[type=radio][name=settingUsbStatus][value="+e.data+"]").attr("checked",true);
         },
         error: function() {
@@ -1401,8 +1417,7 @@ c = function() {
 },
 d = function() {
     return t
-}
-;
+};
 return {
     getData: d,
     init: a,
