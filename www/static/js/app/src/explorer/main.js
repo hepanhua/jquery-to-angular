@@ -3360,7 +3360,11 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 									color = "background:orange!important;";
 								}
 							}
-			$(".usbStorage").append('<div class="usbRow"><div>'+e.data[k].usages[g].dev+'</div><div class="usbProgress"><div style="width:'+e.data[k].usages[g].usage+'%;'+color+'"></div></div><div class="usbPercent">'+e.data[k].usages[g].usage+'%</div></div>');
+							let dev = e.data[k].usages[g].dev;
+							if(dev.length > 4){
+								dev =  dev.substr(dev.length-4);
+							}
+			$(".usbStorage").append('<div class="usbRow"><div>'+dev+'</div><div class="usbProgress"><div style="width:'+e.data[k].usages[g].usage+'%;'+color+'"></div></div><div class="usbPercent">'+e.data[k].usages[g].usage+'%</div></div>');
 		}
 	}
 	
