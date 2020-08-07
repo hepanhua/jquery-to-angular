@@ -3637,6 +3637,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 							break;
 						case "usbevent":
 							if(json.value == 1){
+								$("#usbname_loading").text(json.channelId + "挂载中");
 								$(".usb_mount").removeClass('hidden');
 								if(!Config.usbMountTime){
 									Config.usbMountTime = setTimeout(() => {

@@ -282,7 +282,7 @@
 	
 	<div class="usb_mount hidden">
 	<div class="usb_mount_sf">
-	<span>存储器挂载中</span>
+	<span id="usbname_loading">存储器挂载中</span>
 	<div ><img src="./static/images/loading_simple.gif"></div>
 	</div>
 	</div>
