@@ -5598,7 +5598,7 @@ $(document).on('click', '.antivirus_update_end', function () {
 
 $(document).on('click', '.close_antivirus', function () {
 	$('.antivirus_update').addClass('hidden');
-	$('.ant_update_small').removeClass('hidden');
+	$('.ant_update_small').css('display','flex');
 });
 
 
@@ -5610,7 +5610,7 @@ $(document).on('click', '.hidden_ant_update_small', function () {
 
 
 $(document).on('click', '.ant_update_small', function () {
-	$('.ant_update_small').addClass('hidden');
+	$('.ant_update_small').css('display','none');
 	$('.antivirus_update').removeClass('hidden');
 });
 
