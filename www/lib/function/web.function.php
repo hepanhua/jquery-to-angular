@@ -357,6 +357,7 @@ function get_file_mime($ext){
 		"asf" => "video/x-ms-asf",
 		"asr" => "video/x-ms-asf",
 		"asx" => "video/x-ms-asf",
+		"mxf" => "application/mxf",
 		"au" => "audio/basic",
 		"avi" => "video/x-msvideo",
 		"axs" => "application/olescript",

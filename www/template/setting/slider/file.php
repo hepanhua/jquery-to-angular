@@ -61,8 +61,8 @@
             <a class="tag" href="javascript:;" data-role='video:lsf'>
                 <input type="checkbox" class="checkbox"><span>lsf</span>
             </a>
-             <a class="tag" href="javascript:;" data-role='video:asx'>
-                <input type="checkbox" class="checkbox"><span>asx</span>
+             <a class="tag" href="javascript:;" data-role='video:mxf'>
+                <input type="checkbox" class="checkbox"><span>mxf</span>
             </a>
             <div style="clear:both;"></div>
         </div>
