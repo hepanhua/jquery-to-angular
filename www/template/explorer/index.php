@@ -294,6 +294,47 @@
 	</div>
 	</div>
 
+
+	<!-- 病毒库升级 -->
+	<div class="updateframe  antivirus_update hidden">
+    <div class="updateframe_flex">
+      <img src="./static/images/CLOSE.png" class="close_antivirus">
+      <div class="box_rotate_loading">
+        <div class="box_bordera">  
+          <div class="box_context"></div>
+        </div>  
+        <div class="box_borderb">
+          <div class="box_context"></div>
+        </div>
+      </div>
+
+		  <div  class="ant_update_text">病毒库更新中</div>
+                <div class="updateprogress">
+                    <div class="updateprogress_bar">
+                        <div class="updateprogress_value">0</div>
+                    </div>
+                </div>
+                <!-- <div class="antivirus_alwayshidden">
+                  <input type="checkbox">本次更新完成前,始终隐藏在右下角
+                </div> -->
+                <div class="loading_btn_frame">
+                  </div>
+            </div>
+  </div>
+  
+
+  <div class="ant_update_small hidden">
+    <div class="hidden_ant_update_small">隐藏</div>
+    <div>病毒库更新中</div>
+    <div style="display: flex;align-items: center;">
+      <div class="ant_update_progress">
+        <div style="width:0%;"></div>
+      </div>
+      <div class="ant_update_percent">11%</div>
+    </div>
+  </div>
+	<!-- 病毒库升级end -->
+
 <?php include(TEMPLATE.'common/footer.html');?>
 <script src="<?php echo STATIC_PATH;?>js/lib/seajs/sea.js?ver=<?php echo SECROS_VERSION;?>"></script>
 <script src="./index.php?user/common_js&type=explorer&id=<?php echo rand_string(8);?>"></script>

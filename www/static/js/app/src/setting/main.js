@@ -1868,8 +1868,23 @@ define("app/src/setting/antivirus", [], function() {
             }
         })
     },
+    update=function(){
+        $.ajax({
+            url: '/cgi-bin/avupgrade.cgi',
+            dataType: "json",
+            success: function(res) {
+                if (res.code == 200){
+                    tips("病毒库升级已启动");
+                }
+                else{
+                    tips(res.msg,false);
+                }
+            }
+        });
+    },
     m = function() {
-        $(".antivirus a.av_save").live("click", d)
+        $(".antivirus a.av_save").live("click", d);
+        $(".antivirus a.av_update").live("click", update);
     }
     ;
     return {

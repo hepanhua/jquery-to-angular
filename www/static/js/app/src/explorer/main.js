@@ -3606,6 +3606,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				mqttclient.subscribe("sample-values/USBOX/usbevent/#"); 
 				mqttclient.subscribe("sample-values/USBOX/avscan/#");
 				mqttclient.subscribe("sample-values/USBOX/virus/#");
+				mqttclient.subscribe("sample-values/USBOX/avupdate/progress/#");
 			}
 			//连接失败事件
 			function onError(e) {
@@ -3740,6 +3741,27 @@ if(json.value.username == 'root'){
 							$('.infected_txt').html(lshtml);
 							//end
 							break;
+
+							case "avupdate": //存在进程文件
+							if(json.value.progress == -1){
+								break;
+							}
+							$('.ant_update_text').text("病毒库更新中");
+							$('.ant_update_small').removeClass('hidden');
+							let ant_r = Math.round(json.value.downloaded/json.value.totalsize*100);
+							let ant_pen =  ant_r + '%';
+							$('.ant_update_progress div').css('width', ant_pen);
+							$('.ant_update_percent').text(ant_pen);
+							$('.antivirus_update .updateprogress_bar').css('width',ant_pen);
+							$('.antivirus_update .updateprogress_value').text(ant_pen);
+							if (ant_pen == '100%') {
+								$('.ant_update_small').addClass('hidden');
+								$('.antivirus_update').removeClass('hidden');
+							$('.ant_update_text').text("本次病毒库更新完成");
+						$('.antivirus_update .loading_btn_frame').append('<div class="loading_btn antivirus_update_end">确认</div>');
+							}
+							break;
+
 						default:
 							break;
 					}
@@ -5564,6 +5586,44 @@ $(document).on('click', '.loading_btn_cancle', function () {
 
 });
 
+
+
+
+
+
+$(document).on('click', '.antivirus_update_end', function () {
+	$('.antivirus_update').addClass('hidden');
+	$('.ant_update_small').addClass('hidden');
+});
+
+$(document).on('click', '.close_antivirus', function () {
+	$('.antivirus_update').addClass('hidden');
+	$('.ant_update_small').removeClass('hidden');
+});
+
+
+$(document).on('click', '.hidden_ant_update_small', function () {
+	stopPropagation();
+	$('.ant_update_small').css('display','none');
+	return false;
+});
+
+
+$(document).on('click', '.ant_update_small', function () {
+	$('.ant_update_small').addClass('hidden');
+	$('.antivirus_update').removeClass('hidden');
+});
+
+
+
+function stopPropagation(e) {  
+	e = e || window.event;  
+	if(e.stopPropagation) { //W3C阻止冒泡方法  
+		e.stopPropagation();  
+	} else {  
+		e.cancelBubble = true; //IE阻止冒泡方法  
+	}  
+}
 
 
 $(document).on('click', '.loading_btn_details', function () {

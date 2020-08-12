@@ -545,6 +545,7 @@ $L= array(
 	"button_cancel"              =>	"取消",
 	"button_edit"                =>	"编辑",
 	"button_ai"               	 =>	"开始学习",
+	"button_update"              =>"更新病毒库",
 	"button_save"                =>	"确定",
 	"button_save_all"           =>	"保存全部设置",	
 	"button_not_save"            =>	"不保存",

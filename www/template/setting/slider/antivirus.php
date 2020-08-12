@@ -76,7 +76,8 @@ if (isset($av_status) && ($av_status == 2)){
 
 
   <div class="box_line">
-    <a href="javascript:void(0);" class="av_save button"><?php echo $L['button_save'];?></a>
+	<a href="javascript:void(0);" class="av_save button"><?php echo $L['button_save'];?></a>
+	<a href="javascript:void(0);" class="av_update button"><?php echo $L['button_update'];?></a>
   </div>
   <div style="clear:both;"></div>
 </div>
