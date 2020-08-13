@@ -3662,9 +3662,9 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 								ui.tree.init();//刷新树目录
 								let nowpath = $('#yarnball_input #path').val();
 								let lsarr = nowpath.split('/');
-								if (lsarr[0] == '*usbox*' || lsarr[1] == json.channelId) {
+								core.tips.tips(json.channelId + '已经拔出', true);
+								if (lsarr[1] == json.channelId) {
 									ui.path.list('*usbox*');
-									core.tips.tips(json.channelId + '已经拔出', true);
 								}
 							}
 
@@ -3794,12 +3794,10 @@ if(json.value.username == 'root'){
 		checkUsbchange: m,
 		refresh: p,
 		safeout: function(e,usbid) {
-			console.log(usbid);
 			$.ajax({
 				url: Config.treeAjaxURL + "&type=umount"+"&usbid="+usbid,
 				dataType: "json",
 				success: function(e){
-					console.log(e);
 					if (e.code){
 						t = e.data;
 						if (t.result == 0){
