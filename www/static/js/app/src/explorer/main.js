@@ -3746,7 +3746,21 @@ if(json.value.username == 'root'){
 							if(!json.value){
 								break;
 							}
+							if(json.value.totalsize == 0){
+							$('.ant_update_small').addClass('hidden');
+							$('.antivirus_update').removeClass('hidden');
+							$('.antivirus_update .loading_btn_frame').html('<div class="loading_btn antivirus_update_end">确认</div>');
+							$('.ant_update_progress div').css('width','100%');
+							$('.ant_update_percent').text('100%');
+							$('.antivirus_update .updateprogress_bar').css('width','100%');
+							$('.antivirus_update .updateprogress_value').text('100%');
+							$('.ant_update_text').text("病毒库已更新至最新");
+							$('.small_progree_title').text("病毒库已更新至最新");
+								break;
+							}
 							$('.ant_update_text').text("病毒库更新中");
+							$('.small_progree_title').text("病毒库更新中");
+							$('.antivirus_update .loading_btn_frame').empty();
 							$('.ant_update_small').removeClass('hidden');
 							let ant_r = Math.round(json.value.downloaded/json.value.totalsize*100);
 							let ant_pen =  ant_r + '%';
@@ -3757,8 +3771,9 @@ if(json.value.username == 'root'){
 							if (ant_pen == '100%') {
 								$('.ant_update_small').addClass('hidden');
 								$('.antivirus_update').removeClass('hidden');
-							$('.ant_update_text').text("本次病毒库更新完成");
-						$('.antivirus_update .loading_btn_frame').append('<div class="loading_btn antivirus_update_end">确认</div>');
+							$('.ant_update_text').text("病毒库已更新至最新");
+							$('.small_progree_title').text("病毒库已更新至最新");
+						$('.antivirus_update .loading_btn_frame').html('<div class="loading_btn antivirus_update_end">确认</div>');
 							}
 							break;
 
@@ -5609,12 +5624,14 @@ $(document).on('click', '.antivirus_update_end', function () {
 
 $(document).on('click', '.close_antivirus', function () {
 	$('.antivirus_update').addClass('hidden');
+	$('.ant_update_small').removeClass('hidden');
 	$('.ant_update_small').css('display','flex');
 });
 
 
 $(document).on('click', '.hidden_ant_update_small', function () {
 	stopPropagation();
+	$('.ant_update_small').addClass('hidden');
 	$('.ant_update_small').css('display','none');
 	return false;
 });
@@ -5622,6 +5639,7 @@ $(document).on('click', '.hidden_ant_update_small', function () {
 
 $(document).on('click', '.ant_update_small', function () {
 	$('.ant_update_small').css('display','none');
+	$('.ant_update_small').addClass('hidden');
 	$('.antivirus_update').removeClass('hidden');
 });
 

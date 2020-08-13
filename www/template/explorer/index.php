@@ -325,7 +325,7 @@
 
   <div class="ant_update_small hidden">
     <div class="hidden_ant_update_small">隐藏</div>
-    <div>病毒库更新中</div>
+    <div class="small_progree_title">病毒库更新中</div>
     <div style="display: flex;align-items: center;">
       <div class="ant_update_progress">
         <div style="width:0%;"></div>
