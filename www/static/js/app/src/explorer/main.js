@@ -3606,7 +3606,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				mqttclient.subscribe("sample-values/USBOX/usbevent/#"); 
 				mqttclient.subscribe("sample-values/USBOX/avscan/#");
 				mqttclient.subscribe("sample-values/USBOX/virus/#");
-				mqttclient.subscribe("sample-values/USBOX/avupdate/progress/#");
+				mqttclient.subscribe("sample-values/USBOX/avupdate/progress");
 			}
 			//连接失败事件
 			function onError(e) {
@@ -3743,7 +3743,7 @@ if(json.value.username == 'root'){
 							break;
 
 							case "avupdate": //存在进程文件
-							if(json.value.progress == -1){
+							if(!json.value){
 								break;
 							}
 							$('.ant_update_text').text("病毒库更新中");
@@ -5594,6 +5594,17 @@ $(document).on('click', '.loading_btn_cancle', function () {
 $(document).on('click', '.antivirus_update_end', function () {
 	$('.antivirus_update').addClass('hidden');
 	$('.ant_update_small').addClass('hidden');
+	let msg = {
+"channelId": "progress",
+"monitoringUnitId": "USBOX",
+"sampleUnitId": "avupdate",
+"value":null
+		};
+		var message = new Paho.MQTT.Message(JSON.stringify(msg));
+		message.destinationName = "sample-values/USBOX/avupdate/progress";
+		message.qos = 0;
+		message.retained = true;
+		mqttclient.send(message);
 });
 
 $(document).on('click', '.close_antivirus', function () {
