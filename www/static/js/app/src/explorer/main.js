@@ -3719,21 +3719,25 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 							$('#reboot_progress_value').text(pen);
 
 							if (pen == '100%') {
+								let roottip = '';
+								if(json.value.username){
+									if(json.value.username == 'root'){
+										roottip = '按位置';
+										$('.loading_btn_cancle').addClass('hidden');
+									}else{
+										roottip = '';
+										$('.loading_btn_cancle').removeClass('hidden');
+									}
+								}
 								if (json.value.infected > 0) {
-									lshtml = '<div>'+usbout+'扫描已完成,发现<span style="color:red">' + json.value.infected + '个</span>危险项</div>';
+									lshtml = '<div>'+usbout+roottip+'扫描已完成,发现<span style="color:red">' + json.value.infected + '个</span>危险项</div>';
 								} else {
-									lshtml = '<div>'+usbout+'扫描已完成，暂未发现危险项</div>';
+									lshtml = '<div>'+usbout+roottip+'扫描已完成，暂未发现危险项</div>';
 								}
 								$('.rad1').removeClass('radar_ani');
 								$('.rad2').removeClass('boo_ani');
 								$('.loading_btn_frame').removeClass('hidden');
-								if(json.value.username){
-if(json.value.username == 'root'){
-	$('.loading_btn_cancle').addClass('hidden');
-}else{
-	$('.loading_btn_cancle').removeClass('hidden');
-}
-								}
+								
 							} else {
 								$('.loading_btn_frame').addClass('hidden');
 							}
@@ -4116,8 +4120,6 @@ if(json.value.username == 'root'){
 			},
 			callback: {
 				onClick: function (e, t, a) {
-					// console.log(e); //事件
-					// console.log(t);// dom 对象
 					select_path = a.path + a.name + '/';
 					return s.selectNode(a), s.expandNode(a),
 						"folder" != a.type || "editor" != Config.pageApp ? 0 == a.level ? ("explorer" == Config.pageApp && void 0 != a.this_path,
@@ -4849,7 +4851,8 @@ if(json.value.username == 'root'){
 
 		}
 		},
-		b = function(e) {
+		b = function(s) {
+			let e = s[0].path;
 			if (core.scanvirusCheck() && e) {
 				var t = "index.php?explorer/scanvirus&path=" + urlEncode2(e);
 				G.share_page !== void 0 && (t = "index.php?share/scanvirus&user=" + G.user + "&sid=" + G.sid + "&path=" + urlEncode2(e));
@@ -5403,11 +5406,16 @@ define("app/src/explorer/path", ["../../common/pathOperate", "../../tpl/fileinfo
 			}
 		},
 		scanvirus: function() {
-			//var e = b(!0);
+			var e = b(!0);
+			if(e.length == 1){
+				a.scanvirus(b(!0));
+			}else{
+				tips('请选择单个文件或文件夹',false);
+			}
 			//1 == e.length && "file" == e[0].type ? a.download(b().path) : t.zipDownload(e)
 			//if (1 == e.length && "file" == e[0].type){
-			if (G.this_path != "/")
-				a.scanvirus(G.this_path);
+			// if (G.this_path != "/")
+			// 	a.scanvirus(b(!0));
 			//}
 		},
 		share_edit: function() {
@@ -5578,7 +5586,6 @@ $(document).on('click', '.loading_btn_cancle', function () {
 					url: "index.php?explorer/treeList&app=explorer&type=umount&usbid=" + usbout,
 					dataType: "json",
 					success: function (e) {
-						// console.log(e);
 						$('.canvasframe').addClass('hidden');//隐藏loading界面
 						$('.loading_btn_frame').addClass('hidden');//隐藏loading按钮
 					
@@ -5661,7 +5668,6 @@ $(document).on('click', '.av_hidden', function () {
 });
 $(document).on('click', '.getusbsid_frame_warning .usbwhitekonw', function () {
 	let channelId = $('.channelId').text();
-	// console.log(channelId);
 	cleanusbevent(channelId);
 	$(".getusbsid_frame_warning").addClass('hidden');
 });

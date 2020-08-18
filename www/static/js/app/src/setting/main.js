@@ -1233,7 +1233,6 @@ a = function() {
         dataType: "json",
         async: !1,
         success: function(e) {
-            // console.log(e);
             if(!e.data){
                 $("input[type=radio][name=settingUsbStatus][value='0']").attr("checked",true);
         $.ajax({
