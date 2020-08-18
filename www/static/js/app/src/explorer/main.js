@@ -3705,11 +3705,19 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 
 							usbout = json.channelId;
 							let lshtml = null;
+							let roottip = '';
+								if(json.value.username){
+									if(json.value.username == 'root'){
+										roottip = '按位置';
+									}else{
+										roottip = '';
+									}
+								}
 							if (json.value.infected > 0) {
-								lshtml = '<div>'+usbout+'扫描进行中,发现<span style="color:red">' + json.value.infected + '个</span>危险项</div>';
+								lshtml = '<div>'+usbout+roottip+'扫描进行中,发现<span style="color:red">' + json.value.infected + '个</span>危险项</div>';
 								$('.loading_btn_details').removeClass('hidden');
 							} else {
-								lshtml = '<div>'+usbout+'扫描进行中，暂未发现危险项</div>';
+								lshtml = '<div>'+usbout+roottip+'扫描进行中，暂未发现危险项</div>';
 								$('.loading_btn_details').addClass('hidden');
 							}
 
@@ -3719,13 +3727,10 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 							$('#reboot_progress_value').text(pen);
 
 							if (pen == '100%') {
-								let roottip = '';
 								if(json.value.username){
 									if(json.value.username == 'root'){
-										roottip = '按位置';
 										$('.loading_btn_cancle').addClass('hidden');
 									}else{
-										roottip = '';
 										$('.loading_btn_cancle').removeClass('hidden');
 									}
 								}

@@ -503,7 +503,7 @@ class explorer extends Controller{
         file_put_out($this->path,true);
     }
     public function scanvirus(){
-        system('/bin/avscan '.$this->path);
+        system('/bin/avscan "'.$this->path.'"');
     }
     //文件下载后删除,用于文件夹下载
     public function fileDownloadRemove(){
