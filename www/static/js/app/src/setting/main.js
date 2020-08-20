@@ -1854,6 +1854,7 @@ define("app/src/setting/antivirus", [], function() {
         if(!zipdealmethod){
             return tips(LNG.antivirus_zipdeal_not_null, "error");
         }
+        
 				$.ajax({
             url: t + "?key=" + key + "&antivirus_file=" + a + "&antivirus_policy=" + dealmethod + "&antivirus_compress=" + zipdealmethod,
             dataType: "json",
