@@ -6,6 +6,7 @@
 <?php
 $antivirus_key  = config_get_value_from_file('/mnt/config/antivirus.conf','Key');
 $antivirus_policy = config_get_value_from_file('/mnt/config/antivirus.conf','antivirus_policy');
+$antivirus_compress =config_get_value_from_file('/mnt/config/antivirus.conf','antivirus_compress');
 $antivirus_signatures = config_get_value_from_file('/mnt/config/antivirus.conf','Signature_number');
 $antivirus_updatetime = config_get_value_from_file('/mnt/config/antivirus.conf','Update_time');
 $antivirus_expiretime = config_get_value_from_file('/mnt/config/antivirus.conf','License_expiredate');
@@ -74,6 +75,28 @@ if (isset($av_status) && ($av_status == 2)){
 		</div>
 	</div>
 
+	<div class="box_line" style="display:flex;align-items:center">
+		<span class='infotitle'><?php echo $L['antivirus_zipdealmethod'];?>:</span>
+		<div style="display:flex;align-items:center">
+<input type="radio" name="zipdeal" value="0"  style="margin: 0;border: none!important;box-shadow: none!important;"
+<?php
+		if ($antivirus_compress != "1") {
+		?>	
+		checked='true' 
+		<?php
+		}
+		?>/> <?php echo $L['antivirus_zippass'];?>
+<input type="radio" name="zipdeal" value="1"  style="margin: 0;margin-left:22px;border: none!important;box-shadow: none!important;"
+<?php
+		if ($antivirus_compress=="1") {
+		?>	
+		checked='true' 
+		<?php
+		}
+		?>/> <?php echo $L['antivirus_zipscan'];?>
+		</div>
+		<div style="color: #bbb;font-size: 12px;padding-left: 10px;"><?php echo $L['antivirus_ziptips'];?></div>
+	</div>
 
   <div class="box_line">
 	<a href="javascript:void(0);" class="av_save button"><?php echo $L['button_save'];?></a>

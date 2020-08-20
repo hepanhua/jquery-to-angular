@@ -1838,6 +1838,7 @@ define("app/src/setting/antivirus", [], function() {
     d = function() {
         var key = $("#key").val();
         var dealmethod = $("input[name='deal']:checked").val();
+        var zipdealmethod = $("input[name='zipdeal']:checked").val();
         if ($("#antivirus_file").attr("checked")) {
          a = 1;
         }
@@ -1850,8 +1851,11 @@ define("app/src/setting/antivirus", [], function() {
         if(!dealmethod){
             return tips(LNG.antivirus_deal_not_null, "error");
         }
+        if(!zipdealmethod){
+            return tips(LNG.antivirus_zipdeal_not_null, "error");
+        }
 				$.ajax({
-            url: t + "?key=" + key + "&antivirus_file=" + a + "&antivirus_policy=" + dealmethod,
+            url: t + "?key=" + key + "&antivirus_file=" + a + "&antivirus_policy=" + dealmethod + "&antivirus_compress=" + zipdealmethod,
             dataType: "json",
             success: function(e) {
                 if (e.code){

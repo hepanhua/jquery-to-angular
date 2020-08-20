@@ -3691,14 +3691,15 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 							if(json.value.progress == -1){
 								if(usbout == json.channelId){
 									$('.canvasframe').addClass('hidden');//隐藏loading界面
-									$('.loading_btn_frame').addClass('hidden');//隐藏loading按钮
+									$('.canvasframe .loading_btn_frame').addClass('hidden');//隐藏loading按钮
+									$('.canvasframe .shutdown_loading').removeClass('hidden');
 								}
 								break;
 							}
-							if ($('.canvasframe').length == 0) {
-								let hhh = '<div class="canvasframe hidden"> <div class="canvasframe_flex"> <div class="radar" id="radar"> <div class="rad1"></div> <div class="rad2"></div> </div> <div class="progress"> <div class="progress_bar" id="reboot_progress_bar"> <div class="progress_value" id="reboot_progress_value">0</div> </div> </div> <div class="infected_txt"></div> <div class="loading_btn_frame hidden"> <div class="loading_btn loading_btn_ok" style="margin-right:48px">确认</div> <div class="loading_btn loading_btn_cancle">取消</div><div class="loading_btn loading_btn_details hidden" style="margin-left:48px">查看详情</div> </div> </div> </div>';
-								$("body").append(hhh);
-							}
+							// if ($('.canvasframe').length == 0) {
+							// 	let hhh = '<div class="canvasframe hidden"> <div class="canvasframe_flex"> <div class="radar" id="radar"> <div class="rad1"></div> <div class="rad2"></div> </div> <div class="progress"> <div class="progress_bar" id="reboot_progress_bar"> <div class="progress_value" id="reboot_progress_value">0</div> </div> </div> <div class="infected_txt"></div> <div class="loading_btn_frame hidden"> <div class="loading_btn loading_btn_ok" style="margin-right:48px">确认</div> <div class="loading_btn loading_btn_cancle">取消</div><div class="loading_btn loading_btn_details hidden" style="margin-left:48px">查看详情</div> </div> </div> </div>';
+							// 	$("body").append(hhh);
+							// }
 							$('.canvasframe').removeClass('hidden');
 							$('.rad1').addClass('radar_ani');
 							$('.rad2').addClass('boo_ani');
@@ -3741,10 +3742,12 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 								}
 								$('.rad1').removeClass('radar_ani');
 								$('.rad2').removeClass('boo_ani');
-								$('.loading_btn_frame').removeClass('hidden');
+								$('.canvasframe .loading_btn_frame').removeClass('hidden');
+								$('.shutdown_loading').addClass('hidden');
 								
 							} else {
-								$('.loading_btn_frame').addClass('hidden');
+								$('.canvasframe .loading_btn_frame').addClass('hidden');
+								$('.shutdown_loading').removeClass('hidden');
 							}
 
 							$('.infected_txt').html(lshtml);
@@ -5555,11 +5558,21 @@ define("app/src/explorer/path", ["../../common/pathOperate", "../../tpl/fileinfo
 });
 
 
+//终止杀毒
+$(document).on('click', '.shutdown_loading_btn', function () {
+	$.ajax({
+		url: "index.php?explorer/avscanstop",
+		dataType: "json",
+		success: function (e) {
+		}
+	});
+});
 
 //确认则进入
 $(document).on('click', '.loading_btn_ok', function () {
 	$('.canvasframe').addClass('hidden');//隐藏loading界面
-	$('.loading_btn_frame').addClass('hidden');//隐藏loading按钮
+	$('.canvasframe .loading_btn_frame').addClass('hidden');//隐藏loading按钮
+	$('.canvasframe .shutdown_loading').removeClass('hidden');
 	$.ajax({
 		url: "index.php?explorer/deleteprogress",
 		dataType: "json",
@@ -5592,8 +5605,8 @@ $(document).on('click', '.loading_btn_cancle', function () {
 					dataType: "json",
 					success: function (e) {
 						$('.canvasframe').addClass('hidden');//隐藏loading界面
-						$('.loading_btn_frame').addClass('hidden');//隐藏loading按钮
-					
+						$('.canvasframe .loading_btn_frame').addClass('hidden');//隐藏loading按钮
+						$('.canvasframe .shutdown_loading').removeClass('hidden');
 						$.ajax({
 							url: "index.php?explorer/deleteprogress",
 							dataType: "json",

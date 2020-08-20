@@ -215,6 +215,10 @@
                 </div>
 			</div>
 			<div class="infected_txt"></div>
+	<div class="shutdown_loading  hidden">
+	<div class="loading_btn shutdown_loading_btn">终止扫描</div>
+	</div>
+
 			<div class="loading_btn_frame  hidden">
 	<div class="loading_btn loading_btn_ok">确认</div>
 	<div class="loading_btn loading_btn_cancle" style="margin-left:48px">取消</div>

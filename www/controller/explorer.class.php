@@ -505,6 +505,9 @@ class explorer extends Controller{
     public function scanvirus(){
         system('/bin/avscan "'.$this->path.'"');
     }
+    public function avscanstop(){
+        system('/bin/avscanstop ');
+    }
     //文件下载后删除,用于文件夹下载
     public function fileDownloadRemove(){
         $path = rawurldecode(_DIR_CLEAR($this->in['path']));

@@ -950,6 +950,9 @@ html { overflow-x: hidden; overflow-y: hidden;}
   .canvasframe_flex .loading_btn_frame{
     position: absolute;bottom:0;left:0;width:100%;height:64px;justify-content: center;align-items: center;display: flex;
   }
+  .canvasframe_flex .shutdown_loading{
+    position: absolute;bottom:0;left:0;width:100%;height:64px;justify-content: center;align-items: center;display: flex;
+  }
   .canvasframe_flex .loading_btn{
     text-decoration: none;
     cursor: pointer;
