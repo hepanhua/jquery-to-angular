@@ -248,8 +248,10 @@ class user extends Controller
             system('smbpasswd -a ' . $this->user['name'] . ' -P ' . $password_new . '>>/dev/null &');
             system('/usr/sbin/setusboxsmbd');
             setcookie('secros_token',md5(md5($password_new)),time()+3600*24*365);
+            write_audit('信息','修改密码','成功','修改密码');
             show_json('success');
         }else {
+            write_audit('信息','修改密码','失败',$this->L['old_password_error']);
             show_json($this->L['old_password_error'],false);
         }
     }

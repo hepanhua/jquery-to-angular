@@ -1154,7 +1154,7 @@ if(($('#upload #uploadfile')[0].files[0].size / 1024 /1024).toFixed(0)>200){
     alert(LNG.group_upload_tips);
     return false;
     }
-
+let stydy_name = $('#upload #uploadfile')[0].files[0].name;
 						var formData = new FormData($('#upload')[0]);
 			     //如果上传的文件不为空
 			     if($("input[type='file']").val() != ""){  
@@ -1171,11 +1171,17 @@ if(($('#upload #uploadfile')[0].files[0].size / 1024 /1024).toFixed(0)>200){
 			            data:formData,
 			            dataType:'JSON',
 			            success:function (data) {
+                            let code = 0;
 			                if (data.code == 0) {
-			                	tips(data.info);
+                                code = 1;
+                                tips(data.info);
 			                }else{
 			                	tips(data.info,"error");
-			              	}
+                              }
+                              $.ajax({
+                                url:'index.php?file/ai_study&name='+stydy_name+'&res='+code,
+                                dataType:'JSON',
+                                success:function(dd){}});
 			                obj.innerHTML='';
 			                $("input[type='file']").val()='';
 			            }

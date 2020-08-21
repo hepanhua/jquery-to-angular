@@ -11,17 +11,28 @@ class file extends Controller{
     	$filetype = $this->_init_data();
     	$this->sql->save(CONFIG_PATH.'filetype.php',$filetype);
     	system('/usr/sbin/setusboxftpd');
-    	system('/usr/sbin/setusboxsmbd');
+        system('/usr/sbin/setusboxsmbd');
+        write_audit('ä¿¡æ¯','æ–‡ä»¶ç™½åå•','æˆåŠŸ','è®¾ç½®æ–‡ä»¶ç™½åå•');
       show_json('success');
+    }
+    public function ai_study(){
+        $res = $this->in['res'];
+        $name = $this->in['name'];
+        $res_value = 'å¤±è´¥';
+        if($res == 1){
+            $res_value = 'æˆåŠŸ';
+        }
+        write_audit('ä¿¡æ¯','æ–‡ä»¶æ™ºèƒ½å­¦ä¹ ',$res_value,'å­¦ä¹ '.$name);
+        show_json(true);
     }
     public function get(){
         show_json($this->sql->get());
     }
 
-    //===========ÄÚ²¿µ÷ÓÃ============
+    //===========ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½============
     /**
-     * ³õÊ¼»¯Êý¾Ý get   
-     * Ö»´«¼ü¼´¿É  &ext_allow=''&vedio:avi&pic:bmp
+     * ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ get   
+     * Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  &ext_allow=''&vedio:avi&pic:bmp
      */
     private function _init_data(){
     	$filetype_arr['ext_allow'] = $this->in['ext_allow'];
