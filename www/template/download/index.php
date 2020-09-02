@@ -57,7 +57,7 @@ margin:0;
 				</td>
 			</tr>
 			<tr>
-			  <td width="10%">1</td>
+			  <td width="10%">2</td>
 				<td width="40%">usbforbid.rar</td>
 				<td width="30%">禁止电脑USB存储工具(需管理员权限运行)</td>
 				<td width="20%">
