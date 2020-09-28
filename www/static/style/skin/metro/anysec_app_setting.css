@@ -519,3 +519,9 @@ align-items: center;
     background: #ccc!important;
     cursor: no-drop!important;
 }
+.platform .box_line{
+    border:none!important;
+}
+.platform  .box_line input[type='text']{
+    width: 180px!important;
+}

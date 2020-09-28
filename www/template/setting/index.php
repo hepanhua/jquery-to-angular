@@ -11,6 +11,7 @@ http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 </head>
 <?php
 $antivirus  = config_get_unsign_int_from_file('/etc/system/quota.conf','antivirus');
+$platform = config_get_unsign_int_from_file('/etc/system/quota.conf','noc');
 ?>
 <body>
 	<div id="body">
@@ -33,6 +34,13 @@ $antivirus  = config_get_unsign_int_from_file('/etc/system/quota.conf','antiviru
 				}
 				?>
 					<li id="user"><i class="font-icon icon-user"></i><?php echo $L['setting_user'];?></li>
+				<?php
+				if ($platform != 1 && $GLOBALS['is_root']) {
+				?>	
+				<li id="platform"><i class="font-icon icon-star"></i><?php echo $L['setting_platform'];?></li>
+				<?php
+				}
+				?>
 			</ul>
 		</div>		
 		<div class='main'></div>

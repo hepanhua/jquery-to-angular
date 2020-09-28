@@ -1418,10 +1418,15 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			return "0B"
 		},
 		upload_check: function(e) {
-			if ("*usbox*/" == G.this_path) {
-				core.tips.tips(LNG.upload_error_rootdir, "warn");
+			let arr = G.this_path.split('/');
+			if(!arr[2]){
+				core.tips.tips(LNG.upload_error_rootdir,false);
 				return;
 			}
+			// if ("*usbox*/" == G.this_path) {
+			// 	core.tips.tips(LNG.upload_error_rootdir, "warn");
+			// 	return;
+			// }
 			return void 0 == e && (e = "explorer:fileUpload"), !G.is_root && AUTH.hasOwnProperty(e) && 1 != AUTH[e] ? (core.tips.tips(LNG.no_permission, !1), void 0) : "*recycle*/" == G.this_path || "*share*/" == G.this_path || "*share*/" == G.this_path || G.json_data && "writeable" != G.json_data.path_type ? (core.tips.tips(LNG.no_permission_write, !1), !1) : !0
 		},
 		upload: function() {
@@ -3688,6 +3693,8 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 							}
 							break;
 						case "avscan": //存在进程文件
+						json.value.topic = data.destinationName;
+						// console.log(json.value);
 							if(json.value.progress == -1){
 								if(usbout == json.channelId){
 									$('.canvasframe').addClass('hidden');//隐藏loading界面
@@ -4011,6 +4018,12 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			}
 		},
 		o = function(e, t) {
+			//新建文件夹
+			let arr = G.this_path.split('/');
+			if(!arr[2]){
+				core.tips.tips(LNG.bannewfolder,false);
+				return;
+			}
 			if (e) {
 				var a = core.pathThis(e);
 				return i(a) ? ($.ajax({
@@ -5214,6 +5227,11 @@ define("app/src/explorer/path", ["../../common/pathOperate", "../../tpl/fileinfo
 			})
 		},
 		m = function(e) {
+			let arr = G.this_path.split('/');
+			if(!arr[2]){
+				core.tips.tips(LNG.bannewfile,false);
+				return;
+			}
 			fileLight.clear(), void 0 == e && (e = "txt");
 			var a = "newfile",
 				a = u(a, e),
@@ -5242,6 +5260,11 @@ define("app/src/explorer/path", ["../../common/pathOperate", "../../tpl/fileinfo
 			})
 		},
 		v = function() {
+			let arr = G.this_path.split('/');
+			if(!arr[2]){
+				core.tips.tips(LNG.bannewfolder,false);
+				return;
+			}
 			fileLight.clear();
 			var e = LNG.newfolder,
 				e = u(e),

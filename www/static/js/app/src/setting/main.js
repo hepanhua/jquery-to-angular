@@ -1,4 +1,4 @@
-define("app/src/setting/main", ["lib/jquery-lib", "lib/util", "lib/artDialog/jquery-artDialog", "../../common/core", "../../tpl/copyright.html", "../../tpl/search.html", "../../tpl/search_list.html", "../../tpl/upload.html", "./setting", "./fav", "./group", "./member", "./antivirus", "./file","./system","./usblist"], function(e) {
+define("app/src/setting/main", ["lib/jquery-lib", "lib/util", "lib/artDialog/jquery-artDialog", "../../common/core", "../../tpl/copyright.html", "../../tpl/search.html", "../../tpl/search_list.html", "../../tpl/upload.html", "./setting", "./fav", "./group", "./member", "./antivirus","./platform", "./file","./system","./usblist"], function(e) {
     e("lib/jquery-lib"),
     e("lib/util"),
     e("lib/artDialog/jquery-artDialog"),
@@ -11,12 +11,14 @@ define("app/src/setting/main", ["lib/jquery-lib", "lib/util", "lib/artDialog/jqu
     Usblist = e("./usblist"),
     System = e("./system"),
     Antivirus = e("./antivirus"),
+    Platform = e("./platform"),
     Setting.init(),
     Fav.bindEvent(),
     Member.bindEvent(),
     Filetype.bindEvent(),
     Usblist.bindEvent(),
     Group.bindEvent(),
+    Platform.bindEvent(),
     Antivirus.bindEvent(),
     System.bindEvent()
 }),
@@ -793,6 +795,7 @@ define("app/src/setting/setting", [], function() {
     n = function() {
         G.is_root ? $("ul.setting #system").show() : $("ul.setting #system").hide(),
         G.is_root ? $("ul.setting #antivirus").show() : $("ul.setting #antivirus").hide(),
+        G.is_root ? $("ul.setting #platform").show() : $("ul.setting #platform").hide(),
         G.is_root ? $("ul.setting #net").show() : $("ul.setting #net").hide(),
         G.is_root ? $("ul.setting #usblist").show() : $("ul.setting #usblist").hide(),
         G.is_root ? $("ul.setting #file").show() : $("ul.setting #file").hide(),
@@ -1895,6 +1898,83 @@ define("app/src/setting/antivirus", [], function() {
     m = function() {
         $(".antivirus a.av_save").live("click", d);
         $(".antivirus a.av_update").live("click", update);
+    }
+    ;
+    return {
+        bindEvent: m
+    }
+}),
+define("app/src/setting/platform", [], function() {
+    var  url = "/cgi-bin/.cgi", 
+    d = function() {
+        let authmode = $("input[name='authmode']:checked").val();
+        let serverip = $("#serverip");
+        let monitoringUnitId = $("#monitoringUnitId");
+        let id = $("#id");
+        let password = $("#password");
+
+        var formData = new FormData();
+        formData.append("authmode",authmode);
+        formData.append("serverip",serverip);
+        formData.append("monitoringUnitId",monitoringUnitId);
+        if(authmode == '0'){
+            formData.append("id",id);
+            formData.append("password",password);
+        }else{
+            formData.append("file",$("#ssl_file")[0].files[0]);
+        }
+      
+        $.ajax({
+            url:'',
+            type:'post',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success:function(res){
+                if(res.code == 200){
+                }else{
+                }
+            }
+        })
+        // $.ajax({
+        //     url: url + "?serverip="+serverip+"&authomode="+authmode,
+        //     dataType: "json",
+        //     success: function(e) {
+        //         if (e.code){
+        //             $("#signatures").val(e.signature);
+        //             $("#update").val(e.updatetime);
+        //             $("#expire").val(e.expiredate);
+        //             tips(LNG.success);
+        //         }
+        //         else{
+        //             tips(e.msg,"error");
+        //         }
+        //     }
+        // })
+    },
+    m = function() {
+        $(".antivirus a.platform_save_save").live("click", d);
+        $("input[name='authmode']:checked").live("change", function() {
+            let value = $("input[name='authmode']:checked").val();
+if(value == "1"){
+$(".platform_typeb").removeClass("hidden");
+$(".platform_typea").addClass("hidden");
+}else{
+$(".platform_typea").removeClass("hidden");
+$(".platform_typeb").addClass("hidden");
+}
+        });
+        $("#ssl_file_btn_click").live("click",function(e){
+            document.getElementById("ssl_file").click();
+        });
+        $("#ssl_file").live("change",function(e){
+            let ls = e.currentTarget.files[0].name;
+            if(ls){
+                $('.select_file_nametext').text(e.currentTarget.files[0].name);
+            }else{
+                $('.select_file_nametext').text('');
+            }
+        });
     }
     ;
     return {

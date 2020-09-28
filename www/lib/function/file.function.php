@@ -948,6 +948,7 @@ function write_audit($type, $event, $result, $desc)
 		$db->exec("insert into auditlog (user,type,time,event,result,desc) values ('" . $_SESSION['secros_user']['name']  . "','" . $type . "','" . $now_time  . "','" . $event . "','" . $result . "','" . $desc . "')");
 	}
 	$db->close();
+	
 }
 
 
