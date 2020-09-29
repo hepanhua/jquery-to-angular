@@ -35,7 +35,7 @@ $platform = config_get_unsign_int_from_file('/etc/system/quota.conf','noc');
 				?>
 					<li id="user"><i class="font-icon icon-user"></i><?php echo $L['setting_user'];?></li>
 				<?php
-				if ($platform != 1 && $GLOBALS['is_root']) {
+				if ($platform == 1 && $GLOBALS['is_root']) {
 				?>	
 				<li id="platform"><i class="font-icon icon-star"></i><?php echo $L['setting_platform'];?></li>
 				<?php

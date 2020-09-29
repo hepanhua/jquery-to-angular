@@ -1905,37 +1905,43 @@ define("app/src/setting/antivirus", [], function() {
     }
 }),
 define("app/src/setting/platform", [], function() {
-    var  url = "/cgi-bin/.cgi", 
+    var  url = "/cgi-bin/setnoc.cgi", 
     d = function() {
         let authmode = $("input[name='authmode']:checked").val();
-        let serverip = $("#serverip");
-        let monitoringUnitId = $("#monitoringUnitId");
-        let id = $("#id");
-        let password = $("#password");
+        let serverip = $("#serverip").val();
+        let monitoringUnitId = $("#monitoringUnitId").val();
+        let id = $("#id").val();
+        let password = $("#password").val();
 
         var formData = new FormData();
         formData.append("authmode",authmode);
         formData.append("serverip",serverip);
         formData.append("monitoringUnitId",monitoringUnitId);
-        if(authmode == '0'){
+        if(authmode == '1'){
             formData.append("id",id);
             formData.append("password",password);
         }else{
-            formData.append("file",$("#ssl_file")[0].files[0]);
+            if($("#ssl_file")[0].files[0]){
+                formData.append("certfile",$("#ssl_file")[0].files[0]);
+            }else{
+                tips('请添加要上传的证书',false);
+                return;
+            }
         }
-      
         $.ajax({
-            url:'',
+            url:url,
             type:'post',
             data: formData,
             contentType: false,
             processData: false,
             success:function(res){
-                if(res.code == 200){
-                }else{
-                }
+             if(res.code == 200){
+                tips(LNG.success);
+             }else{
+                tips(e.msg,"error");
+             }
             }
-        })
+        });
         // $.ajax({
         //     url: url + "?serverip="+serverip+"&authomode="+authmode,
         //     dataType: "json",
@@ -1953,10 +1959,10 @@ define("app/src/setting/platform", [], function() {
         // })
     },
     m = function() {
-        $(".antivirus a.platform_save_save").live("click", d);
+        $(".platform a.platform_save").live("click", d);
         $("input[name='authmode']:checked").live("change", function() {
             let value = $("input[name='authmode']:checked").val();
-if(value == "1"){
+if(value == "2"){
 $(".platform_typeb").removeClass("hidden");
 $(".platform_typea").addClass("hidden");
 }else{
