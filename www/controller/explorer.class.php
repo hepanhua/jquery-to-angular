@@ -200,19 +200,19 @@ class explorer extends Controller{
             return;
         }
         $check_file = ($app == 'editor'?true:false);
-        $favData=new fileCache($this->config['user_fav_file']);
-        $fav_list = $favData->get();
-        $fav = array();
-        foreach($fav_list as $key => $val){
-            $fav[] = array(
-                'name'      => $val['name'],
-                'this_path' => $val['path'],
-                'iconSkin'  => "fav",
-                'menuType'  => "menuTreeFav",
-                'type'      => 'folder',
-                'isParent'  => path_haschildren(_DIR($val['path']),$check_file)
-            );
-        }
+        // $favData=new fileCache($this->config['user_fav_file']);
+        // $fav_list = $favData->get();
+        // $fav = array();
+        // foreach($fav_list as $key => $val){
+        //     $fav[] = array(
+        //         'name'      => $val['name'],
+        //         'this_path' => $val['path'],
+        //         'iconSkin'  => "fav",
+        //         'menuType'  => "menuTreeFav",
+        //         'type'      => 'folder',
+        //         'isParent'  => path_haschildren(_DIR($val['path']),$check_file)
+        //     );
+        // }
 
         $list_root  = $this->path(_DIR(MYHOME),$check_file,true);
         $list_public = $this->path(PUBLIC_PATH,$check_file,true);
@@ -223,7 +223,6 @@ class explorer extends Controller{
             $root  = $list_root['folderlist'];
             $public = $list_public['folderlist'];
         }
-
         $root_isparent = count($root)>0?true:false;
         $public_isparent = count($public)>0?true:false;
         $tree_data = array(

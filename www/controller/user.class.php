@@ -25,6 +25,22 @@ class user extends Controller
         if (ST == 'share') return true;//共享页面
         if(in_array(ACT,$this->notCheck)){//不需要判断的action
             return;
+        }else if($_SESSION['auto_login']===true){
+            // show_json(USER_PATH.'admin'.'/');
+            // define('USER',USER_PATH.'user'.'/');
+            define('USER_TEMP','/mnt/temp/');
+            define('USER_RECYCLE','/var/spool/antivirus/recycle/');
+            define('MYHOME','/');
+            define('HOME',PUBLIC_PATH);
+            $GLOBALS['web_root'] = str_replace(WEB_ROOT,'',HOME);//从服务器开始到用户目录
+            $GLOBALS['is_root'] = 1;
+            date_default_timezone_set("Asia/Shanghai");
+            $this->config['user'] = $this->config['setting_default'];
+            $theme = config_get_value_from_file('/etc/system/oem.conf','THEME');
+            if (isset($theme)){
+            	$this->config['user']['theme']= $theme;
+          	}
+            return;
         }else if($_SESSION['secros_login']===true && $_SESSION['secros_user']['name']!=''){
             define('USER',USER_PATH.$this->user['name'].'/');
             define('USER_TEMP','/mnt/temp/');
@@ -162,6 +178,23 @@ class user extends Controller
             $this->display('install.html');exit;
         }
         $this->assign('msg',$msg);
+
+        $random = rawurldecode($this->in['random']);
+        if($random){
+            $ff = file_exists('/tmp/'.$random);
+        if ($ff){
+            unlink('/tmp/'.$random);
+                session_start();//re start
+                $_SESSION['auto_login'] = true;
+                $_SESSION['secros_user']['name']='super';
+                write_audit('信息','登录','成功','ip:'.get_client_ip().',自动登录');
+                header('location:./index.php');
+                return;
+            }else{
+                write_audit('信息','登录','失败','ip:'.get_client_ip().',自动登录');
+            }
+        }
+
         if (is_wap()) {
             $this->display('login_wap.html');
         }else{
@@ -216,10 +249,10 @@ class user extends Controller
                 }
                 $_SESSION['secros_login'] = true;
                 $_SESSION['secros_user']= $user;
-                setcookie('secros_name', $user['name'], time()+3600*24*365);
-                if ($this->in['rember_password'] == '1') {
-                    setcookie('secros_token',md5($user['password'].get_client_ip()),time()+3600*24*365);
-                }
+                // setcookie('secros_name', $user['name'], time()+3600*24*365);
+                // if ($this->in['rember_password'] == '1') {
+                //     setcookie('secros_token',md5($user['password'].get_client_ip()),time()+3600*24*365);
+                // }
                 write_audit('信息','登录','成功','ip:'.get_client_ip());
                 header('location:./index.php');
                 return;
