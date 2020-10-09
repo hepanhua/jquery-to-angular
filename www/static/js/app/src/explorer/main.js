@@ -272,7 +272,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			a = a.replace(".oexe", ""), t = "<div class='file fileBox menufile' data-app=" + n + " data-name='" + e.name + "'" + _hover_title(e) + ">", "app_link" == e.type ? (t += 0 == e.content.search("ui.path.open") ? "<div class='" + core.pathExt(e.name.replace(".oexe", "")) + " ico'" : "<div class='folder ico'", t += ' filetype="oexe"></div><div class="app_link"></div>') : t += "<div class='ico' filetype='oexe' style='background-image:url(" + i + ")'></div>", t += "<div id='' class='titleBox'><span class='title' title='" + LNG.double_click_rename + "'>" + a + "</span></div></div>"
 		} else if (inArray(core.filetype.image, e.ext)) {
 			var s = core.path2url(G.this_path + e.name);
-			let o = '/static/style/skin/metro/images/jpg.png';
+			let o = '/static/style/skin/metro/images/' + e.ext + '.png';
 			if(G.Pic_View == 1){
 				o = "index.php?explorer/image&path=" + urlEncode(G.this_path + e.name);
 			}
