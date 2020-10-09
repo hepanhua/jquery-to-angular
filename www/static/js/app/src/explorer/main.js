@@ -271,10 +271,21 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			var n = urlEncode(json_encode(e));
 			a = a.replace(".oexe", ""), t = "<div class='file fileBox menufile' data-app=" + n + " data-name='" + e.name + "'" + _hover_title(e) + ">", "app_link" == e.type ? (t += 0 == e.content.search("ui.path.open") ? "<div class='" + core.pathExt(e.name.replace(".oexe", "")) + " ico'" : "<div class='folder ico'", t += ' filetype="oexe"></div><div class="app_link"></div>') : t += "<div class='ico' filetype='oexe' style='background-image:url(" + i + ")'></div>", t += "<div id='' class='titleBox'><span class='title' title='" + LNG.double_click_rename + "'>" + a + "</span></div></div>"
 		} else if (inArray(core.filetype.image, e.ext)) {
-			var s = core.path2url(G.this_path + e.name),
+			var s = core.path2url(G.this_path + e.name);
+			let o = '/static/style/skin/metro/images/jpg.png';
+			if(G.Pic_View == 1){
 				o = "index.php?explorer/image&path=" + urlEncode(G.this_path + e.name);
-			"*share*/" == G.this_path && (s = "index.php?share/fileProxy&user=" + G.user_name + "&sid=" + e.path, o = s), t += "<div class='file fileBox menufile' " + _hover_title(e) + ">", t += "<div picasa='" + s + "' thumb='" + o + "' title='" + e.name + "' class='picasaImage picture ico' filetype='" + e.ext + "' style='margin:3px 0 0 8px;background:#fff url(\"" + o + "\") no-repeat center center;'></div>", t += "<div id='" + e.name + "' class='titleBox'><span class='title' title='" + LNG.double_click_rename + "'>" + a + "</span></div></div>"
-		} else t += "<div class='file fileBox menufile' " + _hover_title(e) + ">", t += "<div class='" + e.ext + " ico' filetype='" + e.ext + "'></div>", t += "<div id='" + e.name + "' class='titleBox'><span class='title' title='" + LNG.double_click_rename + "'>" + a + "</span></div></div>";
+			}
+			"*share*/" == G.this_path && (s = "index.php?share/fileProxy&user=" + G.user_name + "&sid=" + e.path, o = s),
+			 t += "<div class='file fileBox menufile' " + _hover_title(e) + ">", 
+			 t += "<div picasa='" + s + "' thumb='" + o + "' title='" + e.name + "' class='picasaImage picture ico' filetype='" + 
+			 e.ext + "' style='margin:3px 0 0 8px;background:#fff url(\"" + o + "\") no-repeat center center;'></div>",
+			  t += "<div id='" + e.name + "' class='titleBox'><span class='title' title='" + LNG.double_click_rename + "'>" + a + "</span></div></div>"
+		} else {
+		t += "<div class='file fileBox menufile' " + _hover_title(e) + ">",
+		 t += "<div class='" + e.ext + " ico' filetype='" + e.ext + "'></div>",
+		  t += "<div id='" + e.name + "' class='titleBox'><span class='title' title='" + LNG.double_click_rename + "'>" + a + "</span></div></div>";
+	}
 		return t
 	}, this._getFolderBoxList = function(e) {
 		var t = e.name;

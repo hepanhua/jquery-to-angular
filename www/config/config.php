@@ -48,6 +48,7 @@ define('STATIC_LESS','css');//less(开发状态)||css(打包压缩)
 define('STATIC_PATH',"./static/");//静态文件目录
 //define('STATIC_PATH','http://www.secros.com/static/');//静态文件统分离,可单独将static部署到CDN
 
+define('Pic_View',0);    //图片缩略图
 /*
  可以自定义【用户目录】和【公共目录】;移到web目录之外，
  可以使程序更安全, 就不用限制用户的扩展名权限了;
