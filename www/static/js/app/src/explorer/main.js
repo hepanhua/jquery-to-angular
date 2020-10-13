@@ -1483,6 +1483,8 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			a >= G.upload_max && (a = .5 * G.upload_max), uploader = WebUploader.create({
 				swf: G.static_path + "js/lib/webuploader/Uploader.swf",
 				dnd: "body",
+				// auto:false,
+				// fileSingleSizeLimit: 209715200,
 				threads: 2,
 				compress: !1,
 				resize: !1,
@@ -1529,17 +1531,20 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					return r = core.file_size(r) + "/s", s = r, r
 				},
 				r = [];
+
+				uploader.on("beforeFileQueued",function(file){
+					if((file.size / 1024 /1024).toFixed(0)>200){
+						core.tips.tips('超出200M的文件已拦截,请使用FTP或文件共享方式传输',false);
+						return false;
+					}
+				});
+
 			uploader.on("uploadBeforeSend", function(e, t) {
 				var a = urlEncode(e.file.fullPath);
-				(void 0 == a || "undefined" == a) && (a = ""), t.fullPath = a
+				(void 0 == a || "undefined" == a) && (a = ""), t.fullPath = a;
 			}).on("fileQueued", function(t) {
 				if (!core.upload_check()) return uploader.skipFile(t), uploader.removeFile(t), void 0;
-				var a, n = $(e),
-					a = t.fullPath;
-				if((t.size / 1024 /1024).toFixed(0)>200){
-					alert(LNG.group_upload_tips);
-					return;
-				}
+				var a, n = $(e),a = t.fullPath;
 				t.finished = !1, (void 0 == a || "undefined" == a) && (a = t.name), i++, $(e).find(".item").length > 0 && (n = $(e).find(".item:eq(0)"));
 				var s = '<div id="' + t.id + '" class="item"><div class="info">' + '<span class="title" title="' + G.upload_path + a + '">' + core.pathThis(a) + "</span>" + '<span class="size">' + core.file_size(t.size) + "</span>" + '<span class="state">' + LNG.upload_ready + "</span>" + '<a class="remove font-icon icon-remove" href="javascript:void(0)"></a>' + '<div style="clear:both"></div></div></div>';
 				$(e).find(".item").length > 0 ? $(s).insertBefore($(e).find(".item:eq(0)")) : $(e).append(s), uploader.upload()

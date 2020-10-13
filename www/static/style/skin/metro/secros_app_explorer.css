@@ -436,7 +436,7 @@ span.tmpzTreeMove_arrow { display: inline-block; margin: 4px 0 0 2px; position: 
 .fileList_icon .file .titleBox .textarea { position: absolute; height: auto; font-size: 12px; text-align: center;}
 .fileList_icon .file .titleBox #pathRenameTextarea,.fileList_icon .file .titleBox .newfile { width: 74px; margin-top: -5px; overflow-y: hidden; border: 1px solid #888; font-size: 12px; text-align: center;}
 .fileList_icon .file .titleBox #pathRenameTextarea:focus,.fileList_icon .file .titleBox .newfile:focus { outline: none; -webkit-transition: all .1s; -moz-transition: all .1s; -o-transition: all .1s; -ms-transition: all .1s; transition: all .1s;}
-.fileList_icon .file .titleBox .title { cursor: text;}
+.fileList_icon .file .titleBox .title { cursor: text;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;}
 .fileList_icon .file .ico { width: 60px; height: 60px; background-image: url("./images/file.png"); background-repeat: no-repeat; background-position: center center; margin: 0 auto; margin-top: 4px; margin-bottom: 3px; display: block; border-radius: 10px;}
 .fileList_icon .file .folder { width: 70px; background-image: url("./images/folder.png");}
 .fileList_icon .file .picture { width: 60px; height: 60px; background: none; margin: 0; vertical-align: middle; text-align: center; border-radius: 0px; *display: block; *font-size: 64px; *font-family: Arial;}
