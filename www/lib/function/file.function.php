@@ -28,20 +28,21 @@
 // 传入参数为程序编码时，有传出，则用程序编码，
 // 传入参数没有和输出无关时，则传入时处理成系统编码。
 function iconv_app($str){
-	global $config;
-	$result = iconv($config['system_charset'], $config['app_charset'], $str);
-	if (strlen($result)==0) {
-		$result = $str;
-	}
-	return $result;
+	return $str;
+	// global $config;
+	// $result = iconv($config['system_charset'], $config['app_charset'], $str);
+	// if (strlen($result)==0) {
+	// 	$result = $str;
+	// }
+	// return $result;
 }
 function iconv_system($str){
-	global $config;
-	$result = iconv($config['app_charset'], $config['system_charset'], $str);
-	if (strlen($result)==0) {
-		$result = $str;
-	}
-	return $result;
+	// global $config;
+	return $str;
+	// $result = iconv($config['app_charset'], $config['system_charset'], $str);
+	// if (strlen($result)==0) {
+	// 	$result = $str;
+	// }
 }
 
 /*
@@ -944,11 +945,22 @@ function write_audit($type, $event, $result, $desc)
 		return;
 	$now_time = date('Y-m-d H:i:s');
 	$db = new SQLite3('/var/spool/antivirus/log.db');
+	$db->busyTimeout(5000);
 	if ($db){
-		$db->exec("insert into auditlog (user,type,time,event,result,desc) values ('" . $_SESSION['secros_user']['name']  . "','" . $type . "','" . $now_time  . "','" . $event . "','" . $result . "','" . $desc . "')");
+	$db->exec("insert into auditlog (user,type,time,event,result,desc) values ('" . $_SESSION['secros_user']['name']  . "','" . $type . "','" . $now_time  . "','" . $event . "','" . $result . "','" . $desc . "')");
+		// method 2
+		// do   
+		// {
+		// 	$nRet = $db->exec("insert into auditlog (user,type,time,event,result,desc) values ('" . $_SESSION['secros_user']['name']  . "','" . $type . "','" . $now_time  . "','" . $event . "','" . $result . "','" . $desc . "')");
+		// 	if(!$nRet){
+		// 	Sleep(1);  
+		// 	continue;
+		// 	}else{
+		// 	break;
+		// 	}
+		// } while (1);
 	}
 	$db->close();
-	
 }
 
 
@@ -958,6 +970,7 @@ function write_dblog($direct, $filename, $action, $desc)
 		return;
 	$now_time = date('Y-m-d H:i:s');
 	$db = new SQLite3('/var/spool/antivirus/log.db');
+	$db->busyTimeout(5000);
 	if ($db){
 		$db->exec("insert into httplog (username,clientip,datetime,filename,direct,action,desc) values ('" . $_SESSION['secros_user']['name'] . "','" . get_client_ip() . "','" . $now_time . "','" . $filename . "','" . $direct . "','" . $action . "','" . $desc . "')");
 	}

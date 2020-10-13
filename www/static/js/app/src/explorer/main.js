@@ -1563,7 +1563,12 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				var t = 36 * $("#" + e.id).index(".item");
 				$("#uploader").scrollTop(t), n++;
 				var a = e.serverData;
-				if (a.code ? ($("#" + e.id).addClass("success"), $("#" + e.id).find(".state").text(a.data), $("#" + e.id).find(".remove").removeClass("icon-remove").addClass("icon-ok").addClass("open").removeClass("remove")) : ($("#" + e.id).addClass("error").find(".state").addClass("error"), $("#" + e.id).find(".state").text(a.data).attr("title", a.data)), uploader.removeFile(e), $("#" + e.id).find(".progress").fadeOut(), !e.fullPath) {
+				if (a.code ? ($("#" + e.id).addClass("success"), 
+				$("#" + e.id).find(".state").text(a.data), 
+				$("#" + e.id).find(".remove").removeClass("icon-remove").addClass("icon-ok").addClass("open").removeClass("remove")) : ($("#" + e.id).addClass("error").find(".state").addClass("error"), 
+				$("#" + e.id).find(".state").text(a.data).attr("title", a.data)), 
+				uploader.removeFile(e), $("#" + e.id).find(".progress").fadeOut(),
+				!e.fullPath) {
 					var i = r;
 					ui.f5_callback(function() {
 						ui.path.setSelectByFilename(i)
