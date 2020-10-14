@@ -344,7 +344,7 @@
 <script src="./index.php?user/common_js&type=explorer&id=<?php echo rand_string(8);?>"></script>
 <script type="text/javascript">
 	G.this_path = "<?php echo $dir;?>";
-	G.Pic_View = "<?php echo Pic_View;?>";
+	G.Pic_View = "<?php echo X86;?>";
 	seajs.config({
 		base: "<?php echo STATIC_PATH;?>js/",
 		preload: ["lib/jquery-1.8.0.min"],

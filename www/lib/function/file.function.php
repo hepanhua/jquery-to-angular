@@ -28,21 +28,31 @@
 // 传入参数为程序编码时，有传出，则用程序编码，
 // 传入参数没有和输出无关时，则传入时处理成系统编码。
 function iconv_app($str){
-	return $str;
-	// global $config;
-	// $result = iconv($config['system_charset'], $config['app_charset'], $str);
-	// if (strlen($result)==0) {
-	// 	$result = $str;
-	// }
-	// return $result;
+	if(X86 == 1){
+global $config;
+	$result = iconv($config['system_charset'], $config['app_charset'], $str);
+	if (strlen($result)==0) {
+		$result = $str;
+	}
+	return $result;
+	}else{
+		return $str;
+	}
+
+	
 }
 function iconv_system($str){
-	// global $config;
-	return $str;
-	// $result = iconv($config['app_charset'], $config['system_charset'], $str);
-	// if (strlen($result)==0) {
-	// 	$result = $str;
-	// }
+	if(X86 == 1){
+global $config;
+$result = iconv($config['app_charset'], $config['system_charset'], $str);
+if (strlen($result)==0) {
+	$result = $str;
+}
+return $result;
+	}else{
+		return $str;
+	}
+	
 }
 
 /*
@@ -654,7 +664,11 @@ function file_put_out($file,$download=false){
 	}
 	if ($GLOBALS['is_root'] != 1){
 		//$type = exec('file -ib '.$file);
+		if(X86 == 1){//x86
 		$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/magic.mgc");
+		}else{//mips
+		$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/web.mgc");
+		}
 	  if ($finfo)
 	  	$type = @finfo_file($finfo, $file);
 		$type = explode(';', $type);
@@ -854,13 +868,19 @@ function upload_chunk($fileInput, $path = './',$temp_path){
 			    fclose($out);
 			}
 			if ($GLOBALS['is_root'] != 1){
-				$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/magic.mgc");
+				if(X86 == 1){//x86
+					$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/magic.mgc");
+					}else{//mips
+					$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/web.mgc");
+					}
 			  if ($finfo)
 			  	$type = @finfo_file($finfo, $save_path);
 				$type = explode(';', $type);
 				$mime = get_file_mime($ext);
 				if ($GLOBALS['config']['system_info']['deepcheck']==1 && $type[0] != $mime) {
 					unlink($save_path);
+					write_audit('警告','上传','失败',$L['deepcheck_nodownload']);
+				write_dblog("上传",$filename,"出错",$L['deepcheck_nodownload']);
 					show_json($L['deepcheck_nodownload'],false);
 				}
 			}
@@ -878,13 +898,19 @@ function upload_chunk($fileInput, $path = './',$temp_path){
 	$save_path = get_filename_auto($path.$file_name); //自动重命名
 	if(move_uploaded_file($file['tmp_name'],$save_path)){
 		if ($GLOBALS['is_root'] != 1){
-			$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/magic.mgc");
+			if(X86 == 1){//x86
+				$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/magic.mgc");
+				}else{//mips
+				$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/web.mgc");
+				}
 		  if ($finfo)
 		  	$type = @finfo_file($finfo, $save_path);
-			$type = explode(';', $type);
+			$type = explode(';', $type);//文件上传类型
 			$mime = get_file_mime($ext);
 			if ($GLOBALS['config']['system_info']['deepcheck']==1 && $type[0] != $mime) {
 				unlink($save_path);
+				write_audit('警告','上传','失败',$L['deepcheck_nodownload']);
+				write_dblog("上传",$filename,"出错",$L['deepcheck_nodownload']);
 				show_json($L['deepcheck_nodownload'],false);
 			}
 		}
