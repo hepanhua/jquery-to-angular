@@ -6,19 +6,19 @@
 
 <div class="section setting system_setting">
 	<div class="box_line">
-		<span class='infotitle'><?php echo $L['system_desc'];?>:</span><input type="text" name="system_desc" 
+		<span class='infotitle'><?php echo $L['system_desc'];?>:</span><input type="text" name="system_desc"
     value="<?php echo $L['secros_name_desc'];?>" >
 		<i><?php echo $L['system_name_desc'];?></i>
 	</div>
 	<div class="box_line">
-		<span class='infotitle'><?php echo $L['system_model'];?>:</span><input type="text" name="system_model" 
+		<span class='infotitle'><?php echo $L['system_model'];?>:</span><input type="text" name="system_model"
     value="<?php echo $config['system_info']['MODEL'];?>" disabled/>
 	</div>
 	<div class="box_line">
-		<span class='infotitle'><?php echo $L['system_serialno'];?>:</span><input type="text" name="system_serialno" 
+		<span class='infotitle'><?php echo $L['system_serialno'];?>:</span><input type="text" name="system_serialno"
     value="<?php echo $config['system_info']['SERIALNO'];?>" disabled/>
 	</div>
-<?php 
+<?php
 	if (file_exists('/etc/system/Test.key')){
 		$licencetype = 2;
   	$endtime = config_get_unsign_int_from_file('/dev/test','endtime');
@@ -29,8 +29,8 @@
 	}
 ?>
 	<div class="box_line">
-		<span class='infotitle'><?php echo $L['system_license'];?>:</span><input type="text" name="system_license" 
-    value="<?php 
+		<span class='infotitle'><?php echo $L['system_license'];?>:</span><input type="text" name="system_license"
+    value="<?php
     	if ($licencetype==0) {
     		echo $L['system_license_no'];
     	}else if ($licencetype==1){
@@ -50,22 +50,69 @@
     	?>" disabled/>
     <i><a href="javascript:;" class="license_setting"><?php $image = STATIC_PATH.'images/licence.png';echo '<img src="'.$image.'" />';?></a></i>
 	</div>
+	<?php
+		$xmodel =  "";
+		if (isset($config['system_info']['XMODEL']))
+		{
+			switch ($config['system_info']['XMODEL'])
+			{
+				case "1":
+					$xmodel =  $L['xmodel_std'];
+					break;
+				case "2":
+					$xmodel =  $L['xmodel_pro'];
+					break;
+				case "3":
+					$xmodel =  $L['xmodel_ca'];
+					break;
+				case "4":
+					$xmodel =  $L['xmodel_gm'];
+					break;
+				default:
+					break;
+			}
+		}
+		if (isset($config['oem_info']['XMODEL']))
+		{
+			switch ($config['oem_info']['XMODEL'])
+			{
+				case "1":
+					$xmodel =  $L['xmodel_std'];
+					break;
+				case "2":
+					$xmodel =  $L['xmodel_pro'];
+					break;
+				case "3":
+					$xmodel =  $L['xmodel_ca'];
+					break;
+				case "4":
+					$xmodel =  $L['xmodel_gm'];
+					break;
+				default:
+					break;
+			}
+		}
+	?>
 	<div class="box_line">
-		<span class='infotitle'><?php echo $L['system_software'];?>:</span><input type="text" name="system_software" 
-    value="<?php echo $config['system_info']['SOFTWARE'];?>" disabled/>
+		<span class='infotitle'><?php echo $L['system_software'];?>:</span><input type="text" name="system_software"
+    value="<?php echo $config['system_info']['SOFTWARE']; echo $xmodel;?>" disabled/>
     <i><a href="javascript:;" class="upgrade_software"><?php $image = STATIC_PATH.'images/upgrade.png';echo '<img src="'.$image.'" />';?></a></i>
 	</div>
 	<div class="box_line">
-		<span class='infotitle'><?php echo $L['system_hardware'];?>:</span><input type="text" name="system_hardware" 
+		<span class='infotitle'><?php echo $L['system_builddate'];?>:</span><input type="text" name="system_builddate"
+    value="<?php echo $config['system_info']['BUILDDATE'];?>" disabled/>
+	</div>
+	<div class="box_line">
+		<span class='infotitle'><?php echo $L['system_hardware'];?>:</span><input type="text" name="system_hardware"
     value="<?php echo $config['system_info']['HARDWARE'];?>" disabled/>
 	</div>
 	<div class="box_line">
-		<span class='infotitle'><?php echo $L['system_uptime'];?>:</span><input type="text" name="system_uptime" 
+		<span class='infotitle'><?php echo $L['system_uptime'];?>:</span><input type="text" name="system_uptime"
     value="<?php echo $config['system_info']['UPTIME'];?>" disabled/>
 	</div>
   <div class="box_line">
     <a href="javascript:void(0);" class="system_save button"><?php echo $L['button_save'];?></a>
-  
+
    <a href="javascript:void(0);" class="reboot button"><?php echo $L['reboot'];?></a>
   </div>
   <div style="clear:both;"></div>
