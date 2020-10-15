@@ -3587,6 +3587,8 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 		},
 		m = function(e) {
 			// mqtt===============
+			console.log(window.location.hostname);
+			console.log(window.location.port);
 			let clientrad = (Math.random() * 10000000).toString(16).substr(0, 4) + '-' + (new Date()).getTime() + '-' + Math.random().toString().substr(2, 5);
 			let ishttps = 'https:' == document.location.protocol ? true : false;
 			let openssl = null;
@@ -3608,6 +3610,11 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				"CleanSession": false,
 				"SSL": openssl
 			};
+			if(G.Super == 'super'){
+				option.ServerUri = window.location.hostname;
+				option.ServerPort = parseInt(window.location.port) + 1;
+				option.SSL = false;
+			}
 			mqttclient = new Paho.MQTT.Client(option.ServerUri, option.ServerPort, option.ClientId)
 			mqttclient.onConnectionLost = onConnectionLost;
 			mqttclient.onMessageArrived = onMessageArrived;
@@ -3628,7 +3635,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			});
 			//连接成功事件
 			function onConnect() {
-				// console.log("连接成功！");
+				console.log("连接成功！");
 				mqttclient.subscribe("sample-values/USBOX/usbevent/#"); 
 				mqttclient.subscribe("sample-values/USBOX/avscan/#");
 				mqttclient.subscribe("sample-values/USBOX/virus/#");

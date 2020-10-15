@@ -36,9 +36,14 @@
               <a href="javascript:core.openLog();"><img src="<?php echo STATIC_PATH;?>images/log.png"></a>
 	  </div>  
 	  <?php }?>
+
+
+	  
+	  <?php if ($_SESSION['secros_user']['name'] != 'super') {?>
 			<div class="menu_group">
 				<a href="./index.php?user/logout"><img src="<?php echo STATIC_PATH;?>images/exit.png"></a>
 			</div>
+			<?php }?>
 		</div>
 		<div style="clear:both"></div>
 	</div>

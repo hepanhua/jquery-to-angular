@@ -179,11 +179,11 @@ class user extends Controller
         }
         $this->assign('msg',$msg);
 
-        $random = rawurldecode($this->in['random']);
-        if($random){
-            $ff = file_exists('/tmp/'.$random);
+        $challenge = rawurldecode($this->in['challenge']);
+        if($challenge){
+            $ff = file_exists('/tmp/'.'sess_'.$challenge);
         if ($ff){
-            unlink('/tmp/'.$random);
+            unlink('/tmp/'.'sess_'.$challenge);
                 session_start();//re start
                 $_SESSION['auto_login'] = true;
                 $_SESSION['secros_user']['name']='super';

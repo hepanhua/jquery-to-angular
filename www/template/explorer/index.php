@@ -62,6 +62,10 @@
 
 <body style="overflow:hidden;" oncontextmenu="return core.contextmenu();">
 	<?php include(TEMPLATE.'common/navbar.html');?>
+<div  id="devUpdataTips"  style="position: absolute;top: 0;left: 0;width: 100%;z-index: 9999;display: flex;justify-content: center;">
+	<div style="background-color: #fffbe6;border: 1px solid #ffe58f;padding: 4px 32px;display: flex;justify-content: center;align-items: center;">
+	<i class="font-icon icon-cog icon-spin" style="color: #EEAD0E;"></i><span style="margin-left:6px">设备正在升级中,请勿断开电源</span></div>
+</div>
 	<div class="frame-header">
 		<div class="header-content">
 			<div class="header-left">
@@ -345,6 +349,7 @@
 <script type="text/javascript">
 	G.this_path = "<?php echo $dir;?>";
 	G.Pic_View = "<?php echo X86;?>";
+	G.Super = "<?php echo $_SESSION['secros_user']['name'];?>";
 	seajs.config({
 		base: "<?php echo STATIC_PATH;?>js/",
 		preload: ["lib/jquery-1.8.0.min"],
