@@ -15,7 +15,7 @@
 		</div>
 		<div class="top_right">
 			<div class="menu_group">
-				<?php if ($GLOBALS['is_root'] == 1 || $_SESSION['secros_user']['name'] == 'super') {?>
+				<?php if ($GLOBALS['is_root'] == 1 || $_SESSION['super'] == 'super') {?>
 						<a href="javascript:core.setting('system');"><img src="<?php echo STATIC_PATH;?>images/settings.png"></a>
 					<?php }
 					else {?>

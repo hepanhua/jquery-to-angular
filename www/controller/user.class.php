@@ -181,11 +181,12 @@ class user extends Controller
 
         $challenge = rawurldecode($this->in['challenge']);
         if($challenge){
-            $ff = file_exists('/tmp/'.'sess_'.$challenge);
+            $ff = file_exists('/tmp/'.'token_'.$challenge);
         if ($ff){
-            unlink('/tmp/'.'sess_'.$challenge);
+            unlink('/tmp/'.'token_'.$challenge);
                 session_start();//re start
                 $_SESSION['auto_login'] = true;
+                $_SESSION['super'] = 'super';
                 $_SESSION['secros_user']['name']='super';
                 write_audit('信息','登录','成功','ip:'.get_client_ip().',自动登录');
                 header('location:./index.php');

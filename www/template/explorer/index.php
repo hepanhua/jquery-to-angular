@@ -349,7 +349,7 @@
 <script type="text/javascript">
 	G.this_path = "<?php echo $dir;?>";
 	G.Pic_View = "<?php echo X86;?>";
-	G.Super = "<?php echo $_SESSION['secros_user']['name'];?>";
+	G.Super = "<?php echo $_SESSION['super'];?>";
 	seajs.config({
 		base: "<?php echo STATIC_PATH;?>js/",
 		preload: ["lib/jquery-1.8.0.min"],
