@@ -3823,7 +3823,15 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 						$('.antivirus_update .loading_btn_frame').html('<div class="loading_btn antivirus_update_end">确认</div>');
 							}
 							break;
-
+						case "virus":
+							let update = json.value;
+							if(update == 0){
+								$('#devUpdataTips').removeClass('hidden');
+							}
+							if(update == 100){
+								$('#devUpdataTips').addClass('hidden');
+							}
+							break;
 						default:
 							break;
 					}

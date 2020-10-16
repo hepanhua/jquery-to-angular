@@ -62,7 +62,7 @@
 
 <body style="overflow:hidden;" oncontextmenu="return core.contextmenu();">
 	<?php include(TEMPLATE.'common/navbar.html');?>
-<div  id="devUpdataTips"  style="position: absolute;top: 0;left: 0;width: 100%;z-index: 9999;display: flex;justify-content: center;">
+<div class="hidden"  id="devUpdataTips"  style="position: absolute;top: 0;left: 0;width: 100%;z-index: 9999;display: flex;justify-content: center;">
 	<div style="background-color: #fffbe6;border: 1px solid #ffe58f;padding: 4px 32px;display: flex;justify-content: center;align-items: center;">
 	<i class="font-icon icon-cog icon-spin" style="color: #EEAD0E;"></i><span style="margin-left:6px">设备正在升级中,请勿断开电源</span></div>
 </div>
