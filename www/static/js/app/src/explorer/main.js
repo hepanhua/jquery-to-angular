@@ -3668,7 +3668,21 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 							let time = json.timestamp;
 							time = time.replace(/T/g," ");
 							time = time.replace(/Z/g," ");
-							let ls = '<div class="list"><div>'+json.value.virusname+'</div><div>'+json.value.filepath+'</div><div>'+time+'</div></div>';
+							let policy = null;
+							switch (json.value.policy) {
+								case 0:
+									policy = '警告';
+									break;
+								case 1:
+									policy = '隔离';
+									break;
+								case 2:
+									policy = '删除';
+									break;
+								default:
+									break;
+							}
+							let ls = '<div class="list"><div>'+json.value.virusname+'</div><div>'+json.value.filepath+'</div><div>'+time+'</div><div>'+policy+'</div></div>';
 							$('.av_content').append(ls);
 							break;
 						case "usbevent":
@@ -4921,7 +4935,8 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			if (core.scanvirusCheck() && e) {
 				var t = "index.php?explorer/scanvirus&path=" + urlEncode2(e);
 				G.share_page !== void 0 && (t = "index.php?share/scanvirus&user=" + G.user + "&sid=" + G.sid + "&path=" + urlEncode2(e));
-				var a = '<iframe src="' + t + '" style="width:0px;height:0px;border:0;" frameborder=0></iframe>' + LNG.scanvirus_ready + "...",
+				let av_status = $('#noc_status').text().split(': ') == '已连接'?'病毒扫描已入队':LNG.scanvirus_ready;
+				var a = '<iframe src="' + t + '" style="width:0px;height:0px;border:0;" frameborder=0></iframe>' + av_status + "...",
 					i = $.dialog({
 						icon: "succeed",
 						title: !1,

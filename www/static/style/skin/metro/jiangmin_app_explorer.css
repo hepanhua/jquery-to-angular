@@ -1153,27 +1153,36 @@ animation: boo  4s  infinite;
     background: rgb(193, 209, 234);
     position: relative;
 }
+/* 2020.10.19 */
 .av_flex .av_title{
-  width:90%;height:10%;display:flex;font-size:16px;justify-content: space-between;
+  width:98%;height:10%;display:flex;font-size:16px;justify-content: space-between;
 }
 .av_flex .av_title div{
-  width:30%;display: flex;justify-content: center;align-items: center;text-align: center;
+  width:28%;display: flex;justify-content: center;align-items: center;text-align: center;
+}
+.av_flex .av_title div:last-child{
+  width:16%;
 }
 .av_flex .av_content{
-  width:90%;height:60%;overflow:auto;background:#fff;
+  width:98%;height:60%;overflow:auto;background:#fff;box-shadow:inset 0 0 4px #000;
 }
 .av_flex .av_content .list{
-  display: flex;width: 100%;justify-content:space-between;border-bottom: 1px solid #ccc;
+  display: flex;width: 100%;border-bottom: 1px solid #ccc;
 }
 .av_flex .av_content .list div{
-  width: 30%;
+  width: 28%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   font-size: 16px;
   margin: 16px 0;
   padding-left: 18px;
-  word-break: break-all;
+  word-break: break-word;
+}
+.av_flex .av_content .list div:last-child{
+  width: 16%;
+  padding: 0;
+  justify-content: center;
 }
 .av_hidden{
   position: absolute;right:16px;top:16px;cursor: pointer;

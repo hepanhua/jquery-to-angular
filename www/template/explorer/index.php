@@ -243,6 +243,7 @@
 		<div>病毒名称</div>
 		<div>路径</div>
 		<div>日期</div>
+		<div>处理方式</div>
 		 </div>
 		 <div class="av_content">
 		 </div>
