@@ -14,7 +14,7 @@
 			</a>
 		</div>
 		<div class="top_right">
-			<div class="menu_group">
+			<div class="menu_group  noc_d">
 				<?php if ($GLOBALS['is_root'] == 1 || $_SESSION['super'] == 'super') {?>
 						<a href="javascript:core.setting('system');"><img src="<?php echo STATIC_PATH;?>images/settings.png"></a>
 					<?php }
@@ -23,7 +23,7 @@
 					<?php }?>
 			</div>
 			<?php if ($GLOBALS['is_root'] == 1) {?>
-				<div class="menu_group">	
+				<div class="menu_group noc_d">	
 					<a href="javascript:core.saveAll();"><img src="<?php echo STATIC_PATH;?>images/save.png"></a>
 				</div>
 			<?php }?>

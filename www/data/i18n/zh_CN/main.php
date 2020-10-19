@@ -104,6 +104,7 @@ $L= array(
 	"system_hardware"  				=> "硬件版本",
 	"current_user"  				=> "当前用户",
 	"system_uptime"  				=> "系统已运行",
+	"no_connect" 				=>"未连接",
 	"reboot"  				=> "重启设备",
 	"reboot_success"  				=> "设备重启中，请稍后...",
 	"savecfg_success"  				=> "系统配置保存成功",

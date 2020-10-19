@@ -1101,7 +1101,10 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			})
 		},
 		setting: function(e) {
-			void 0 == e && (e = G.is_root ? "system" : "user"), void 0 == window.top.frames.Opensetting_mode ? $.dialog.open("./index.php?setting#" + e, {
+			!e && (e = G.is_root ? "system" : "user");
+			window.frames['Opensetting_mode'] ? 
+			($.dialog.list.setting_mode.display(!0), FrameCall.top("Opensetting_mode", "Setting.setGoto", '"' + e + '"')) :
+			$.dialog.open("./index.php?setting#" + e, {
 				id: "setting_mode",
 				fixed: !0,
 				ico: core.ico("setting"),
@@ -1109,7 +1112,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				title: LNG.setting,
 				width: 960,
 				height: 580
-			}) : ($.dialog.list.setting_mode.display(!0), FrameCall.top("Opensetting_mode", "Setting.setGoto", '"' + e + '"'))
+			});
 		},
 		copyright: function() {
 			var e = require("../tpl/copyright.html"),
@@ -3638,6 +3641,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				mqttclient.subscribe("sample-values/USBOX/avscan/#");
 				mqttclient.subscribe("sample-values/USBOX/virus/#");
 				mqttclient.subscribe("sample-values/USBOX/avupdate/progress");
+				mqttclient.subscribe("sample-values/USBOX/CAVP/status");
 			}
 			//连接失败事件
 			function onError(e) {
@@ -3830,6 +3834,12 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 								$('#devUpdataTips').addClass('hidden');
 							}
 							break;
+						case "status":
+							let status = json.value;
+							if(status == 1){
+								$('#noc_status').text('集审平台: 已连接');
+								$('.noc_d').remove();
+							}
 						default:
 							break;
 					}
