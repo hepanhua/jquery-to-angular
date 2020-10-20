@@ -3848,7 +3848,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 								$('#devUpdataTips').addClass('hidden');
 							}
 							break;
-						case "status":
+						case "CAVP":
 							let status = json.value;
 							if(status == 1){
 								$('#noc_status').text('集审平台: 已连接');
