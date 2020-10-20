@@ -3852,8 +3852,31 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 							let status = json.value;
 							if(status == 1){
 								$('#noc_status').text('集审平台: 已连接');
-								$('.noc_d').remove();
+								if(G.Super != 'super'){
+									$('.noc_d').remove();
+								}
+							}else if(status == 0){
+								let exit = $('.menu_group').is('.noc_d');
+								if(!exit){
+								$('#noc_status').text('集审平台: 未连接');
+								let html = null;
+							if(G.is_root == 1){
+							html = '<div class="menu_group  noc_d">'+
+							'<a href="javascript:core.setting("system");"><img src="'+G.STATIC_PATH+'images/settings.png"></a>'+
+							'</div>'+
+							'<div class="menu_group noc_d">'+
+							'<a href="javascript:core.saveAll();"><img src="'+G.STATIC_PATH+'images/save.png"></a>'+
+							'</div>';
+							}else{
+							html ='<div class="menu_group  noc_d">'+
+							'<a href="javascript:core.setting("user");"><img src="'+G.STATIC_PATH+'images/settings.png"></a>'+
+							'</div>';
 							}
+								
+								$('.noc_a').prepend(html);
+								}
+							}
+
 						default:
 							break;
 					}
