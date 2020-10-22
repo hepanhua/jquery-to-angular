@@ -75,6 +75,13 @@ class explorer extends Controller{
     }
     public function pathRname(){
         if (!is_writable($this->path)) {
+            $pt = $this->path;
+            $size = get_filesize($pt);
+            if($size > 1717986918){
+                $rn=_DIR($this->in['rname_to']);
+                exec("mv  '".$pt ."'  '". $rn."'");
+                show_json($this->L['rname_success']);
+            }
             show_json($this->L['no_permission_write_all'],false);
         }
         $rname_to=_DIR($this->in['rname_to']);
@@ -499,8 +506,15 @@ class explorer extends Controller{
     public function fileDownload(){
     $patharry = explode("/",$this->path);
     write_audit('信息','下载','成功','下载'.end($patharry));
-        file_put_out($this->path,true);
+    file_put_out($this->path,true);
     }
+
+    // public function newzipdownload(){
+    //     $patharry = explode("/",$this->path);
+    //     write_audit('信息','下载','成功','下载'.end($patharry));
+    //     zipupload($this->path);
+    // }
+
     public function scanvirus(){
         system('/bin/avscan "'.$this->path.'"');
     }

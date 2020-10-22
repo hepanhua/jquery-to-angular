@@ -66,7 +66,7 @@ input[type="radio"],input[type="checkbox"] { border: none; background: none;}
 .topbar .content .top_right div.share_info_user { margin-right: 10px; color: #fff; position: relative; top: -16px;}
 .topbar .content .top_right div.share_info_user .btn_download,.topbar .content .top_right div.share_info_user .btn.button_my_share { padding: 4px 20px; margin-left: 5px;}
 .topbar .content .top_right div.share_info_user .dropdown-toggle { height: 16px;}
-.common_footer { position: fixed; bottom: 0px; background: #f8f8f8; color: #999; font-size: 13px; width: 100%; text-align: center; border-top: 1px solid #e8e8e8; height: 29px; line-height: 30px; overflow: hidden;}
+.common_footer { position: fixed; bottom: 0px; background: #f8f8f8; color: #999; font-size: 13px; width: 100%; text-align: center; border-top: 1px solid #e8e8e8; height: 29px; line-height: 30px; overflow: hidden;display: flex;justify-content: space-around;}
 .common_footer .copyright_bottom { cursor: pointer; font-size: 16px; color: #aaa; text-decoration: none;}
 .common_footer .copyright_bottom:hover { color: #f60; border-bottom: none;}
 .do_search { color: #888; min-width: 452px;}
@@ -242,6 +242,7 @@ input[type="radio"],input[type="checkbox"] { border: none; background: none;}
 .file_upload .btns { margin-bottom: 10px; font-size: 13px; height: 28px;}
 .file_upload .btns .tips { float: right; line-height: 30px;}
 .file_upload .btns #picker { width: 100px; float: left;}
+.file_upload .btns #pickerfol { width: 100px; float: left;}
 .file_upload .upload_box_limit_tips { float: left; line-height: 34px; color: #03b3b2;}
 .file_upload .upload_box_tips { float: right; line-height: 34px; color: #888;}
 .file_upload .upload_box_tips a { text-decoration: none; color: #888;}

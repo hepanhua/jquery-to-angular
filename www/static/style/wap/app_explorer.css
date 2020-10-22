@@ -329,6 +329,7 @@ div.dialog-simple .dialog_mouse_in .aui_header { opacity: 1; filter: alpha(opaci
 .file_upload .btns { margin-bottom: 10px; font-size: 13px; height: 28px;}
 .file_upload .btns .tips { float: right; line-height: 30px;}
 .file_upload .btns #picker { width: 100px; float: left;}
+.file_upload .btns #pickerfol { width: 100px; float: left;}
 .file_upload .upload_box_tips { float: right; line-height: 34px; color: #888;}
 .file_upload .upload_box_tips a { text-decoration: none; color: #888;}
 .file_upload .upload_box_tips a:hover { color: #428bca; border-bottom: 1px solid #428bca;}

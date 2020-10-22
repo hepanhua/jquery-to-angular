@@ -362,6 +362,7 @@ $L= array(
 	"upload_success"             =>	"上传成功",
 	"upload_path_current"        =>	"切换到当前目录",
 	"upload_select"              =>	"选择文件",
+	"upload_selectfol"			=> "选择文件夹",
 	"upload_max_size"            =>	"最大允许",
 	"upload_size_info"           =>	"如果想配置更大，请修改php.ini中允许上传的最大值。选择文件时,大于该配置的将自动过滤掉。",
 	"upload_error"               =>	"上传失败",

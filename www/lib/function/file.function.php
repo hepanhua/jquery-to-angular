@@ -63,56 +63,73 @@ function get_filesize($path){
 
 //filesize 解决大于2G 大小问题
 //http://stackoverflow.com/questions/5501451/php-x86-how-to-get-filesize-of-2-gb-file-without-external-program
-function get_filesize($path){
+function get_filesize($file){
 	$result = false;
-	$fp = @fopen($path,"r");
-	if(! $fp = @fopen($path,"r")) return $result;
-	if(PHP_INT_SIZE >= 8 ){ //64bit
-		$result = (float)(abs(sprintf("%u",@filesize($path))));
-	}else{
-		if (fseek($fp, 0, SEEK_END) === 0) {
-			$result = 0.0;
-			$step = 0x7FFFFFFF;
-			while ($step > 0) {
-				if (fseek($fp, - $step, SEEK_CUR) === 0) {
-					$result += floatval($step);
-				} else {
-					$step >>= 1;
-				}
-			}
-		}else{
-			static $iswin;
-			if (!isset($iswin)) {
-				$iswin = (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN');
-			}
-			static $exec_works;
-			if (!isset($exec_works)) {
-				$exec_works = (function_exists('exec') && !ini_get('safe_mode') && @exec('echo EXEC') == 'EXEC');
-			}
-			if ($iswin && class_exists("COM")) {
-				try {
-					$fsobj = new COM('Scripting.FileSystemObject');
-					$f = $fsobj->GetFile( realpath($path) );
-					$size = $f->Size;
-				} catch (Exception $e) {
-					$size = null;
-				}
-				if (is_numeric($size)) {
-					$result = $size;
-				}
-			}else if ($exec_works){
-				$cmd = ($iswin) ? "for %F in (\"$path\") do @echo %~zF" : "stat -c%s \"$path\"";
-				@exec($cmd, $output);
-				if (is_array($output) && is_numeric($size = trim(implode("\n", $output)))) {
-					$result = $size;
-				}
-			}else{
-				$result = filesize($path);
-			}
+	// $fp = @fopen($path,"r");
+	// if(! $fp = @fopen($path,"r")) return $result;
+	// if(PHP_INT_SIZE >= 8 ){ //64bit
+	// 	$result = (float)(abs(sprintf("%u",@filesize($path))));
+	// }else{
+	// 	if (fseek($fp, 0, SEEK_END) === 0) {
+	// 		$result = 0.0;
+	// 		$step = 0x7FFFFFFF;
+	// 		while ($step > 0) {
+	// 			if (fseek($fp, - $step, SEEK_CUR) === 0) {
+	// 				$result += floatval($step);
+	// 			} else {
+	// 				$step >>= 1;
+	// 			}
+	// 		}
+	// 	}else{
+	// 		static $iswin;
+	// 		if (!isset($iswin)) {
+	// 			$iswin = (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN');
+	// 		}
+	// 		static $exec_works;
+	// 		if (!isset($exec_works)) {
+	// 			$exec_works = (function_exists('exec') && !ini_get('safe_mode') && @exec('echo EXEC') == 'EXEC');
+	// 		}
+	// 		if ($iswin && class_exists("COM")) {
+	// 			try {
+	// 				$fsobj = new COM('Scripting.FileSystemObject');
+	// 				$f = $fsobj->GetFile( realpath($path) );
+	// 				$size = $f->Size;
+	// 			} catch (Exception $e) {
+	// 				$size = null;
+	// 			}
+	// 			if (is_numeric($size)) {
+	// 				$result = $size;
+	// 			}
+	// 		}else if ($exec_works){
+	// 			$cmd = ($iswin) ? "for %F in (\"$path\") do @echo %~zF" : "stat -c%s \"$path\"";
+	// 			@exec($cmd, $output);
+	// 			if (is_array($output) && is_numeric($size = trim(implode("\n", $output)))) {
+	// 				$result = $size;
+	// 			}
+	// 		}else{
+	// 			$result = filesize($path);
+	// 		}
+	// 	}
+	// }
+	// fclose($fp);
+	// return $result;
+	if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
+		if (class_exists("COM")) {
+		  $fsobj = new COM('Scripting.FileSystemObject');
+		  $f = $fsobj->GetFile(realpath($file));
+		  $file = $f->Size;
+		} else {
+		  $file = trim(exec("for %F in (\"" . $file . "\") do @echo %~zF"));
 		}
-	}
-	fclose($fp);
-	return $result;
+	  } elseif (PHP_OS == 'Darwin') {
+		$file = trim(shell_exec("stat -f %z " ."'". $file."'"));
+	  } elseif ((PHP_OS == 'Linux') || (PHP_OS == 'FreeBSD') || (PHP_OS == 'Unix') || (PHP_OS == 'SunOS')) {
+	  //   $file = trim(shell_exec("stat -c%s " . escapeshellarg($file)));
+		$file = trim(shell_exec("stat -c%s " ."'". $file."'"));
+	  } else {
+		$file = filesize($file);
+	  }
+	  return $file;
 }
 
 /**
@@ -645,17 +662,97 @@ function ext_type($ext){
 			return $type;
 		} 
 	} 
-} 
+}
+
+
+
+
+
+// function zipupload($filepath){
+// 	// $filepath= iconv("UTF-8", "GBK", $filepath);
+// 	set_time_limit(0);
+// 	if (isset($_SERVER['HTTP_RANGE']) && ($_SERVER['HTTP_RANGE'] != "") && 
+// 		preg_match("/^bytes=([0-9]+)-$/i", $_SERVER['HTTP_RANGE'], $match) && ($match[1] < $fsize)) { 
+// 		$start = $match[1];
+// 	}else{
+// 		$start = 0;
+// 	}
+
+// 	$filename = basename($filepath);
+// 	$patharr=explode("/",$filepath);
+// 	if(!end($patharr)){
+// 		array_pop($patharr);
+// 		array_pop($patharr);
+// 	}else{
+// 		array_pop($patharr);
+// 	}
+// 	$path = implode('/',$patharr);
+
+// 	$zippath = $path.'/'.$filename.'.zip';
+// // exec("cd '".$path."'; " ."zip -r  '". $filename.".zip'  '". $filename."'");
+// exec("cd '".$path."'; " ."tar  cf  '". $filename.".zip'  '". $filename."'");
+// // show_json("cd '".$path."'; " ."zip -r  '". $filename.".zip'  '". $filename."'");
+//     if(!file_exists($zippath)){
+//         echo 1;die;
+// 	}
+// 	$size = showsize($zippath);
+// 	$filename = get_path_this($file);//解决在IE中下载时中文乱码问题
+// 		if( preg_match('/MSIE/',$_SERVER['HTTP_USER_AGENT']) || 
+// 			preg_match('/Trident/',$_SERVER['HTTP_USER_AGENT'])){
+// 			if($GLOBALS['config']['system_os']!='windows'){//win主机 ie浏览器；中文文件下载urlencode问题
+// 				$filename = str_replace('+','%20',urlencode($filename));
+// 			}
+// 		}
+// 		write_dblog("下载",$filename,"通过","");
+// 		header("Content-Type: application/octet-stream");
+// 		header('Content-disposition: attachment; filename=' . basename($zippath)); //文件名
+	
+// 	header("Cache-Control: public");
+// 	header("X-Powered-By: SecROS.");
+// 	// header("Content-Type: ".$mime);
+// 	if ($start > 0){
+// 		header("HTTP/1.1 206 Partial Content");
+// 		header("Content-Ranges: bytes".$start ."-".($size - 1)."/" .$size);
+// 		header("Content-Length: ".($size - $start));		
+// 	}else{
+// 		header("Accept-Ranges: bytes");
+// 		header("Content-Length: $size");
+// 	}
+
+// 	$fp = fopen($zippath, "rb");
+// 	fseek($fp, $start);
+// 	while (!feof($fp)) {
+// 		print (fread($fp, 1024 * 8)); //输出文件  
+// 		flush(); 
+// 		ob_flush();
+// 	}  
+// 	fclose($fp);
+
+//     // header("Cache-Control: public");
+//     // header("Content-Description: File Transfer");
+//     // header('Content-disposition: attachment; filename=' . basename($zippath)); //文件名
+//     // header("Content-Type: application/zip"); //zip格式的
+//     // header("Content-Transfer-Encoding: binary"); //告诉浏览器，这是二进制文件
+//     // header('Content-Length: ' . filesize($zippath)); //告诉浏览器，文件大小
+//     // @readfile($zippath);//下载到本地
+//     @unlink($zippath);//删除压缩文件
+// }
 
 /**
  * 输出、文件下载
  * 默认以附件方式下载；$download为false时则为输出文件
  */
 function file_put_out($file,$download=false){
-	if (!is_file($file)) show_json('not a file!');
+	// ob_clean();
+	// clearstatcache();
+	// $fileExt = showsize($file);
+	// show_json($fileExt);
+// $fileExt = get_filesize($file);	
+// $fileExt = file_info($file);
+// if (!is_file($file)) show_json('not a file!');
 	set_time_limit(0); 
 	//ob_clean();//清除之前所有输出缓冲
-	if (!file_exists($file)) show_json('file not exists',false);
+	// if (!file_exists($file)) show_json('file not exists',false);
 	if (isset($_SERVER['HTTP_RANGE']) && ($_SERVER['HTTP_RANGE'] != "") && 
 		preg_match("/^bytes=([0-9]+)-$/i", $_SERVER['HTTP_RANGE'], $match) && ($match[1] < $fsize)) { 
 		$start = $match[1];
@@ -663,7 +760,6 @@ function file_put_out($file,$download=false){
 		$start = 0;
 	}
 	if ($GLOBALS['is_root'] != 1){
-		//$type = exec('file -ib '.$file);
 		if(X86 == 1){//x86
 		$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/magic.mgc");
 		}else{//mips
@@ -676,15 +772,15 @@ function file_put_out($file,$download=false){
 		$mime = get_file_mime(get_path_ext($file));
 		if ($GLOBALS['config']['system_info']['deepcheck']==1 && $type[0] != $mime) {
 			$filename = get_path_this($file);
-			write_audit('警告','上传','失败','上传非法文件'.$file_name);
+			write_audit('警告','下载','失败','下载非法文件'.$file_name);
 			write_dblog("下载",$filename,"阻断","非法文件");
 			show_json('deepcheck nodownload');
 		}
-	}
-	else{
-		$size = get_filesize($file);
+	}else{
+		$size = showsize($file);
 		$mime = get_file_mime(get_path_ext($file));
 	}
+
 	if ($download || strstr($mime,'application/')) {//下载或者application则设置下载头
 		$filename = get_path_this($file);//解决在IE中下载时中文乱码问题
 		if( preg_match('/MSIE/',$_SERVER['HTTP_USER_AGENT']) || 
@@ -719,6 +815,27 @@ function file_put_out($file,$download=false){
 	}  
 	fclose($fp);
 }
+
+
+function showsize($file) {
+    if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
+      if (class_exists("COM")) {
+        $fsobj = new COM('Scripting.FileSystemObject');
+        $f = $fsobj->GetFile(realpath($file));
+        $file = $f->Size;
+      } else {
+        $file = trim(exec("for %F in (\"" . $file . "\") do @echo %~zF"));
+      }
+    } elseif (PHP_OS == 'Darwin') {
+      $file = trim(shell_exec("stat -f %z " ."'". $file."'"));
+    } elseif ((PHP_OS == 'Linux') || (PHP_OS == 'FreeBSD') || (PHP_OS == 'Unix') || (PHP_OS == 'SunOS')) {
+	//   $file = trim(shell_exec("stat -c%s " . escapeshellarg($file)));
+	  $file = trim(shell_exec("stat -c%s " ."'". $file."'"));
+    } else {
+	  $file = filesize($file);
+    }
+	return $file;
+  }
 
 /**
  * 远程文件下载到服务器
@@ -974,19 +1091,12 @@ function write_audit($type, $event, $result, $desc)
 	$db->busyTimeout(5000);
 	if ($db){
 	$db->exec("insert into auditlog (user,type,time,event,result,desc) values ('" . $_SESSION['secros_user']['name']  . "','" . $type . "','" . $now_time  . "','" . $event . "','" . $result . "','" . $desc . "')");
-		// method 2
-		// do   
-		// {
-		// 	$nRet = $db->exec("insert into auditlog (user,type,time,event,result,desc) values ('" . $_SESSION['secros_user']['name']  . "','" . $type . "','" . $now_time  . "','" . $event . "','" . $result . "','" . $desc . "')");
-		// 	if(!$nRet){
-		// 	Sleep(1);  
-		// 	continue;
-		// 	}else{
-		// 	break;
-		// 	}
-		// } while (1);
 	}
 	$db->close();
+	$ck_noc = config_get_value_from_file('/var/run/roswan','noc_connected');
+	if($ck_noc){
+		exec("oplogpub ". $type ." ".$_SESSION['secros_user']['name']." ".$event." ".$result." ".$desc);
+	}
 }
 
 
@@ -1001,6 +1111,10 @@ function write_dblog($direct, $filename, $action, $desc)
 		$db->exec("insert into httplog (username,clientip,datetime,filename,direct,action,desc) values ('" . $_SESSION['secros_user']['name'] . "','" . get_client_ip() . "','" . $now_time . "','" . $filename . "','" . $direct . "','" . $action . "','" . $desc . "')");
 	}
 	$db->close();
+	$ck_noc = config_get_value_from_file('/var/run/roswan','noc_connected');
+	if($ck_noc){
+		exec("hfslogpub 1 ".$_SESSION['secros_user']['name']." ". get_client_ip() ." ". $filename . " ".$direct." ".$action." ".$desc);
+	}
 }
 
 function config_read($filename){

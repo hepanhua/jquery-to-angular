@@ -132,6 +132,7 @@ class user extends Controller
             'user_name'     => $this->user['name'],
             'web_root'      => $GLOBALS['web_root'],
             'web_host'      => HOST,
+            'xmodel_v'      => xmodel_v,
             'static_path'   => STATIC_PATH,
             'basic_path'    => $basic_path,
             'app_host'      => APPHOST,
