@@ -49,17 +49,6 @@ define('STATIC_PATH',"./static/");//静态文件目录
 //define('STATIC_PATH','http://www.secros.com/static/');//静态文件统分离,可单独将static部署到CDN
 
 define('X86',0);    //X86系统
-$bbba = 'fffc';
-$xmodel_v="";
-if (isset($config['system_info']['XMODEL']))
-		{
-		$xmodel_v =$config['system_info']['XMODEL'];
-		}
-if (isset($config['oem_info']['XMODEL']))
-		{
-        $xmodel_v =$config['oem_info']['XMODEL'];
-        }
-define('xmodel_v',$xmodel_v);     
 /*
  可以自定义【用户目录】和【公共目录】;移到web目录之外，
  可以使程序更安全, 就不用限制用户的扩展名权限了;
@@ -88,6 +77,20 @@ include(CORER_DIR.'Model.class.php');
 include(FUNCTION_DIR.'common.function.php');
 include(BASIC_PATH.'config/setting.php');
 include(BASIC_PATH.'config/version.php');
+
+
+$xmodel_v="";
+$xm_va = config_get_unsign_int_from_file('/etc/system/sys.conf','XMODEL');
+$xm_vb = config_get_unsign_int_from_file('/etc/system/oem.conf','XMODEL');
+if (isset($xm_va) && $xm_va!= 0)
+{
+$xmodel_v =$xm_va;
+}
+if (isset($xm_vb) && $xm_vb!= 0)
+{
+$xmodel_v =$xm_vb;
+}
+define('xmodel_v',$xmodel_v);     
 
 //数据地址定义。
 $config['pic_thumb']	= BASIC_PATH.'data/thumb/';		// 缩略图生成存放地址

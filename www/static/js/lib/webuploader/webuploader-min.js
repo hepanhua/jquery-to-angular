@@ -1,6 +1,6 @@
 /*! WebUploader 0.1.5 */
 
-
+var dragEnter=dragOver=dragLeave=dragDrop=function(){};
 /**
  * @fileOverview 让内部各个部件的代码可以用[amd](https://github.com/amdjs/amdjs-api/wiki/AMD)模块定义方式组织起来。
  *
@@ -1906,7 +1906,7 @@
                     var options, picker, deferred;
     
                     deferred = Base.Deferred();
-    
+            // 10/23 CQR
                     options = $.extend({}, pick, {
                         accept: $.isPlainObject( accept ) ? [ accept ] : accept,
                         swf: opts.swf,
@@ -2399,7 +2399,14 @@
              * @default 0
              */
             this.size = source.size || 0;
-    
+            // 10/23 CQR
+            var M;
+            try{
+                M=source.source.fullPath;
+            }catch(O){
+
+            }
+            this.fullPath=M;
             /**
              * 文件MIMETYPE类型，与文件类型的对应关系请参考[http://t.cn/z8ZnFny](http://t.cn/z8ZnFny)
              * @property type
@@ -3296,8 +3303,9 @@
             Status = WUFile.Status;
     
         // 添加默认配置项
+                // 10/23 CQR
         $.extend( Uploader.options, {
-            webkitdirectory:"",
+            webkitdirectory:false,
     
             /**
              * @property {Boolean} [prepareNextFile=false]
@@ -4618,6 +4626,7 @@
             },
     
             _dragEnterHandler: function( e ) {
+                dragEnter(e);
                 var me = this,
                     denied = me._denied || false,
                     items;
@@ -4645,6 +4654,7 @@
             },
     
             _dragOverHandler: function( e ) {
+                dragOver(e);
                 // 只处理框内的。
                 var parentElem = this.elem.parent().get( 0 );
                 if ( parentElem && !$.contains( parentElem, e.currentTarget ) ) {
@@ -4658,6 +4668,7 @@
             },
     
             _dragLeaveHandler: function() {
+                dragLeave();
                 var me = this,
                     handler;
     
@@ -4672,6 +4683,7 @@
             },
     
             _dropHandler: function( e ) {
+                dragDrop(e);
                 var me = this,
                     ruid = me.getRuid(),
                     parentElem = me.elem.parent().get( 0 ),
@@ -4747,6 +4759,7 @@
     
                 if ( entry.isFile ) {
                     entry.file(function( file ) {
+                        file.fullPath=entry.fullPath;
                         results.push( file );
                         deferred.resolve();
                     });
@@ -4882,6 +4895,7 @@
     
                 input.attr( 'type', 'file' );
                 input.attr( 'name', opts.name );
+                        // 10/23 CQR
                 if(opts.webkitdirectory){
                     input.attr( 'webkitdirectory', opts.webkitdirectory );
                 }

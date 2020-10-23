@@ -1356,68 +1356,69 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			o()
 		},
 		server_dwonload: function(e) {
-			core.upload_check("explorer:serverDownload");
-			var t = $(".download_box"),
-				a = t.find("#download_list"),
-				i = t.find("input").val();
-			if (t.find("input").val(""), !i || "http" != i.substr(0, 4)) return core.tips.tips("url false!", !1), void 0;
-			var n = UUID(),
-				s = '<div id="' + n + '" class="item">' + '<div class="info"><span class="title" tytle="' + i + '">' + core.pathThis(i) + "</span>" + '<span class="size">0b</span>' + '<span class="state">' + LNG.upload_ready + "</span>" + '<a class="remove font-icon icon-remove" href="javascript:void(0)"></a>' + '<div style="clear:both"></div></div></div>';
-			a.find(".item").length > 0 ? $(s).insertBefore(a.find(".item:eq(0)")) : a.append(s);
-			var o, r, l, c = 0,
-				d = $("#" + n),
-				p = $("#" + n + " .state").text(LNG.download_ready),
-				u = $('<div class="progress progress-striped active"><div class="progress-bar" role="progressbar" style="width: 0%;text-align:right;"></div></div>').appendTo("#" + n).find(".progress-bar");
-			$("#" + n + " .remove").bind("click", function() {
-				clearInterval(o), o = !1, clearTimeout(r), o = !1, $.get("./index.php?explorer/serverDownload&type=remove&uuid=" + n), $(this).parent().parent().slideUp(function() {
-					$(this).remove(), ui.f5()
-				})
-			}), $.ajax({
-				url: "./index.php?explorer/serverDownload&type=download&save_path=" + e + "&url=" + urlEncode2(i) + "&uuid=" + n,
-				dataType: "json",
-				error: function(e, t, a) {
-					core.ajaxError(e, t, a), clearInterval(o), o = !1, clearTimeout(r), o = !1, u.parent().remove(), p.addClass("error").text(LNG.download_error)
-				},
-				success: function(e) {
-					clearInterval(o), o = !1, clearTimeout(r), o = !1, e.code ? (ui.f5_callback(function() {
-						ui.path.setSelectByFilename(e.info)
-					}), p.text(LNG.download_success), $("#" + n + " .info .title").html(e.info)) : p.addClass("error").text(LNG.error), u.parent().remove()
-				}
-			});
-			var h = function() {
-					$.ajax({
-						url: "./index.php?explorer/serverDownload&type=percent&uuid=" + n,
-						dataType: "json",
-						success: function(e) {
-							var t = "",
-								a = e.data;
-							if (o) {
-								if (!e.code) return p.text(LNG.loading), void 0;
-								if (a) {
-									if (a.size = parseFloat(a.size), a.time = parseFloat(a.time), l) {
-										var i = (a.size - l.size) / (a.time - l.time);
-										if (c > .2 * i) {
-											var n = c;
-											c = i, i = n
-										} else c = i;
-										t = core.file_size(i) + "/s"
-									}
-									if (0 == a.length) d.find(".progress-bar").css("width", "100%").text(LNG.loading);
-									else {
-										var s = 100 * (a.size / a.length);
-										d.find(".progress-bar").css("width", s + "%"), p.text(parseInt(s) + "%(" + t + ")")
-									}
-									d.find(".size").text(core.file_size(a.length)), l = a
-								}
-							}
-						}
-					})
-				};
-			r = setTimeout(function() {
-				h(), o = setInterval(function() {
-					h()
-				}, 1e3)
-			}, 100)
+			console.log(e);
+			// core.upload_check("explorer:serverDownload");
+			// var t = $(".download_box"),
+			// 	a = t.find("#download_list"),
+			// 	i = t.find("input").val();
+			// if (t.find("input").val(""), !i || "http" != i.substr(0, 4)) return core.tips.tips("url false!", !1), void 0;
+			// var n = UUID(),
+			// 	s = '<div id="' + n + '" class="item">' + '<div class="info"><span class="title" tytle="' + i + '">' + core.pathThis(i) + "</span>" + '<span class="size">0b</span>' + '<span class="state">' + LNG.upload_ready + "</span>" + '<a class="remove font-icon icon-remove" href="javascript:void(0)"></a>' + '<div style="clear:both"></div></div></div>';
+			// a.find(".item").length > 0 ? $(s).insertBefore(a.find(".item:eq(0)")) : a.append(s);
+			// var o, r, l, c = 0,
+			// 	d = $("#" + n),
+			// 	p = $("#" + n + " .state").text(LNG.download_ready),
+			// 	u = $('<div class="progress progress-striped active"><div class="progress-bar" role="progressbar" style="width: 0%;text-align:right;"></div></div>').appendTo("#" + n).find(".progress-bar");
+			// $("#" + n + " .remove").bind("click", function() {
+			// 	clearInterval(o), o = !1, clearTimeout(r), o = !1, $.get("./index.php?explorer/serverDownload&type=remove&uuid=" + n), $(this).parent().parent().slideUp(function() {
+			// 		$(this).remove(), ui.f5()
+			// 	})
+			// }), $.ajax({
+			// 	url: "./index.php?explorer/serverDownload&type=download&save_path=" + e + "&url=" + urlEncode2(i) + "&uuid=" + n,
+			// 	dataType: "json",
+			// 	error: function(e, t, a) {
+			// 		core.ajaxError(e, t, a), clearInterval(o), o = !1, clearTimeout(r), o = !1, u.parent().remove(), p.addClass("error").text(LNG.download_error)
+			// 	},
+			// 	success: function(e) {
+			// 		clearInterval(o), o = !1, clearTimeout(r), o = !1, e.code ? (ui.f5_callback(function() {
+			// 			ui.path.setSelectByFilename(e.info)
+			// 		}), p.text(LNG.download_success), $("#" + n + " .info .title").html(e.info)) : p.addClass("error").text(LNG.error), u.parent().remove()
+			// 	}
+			// });
+			// var h = function() {
+			// 		$.ajax({
+			// 			url: "./index.php?explorer/serverDownload&type=percent&uuid=" + n,
+			// 			dataType: "json",
+			// 			success: function(e) {
+			// 				var t = "",
+			// 					a = e.data;
+			// 				if (o) {
+			// 					if (!e.code) return p.text(LNG.loading), void 0;
+			// 					if (a) {
+			// 						if (a.size = parseFloat(a.size), a.time = parseFloat(a.time), l) {
+			// 							var i = (a.size - l.size) / (a.time - l.time);
+			// 							if (c > .2 * i) {
+			// 								var n = c;
+			// 								c = i, i = n
+			// 							} else c = i;
+			// 							t = core.file_size(i) + "/s"
+			// 						}
+			// 						if (0 == a.length) d.find(".progress-bar").css("width", "100%").text(LNG.loading);
+			// 						else {
+			// 							var s = 100 * (a.size / a.length);
+			// 							d.find(".progress-bar").css("width", s + "%"), p.text(parseInt(s) + "%(" + t + ")")
+			// 						}
+			// 						d.find(".size").text(core.file_size(a.length)), l = a
+			// 					}
+			// 				}
+			// 			}
+			// 		})
+			// 	};
+			// r = setTimeout(function() {
+			// 	h(), o = setInterval(function() {
+			// 		h()
+			// 	}, 1e3)
+			// }, 100)
 		},
 		file_size: function(e) {
 			if (0 == e) return "0B";
@@ -1476,10 +1477,17 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			}), $(".file_upload .tips").tooltip({
 				placement: "bottom"
 			}), $(".file_upload .top_nav a.menu").unbind("click").bind("click", function() {
-				$(this).hasClass("tab_upload") ? ($(".file_upload .tab_upload").addClass("this"), $(".file_upload .tab_download").removeClass("this"), $(".file_upload .upload_box").removeClass("hidden"), $(".file_upload .download_box").addClass("hidden")) : ($(".file_upload .tab_upload").removeClass("this"), $(".file_upload .tab_download").addClass("this"), $(".file_upload .upload_box").addClass("hidden"), $(".file_upload .download_box").removeClass("hidden"))
-			}), $(".file_upload .download_box button").unbind("click").bind("click", function() {
-				core.server_dwonload(G.upload_path)
-			}), uploader.addButton({
+				$(this).hasClass("tab_upload") ? ($(".file_upload .tab_upload").addClass("this"), 
+				$(".file_upload .tab_download").removeClass("this"), 
+				$(".file_upload .upload_box").removeClass("hidden"), 
+				$(".file_upload .download_box").addClass("hidden")) : ($(".file_upload .tab_upload").removeClass("this"),
+				$(".file_upload .tab_download").addClass("this"), $(".file_upload .upload_box").addClass("hidden"),
+				$(".file_upload .download_box").removeClass("hidden"))
+			}),
+			//  $(".file_upload .download_box button").unbind("click").bind("click", function() {
+			// 	core.server_dwonload(G.upload_path)
+			// }), 
+			uploader.addButton({
 				id: "#picker"
 			}),uploaderfol.addButton({
 				id: "#pickerfol"
@@ -1490,9 +1498,10 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				t = !0;
 			$.browser.msie && (t = !1);
 			var a = 10485760;
-			a >= G.upload_max && (a = .5 * G.upload_max), uploader = WebUploader.create({
+			a >= G.upload_max && (a = .5 * G.upload_max),
+			uploader = WebUploader.create({
 				swf: G.static_path + "js/lib/webuploader/Uploader.swf",
-				dnd: "body",
+				dnd: "body", //文件拖拽
 				// auto:false,
 				// fileSingleSizeLimit: 209715200,
 				threads: 2,
@@ -1506,7 +1515,6 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			}),
 			uploaderfol = WebUploader.create({
 				swf: G.static_path + "js/lib/webuploader/Uploader.swf",
-				dnd: "body",
 				webkitdirectory:1,
 				threads: 2,
 				compress: !1,
@@ -1578,8 +1586,8 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				});
 
 				uploaderfol.on("uploadBeforeSend", function(e, t) {
-					var a = urlEncode(e.file.fullPath);
-					(void 0 == a || "undefined" == a) && (a = ""), t.fullPath = a;
+					var a = urlEncode(e.file.source.source.webkitRelativePath);
+					(void 0 == a || "undefined" == a) && (a = ""),t.fullPath = a;
 				}).on("fileQueued", function(t) {
 					if (!core.upload_check()) return uploaderfol.skipFile(t), uploaderfol.removeFile(t), void 0;
 					var a, n = $(e),a = t.fullPath;
@@ -1626,6 +1634,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 
 			uploader.on("uploadBeforeSend", function(e, t) {
 				var a = urlEncode(e.file.fullPath);
+				console.log(e);
 				(void 0 == a || "undefined" == a) && (a = ""), t.fullPath = a;
 			}).on("fileQueued", function(t) {
 				if (!core.upload_check()) return uploader.skipFile(t), uploader.removeFile(t), void 0;
@@ -1673,7 +1682,8 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 
 
 			var l;
-			inState = !1, dragOver = function() {
+			inState = !1,
+			dragOver = function() {
 				0 == inState && (inState = !0, MaskView.tips(LNG.upload_drag_tips)), l && window.clearTimeout(l)
 			}, dragLeave = function(e) {
 				stopPP(e), l && window.clearTimeout(l), l = window.setTimeout(function() {

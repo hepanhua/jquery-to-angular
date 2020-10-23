@@ -52,9 +52,7 @@
 	</div>
 	<?php
 		$xmodel =  "";
-		if (isset($config['system_info']['XMODEL']))
-		{
-			switch ($config['system_info']['XMODEL'])
+			switch (xmodel_v)
 			{
 				case "1":
 					$xmodel =  $L['xmodel_std'];
@@ -71,27 +69,6 @@
 				default:
 					break;
 			}
-		}
-		if (isset($config['oem_info']['XMODEL']))
-		{
-			switch ($config['oem_info']['XMODEL'])
-			{
-				case "1":
-					$xmodel =  $L['xmodel_std'];
-					break;
-				case "2":
-					$xmodel =  $L['xmodel_pro'];
-					break;
-				case "3":
-					$xmodel =  $L['xmodel_ca'];
-					break;
-				case "4":
-					$xmodel =  $L['xmodel_gm'];
-					break;
-				default:
-					break;
-			}
-		}
 	?>
 	<div class="box_line">
 		<span class='infotitle'><?php echo $L['system_software'];?>:</span><input type="text" name="system_software"
