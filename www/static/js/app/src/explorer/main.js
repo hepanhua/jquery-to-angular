@@ -332,6 +332,9 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			t = "up" == G.sort_order ? r + o : o + r, "" == t && (t = '<div style="text-align:center;color:#aaa;">' + LNG.path_null + "</div>"), t += "<div style='clear:both'></div>", e ? $(Config.FileBoxSelector).hide().html(t).fadeIn(Config.AnimateTime) : $(Config.FileBoxSelector).html(t), "list" == G.list_type && $(Config.FileBoxSelector + " .file:nth-child(2n)").addClass("file2"), _ajaxLive()
 		},
 		_f5 = function(e, t, a) {
+			if(G.this_path == '/'){
+				G.this_path = '*usbox*/';
+			}
 			if (void 0 == e && (e = !0), void 0 == t && (t = !1), _jsonSortTitle(), e) $.ajax({
 				url: "index.php?explorer/pathList&path=" + urlEncode(G.this_path),
 				dataType: "json",
@@ -490,7 +493,8 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 						ui.f5(!0, !0), ui.tree.init();
 						break;
 					case "home":
-						ui.path.list(G.myhome);
+						// ui.path.list(G.myhome);
+						ui.path.list('*usbox*');
 						break;
 					case "fav":
 						ui.path.pathOperate.fav(G.this_path);
@@ -542,6 +546,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			},
 			gotoPath: function() {
 				var e = $("input.path").val();
+				console.log('qqq');
 				e = e.replace(/\\/g, "/"), $("input.path").val(e), "/" != e.substr(e.length - 1, 1) && (e += "/"), ui.path.list(e), ui.header.addressSet()
 			},
 			updateHistoryStatus: function() {
@@ -1322,6 +1327,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					}), $("#search_value,#search_ext,#search_path").keyEnter(r), $(".search_header a.button").die("click").live("click", r), $(".search_result .list .name").die("click").live("click", function() {
 						var e = $(this).find("a").html(),
 							t = $(this).parent().find(".path a").html() + e;
+							console.log('ggb');
 						$(this).parent().hasClass("file") ? ui.pathOpen.open(t) : "explorer" == Config.pageApp ? ui.path.list(t + "/", "tips") : core.explorer(t + "/")
 					}), $(".search_result .list .path a").die("click").live("click", function() {
 						var e = $(this).html();
@@ -3598,7 +3604,8 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			},
 			callback: {
 				onClick: function(e, t, a) {
-					return s.selectNode(a), s.expandNode(a), "folder" != a.type || "editor" != Config.pageApp ? 0 == a.level ? ("explorer" == Config.pageApp && void 0 != a.this_path && ui.path.list(a.this_path + "/"), !1) : ("editor" == Config.pageApp ? ui.tree.openEditor() : "explorer" == Config.pageApp && ui.tree.open(), void 0) : void 0
+					return s.selectNode(a), s.expandNode(a), 
+					"folder" != a.type || "editor" != Config.pageApp ? 0 == a.level ? ("explorer" == Config.pageApp && void 0 != a.this_path && ui.path.list(a.this_path + "/"), !1) : ("editor" == Config.pageApp ? ui.tree.openEditor() : "explorer" == Config.pageApp && ui.tree.open(), void 0) : void 0
 				},
 				beforeRightClick: function(e, t) {
 					s.selectNode(t)
@@ -4536,6 +4543,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			if (!(1 > e.length)) {
 				var i, n = core.pathThis(e),
 					s = core.pathFather(e);
+
 				i = "folder" == t ? "ui.path.list('" + urlEncode(e) + "');" : "ui.path.open('" + urlEncode(e) + "');";
 				var o = urlEncode2(s + n + ".oexe");
 				$.ajax({
@@ -5323,10 +5331,15 @@ define("app/src/explorer/path", ["../../common/pathOperate", "../../tpl/fileinfo
 		n = void 0;
 	ui.pathOpen = a;
 	var s = function(e, t, a) {
+
 			if (void 0 != e) {
+				console.log(G.this_path);
 				if ("explorer" != Config.pageApp) return core.explorer(e), void 0;
 				if (e == G.this_path) return void 0 != t && "" != t && core.tips.tips(LNG.path_is_current, "info"), void 0;
-				if (G.this_path = e.replace(/\\/g, "/"), G.this_path = e.replace(/\/+/g, "/"), "/" != G.this_path.substr(G.this_path.length - 1) && (G.this_path += "/"), $(".dialog_file_upload").length > 0) {
+				if (G.this_path = e.replace(/\\/g, "/"), 
+				G.this_path = e.replace(/\/+/g, "/"), 
+				"/" != G.this_path.substr(G.this_path.length - 1) && (G.this_path += "/"),
+				 $(".dialog_file_upload").length > 0) {
 					var i = "hidden" == $(".dialog_file_upload").css("visibility");
 					core.upload(), i && $(".dialog_file_upload").css("visibility", "hidden")
 				}
