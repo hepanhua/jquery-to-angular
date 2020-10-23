@@ -26,7 +26,6 @@ function _DIR($path){
         return "*share*/";
     }
     $path = HOME.$path;
-    // show_json($path);
     if (is_dir($path)) $path = rtrim($path,'/').'/';
     return $path;
 }
