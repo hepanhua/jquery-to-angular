@@ -2752,238 +2752,349 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			})
 		},
 		_bindTreeFolder = function() {
-			$('<i class="' + selectTreeSelectorFolder.substr(1) + '"></i>').appendTo("#rightMenu"), $.contextMenu({
-				zIndex: 9999,
-				selector: ".level1"+selectTreeSelectorFolder,
-				callback: function(e,selector) {
-					var usbid=selector.$trigger[0].title;
-					_menuTree(e,usbid);
-				},
-				items: {
-					refresh: {
-						name: LNG.refresh_tree,
-						className: "refresh",
-						icon: "refresh",
-						accesskey: "e"
+			$('<i class="' + selectTreeSelectorFolder.substr(1) + '"></i>').appendTo("#rightMenu");
+			if(core.scanvirusCheck()){
+				$.contextMenu({
+					zIndex: 9999,
+					selector: ".level1"+selectTreeSelectorFolder,
+					callback: function(e,selector) {
+						var usbid=selector.$trigger[0].title;
+						_menuTree(e,usbid);
 					},
-					/*download: {
-						name: LNG.download,
-						className: "download",
-						icon: "download",
-						accesskey: "x"
-					},
-					share: {
-						name: LNG.share,
-						className: "share",
-						icon: "share-sign",
-						accesskey: "e"
-					},*/
-					sep0: "--------",
-					safeout: {
-						name: LNG.safe_out,
-						className: "safeout",
-						icon: "share-sign",
-						accesskey: "o"
-					},
-					sep1: "--------",
-					// copy: {
-					// 	name: LNG.copy,
-					// 	className: "copy",
-					// 	icon: "copy",
-					// 	accesskey: "c"
-					// },
-					// cute: {
-					// 	name: LNG.cute,
-					// 	className: "cute",
-					// 	icon: "cut",
-					// 	accesskey: "k"
-					// },
-					// past: {
-					// 	name: LNG.past,
-					// 	className: "past",
-					// 	icon: "paste",
-					// 	accesskey: "p"
-					// },
-					// rname: {
-					// 	name: LNG.rename,
-					// 	className: "rname",
-					// 	icon: "pencil",
-					// 	accesskey: "r"
-					// },
-					// remove: {
-					// 	name: LNG.remove,
-					// 	className: "remove",
-					// 	icon: "trash",
-					// 	accesskey: "d"
-					// },
-					// sep2: "--------",
-					// newfolder: {
-					// 	name: LNG.newfolder,
-					// 	className: "newfolder",
-					// 	icon: "folder-close-alt",
-					// 	accesskey: "n"
-					// },
-					/*search: {
-						name: LNG.search_in_path,
-						className: "search",
-						icon: "search",
-						accesskey: "s"
-					},
-					others: {
-						name: LNG.more,
-						icon: "ellipsis-horizontal",
-						accesskey: "m",
-						items: {
-							fav: {
-								name: LNG.add_to_fav,
-								className: "fav",
-								icon: "star"
-							},
-							open_ie: {
-								name: LNG.open_ie,
-								className: "open_ie",
-								icon: "globe"
-							},
-							clone: {
-								name: LNG.clone,
-								className: "clone",
-								icon: "external-link",
-								accesskey: "l"
-							},
-							explorer: {
-								name: LNG.manage_folder,
-								className: "explorer line_top",
-								icon: "laptop",
-								accesskey: "v"
-							},
-							openProject: {
-								name: LNG.openProject,
-								className: "openProject",
-								icon: "edit"
+					items: {
+						refresh: {
+							name: LNG.refresh_tree,
+							className: "refresh",
+							icon: "refresh",
+							accesskey: "e"
+						},
+						tree_scanvirus: {
+							name: LNG.scanvirus,
+							className: "tree_scanvirus",
+							icon: "bolt",
+							// accesskey: "q"
+						},
+						/*download: {
+							name: LNG.download,
+							className: "download",
+							icon: "download",
+							accesskey: "x"
+						},
+						share: {
+							name: LNG.share,
+							className: "share",
+							icon: "share-sign",
+							accesskey: "e"
+						},*/
+						sep0: "--------",
+						safeout: {
+							name: LNG.safe_out,
+							className: "safeout",
+							icon: "share-sign",
+							accesskey: "o"
+						},
+						sep1: "--------",
+						// copy: {
+						// 	name: LNG.copy,
+						// 	className: "copy",
+						// 	icon: "copy",
+						// 	accesskey: "c"
+						// },
+						// cute: {
+						// 	name: LNG.cute,
+						// 	className: "cute",
+						// 	icon: "cut",
+						// 	accesskey: "k"
+						// },
+						// past: {
+						// 	name: LNG.past,
+						// 	className: "past",
+						// 	icon: "paste",
+						// 	accesskey: "p"
+						// },
+						// rname: {
+						// 	name: LNG.rename,
+						// 	className: "rname",
+						// 	icon: "pencil",
+						// 	accesskey: "r"
+						// },
+						// remove: {
+						// 	name: LNG.remove,
+						// 	className: "remove",
+						// 	icon: "trash",
+						// 	accesskey: "d"
+						// },
+						// sep2: "--------",
+						// newfolder: {
+						// 	name: LNG.newfolder,
+						// 	className: "newfolder",
+						// 	icon: "folder-close-alt",
+						// 	accesskey: "n"
+						// },
+						/*search: {
+							name: LNG.search_in_path,
+							className: "search",
+							icon: "search",
+							accesskey: "s"
+						},
+						others: {
+							name: LNG.more,
+							icon: "ellipsis-horizontal",
+							accesskey: "m",
+							items: {
+								fav: {
+									name: LNG.add_to_fav,
+									className: "fav",
+									icon: "star"
+								},
+								open_ie: {
+									name: LNG.open_ie,
+									className: "open_ie",
+									icon: "globe"
+								},
+								clone: {
+									name: LNG.clone,
+									className: "clone",
+									icon: "external-link",
+									accesskey: "l"
+								},
+								explorer: {
+									name: LNG.manage_folder,
+									className: "explorer line_top",
+									icon: "laptop",
+									accesskey: "v"
+								},
+								openProject: {
+									name: LNG.openProject,
+									className: "openProject",
+									icon: "edit"
+								}
 							}
+						},*/
+						// sep3: "--------",
+						info: {
+							name: LNG.info,
+							className: "info",
+							icon: "info",
+							accesskey: "i"
 						}
-					},*/
-					// sep3: "--------",
-					info: {
-						name: LNG.info,
-						className: "info",
-						icon: "info",
-						accesskey: "i"
 					}
-				}
-			});
-			$('<i class="' + selectTreeSelectorFolder.substr(1) + '"></i>').appendTo("#rightMenu"), $.contextMenu({
-				zIndex: 9999,
-				selector: selectTreeSelectorFolder,
-				callback: function(e) {
-					_menuTree(e)
-				},
-				items: {
-					refresh: {
-						name: LNG.refresh_tree,
-						className: "refresh",
-						icon: "refresh",
-						accesskey: "e"
+				});
+			}else{
+				$.contextMenu({
+					zIndex: 9999,
+					selector: ".level1"+selectTreeSelectorFolder,
+					callback: function(e,selector) {
+						var usbid=selector.$trigger[0].title;
+						_menuTree(e,usbid);
 					},
-					/*download: {
-						name: LNG.download,
-						className: "download",
-						icon: "download",
-						accesskey: "x"
+					items: {
+						refresh: {
+							name: LNG.refresh_tree,
+							className: "refresh",
+							icon: "refresh",
+							accesskey: "e"
+						},
+						sep0: "--------",
+						safeout: {
+							name: LNG.safe_out,
+							className: "safeout",
+							icon: "share-sign",
+							accesskey: "o"
+						},
+						sep1: "--------",
+						info: {
+							name: LNG.info,
+							className: "info",
+							icon: "info",
+							accesskey: "i"
+						}
+					}
+				});
+			}
+			
+			$('<i class="' + selectTreeSelectorFolder.substr(1) + '"></i>').appendTo("#rightMenu");
+			if(core.scanvirusCheck()){
+				$.contextMenu({
+					zIndex: 9999,
+					selector: selectTreeSelectorFolder,
+					callback: function(e) {
+						_menuTree(e)
 					},
-					share: {
-						name: LNG.share,
-						className: "share",
-						icon: "share-sign",
-						accesskey: "e"
-					},*/
-					sep1: "--------",
-					copy: {
-						name: LNG.copy,
-						className: "copy",
-						icon: "copy",
-						accesskey: "c"
-					},
-					cute: {
-						name: LNG.cute,
-						className: "cute",
-						icon: "cut",
-						accesskey: "k"
-					},
-					past: {
-						name: LNG.past,
-						className: "past",
-						icon: "paste",
-						accesskey: "p"
-					},
-					rname: {
-						name: LNG.rename,
-						className: "rname",
-						icon: "pencil",
-						accesskey: "r"
-					},
-					remove: {
-						name: LNG.remove,
-						className: "remove",
-						icon: "trash",
-						accesskey: "d"
-					},
-					sep2: "--------",
-					newfolder: {
-						name: LNG.newfolder,
-						className: "newfolder",
-						icon: "folder-close-alt",
-						accesskey: "n"
-					},
-					/*search: {
-						name: LNG.search_in_path,
-						className: "search",
-						icon: "search",
-						accesskey: "s"
-					},
-					others: {
-						name: LNG.more,
-						icon: "ellipsis-horizontal",
-						accesskey: "m",
-						items: {
-							fav: {
-								name: LNG.add_to_fav,
-								className: "fav",
-								icon: "star"
-							},
-							open_ie: {
-								name: LNG.open_ie,
-								className: "open_ie",
-								icon: "globe"
-							},
-							clone: {
-								name: LNG.clone,
-								className: "clone",
-								icon: "external-link",
-								accesskey: "l"
-							},
-							explorer: {
-								name: LNG.manage_folder,
-								className: "explorer line_top",
-								icon: "laptop",
-								accesskey: "v"
-							},
-							openProject: {
-								name: LNG.openProject,
-								className: "openProject",
-								icon: "edit"
+					items: {
+						refresh: {
+							name: LNG.refresh_tree,
+							className: "refresh",
+							icon: "refresh",
+							accesskey: "e"
+						},
+						tree_scanvirus: {
+							name: LNG.scanvirus,
+							className: "tree_scanvirus",
+							icon: "bolt"
+						},
+						/*download: {
+							name: LNG.download,
+							className: "download",
+							icon: "download",
+							accesskey: "x"
+						},
+						share: {
+							name: LNG.share,
+							className: "share",
+							icon: "share-sign",
+							accesskey: "e"
+						},*/
+						sep1: "--------",
+						copy: {
+							name: LNG.copy,
+							className: "copy",
+							icon: "copy",
+							accesskey: "c"
+						},
+						cute: {
+							name: LNG.cute,
+							className: "cute",
+							icon: "cut",
+							accesskey: "k"
+						},
+						past: {
+							name: LNG.past,
+							className: "past",
+							icon: "paste",
+							accesskey: "p"
+						},
+						rname: {
+							name: LNG.rename,
+							className: "rname",
+							icon: "pencil",
+							accesskey: "r"
+						},
+						remove: {
+							name: LNG.remove,
+							className: "remove",
+							icon: "trash",
+							accesskey: "d"
+						},
+						sep2: "--------",
+						newfolder: {
+							name: LNG.newfolder,
+							className: "newfolder",
+							icon: "folder-close-alt",
+							accesskey: "n"
+						},
+						/*search: {
+							name: LNG.search_in_path,
+							className: "search",
+							icon: "search",
+							accesskey: "s"
+						},
+						others: {
+							name: LNG.more,
+							icon: "ellipsis-horizontal",
+							accesskey: "m",
+							items: {
+								fav: {
+									name: LNG.add_to_fav,
+									className: "fav",
+									icon: "star"
+								},
+								open_ie: {
+									name: LNG.open_ie,
+									className: "open_ie",
+									icon: "globe"
+								},
+								clone: {
+									name: LNG.clone,
+									className: "clone",
+									icon: "external-link",
+									accesskey: "l"
+								},
+								explorer: {
+									name: LNG.manage_folder,
+									className: "explorer line_top",
+									icon: "laptop",
+									accesskey: "v"
+								},
+								openProject: {
+									name: LNG.openProject,
+									className: "openProject",
+									icon: "edit"
+								}
 							}
+						},*/
+						sep3: "--------",
+						info: {
+							name: LNG.info,
+							className: "info",
+							icon: "info",
+							accesskey: "i"
 						}
-					},*/
-					sep3: "--------",
-					info: {
-						name: LNG.info,
-						className: "info",
-						icon: "info",
-						accesskey: "i"
 					}
-				}
-			})
+				})
+			}else{
+				$.contextMenu({
+					zIndex: 9999,
+					selector: selectTreeSelectorFolder,
+					callback: function(e) {
+						_menuTree(e)
+					},
+					items: {
+						refresh: {
+							name: LNG.refresh_tree,
+							className: "refresh",
+							icon: "refresh",
+							accesskey: "e"
+						},
+						sep1: "--------",
+						copy: {
+							name: LNG.copy,
+							className: "copy",
+							icon: "copy",
+							accesskey: "c"
+						},
+						cute: {
+							name: LNG.cute,
+							className: "cute",
+							icon: "cut",
+							accesskey: "k"
+						},
+						past: {
+							name: LNG.past,
+							className: "past",
+							icon: "paste",
+							accesskey: "p"
+						},
+						rname: {
+							name: LNG.rename,
+							className: "rname",
+							icon: "pencil",
+							accesskey: "r"
+						},
+						remove: {
+							name: LNG.remove,
+							className: "remove",
+							icon: "trash",
+							accesskey: "d"
+						},
+						sep2: "--------",
+						newfolder: {
+							name: LNG.newfolder,
+							className: "newfolder",
+							icon: "folder-close-alt",
+							accesskey: "n"
+						},
+						sep3: "--------",
+						info: {
+							name: LNG.info,
+							className: "info",
+							icon: "info",
+							accesskey: "i"
+						}
+					}
+				})
+			}
+			
 		},
 		_bindTreeFolderEditor = function() {
 			$('<i class="' + selectTreeSelectorFolder.substr(1) + '"></i>').appendTo("#rightMenu"), $.contextMenu({
@@ -3350,6 +3461,9 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				break;
 			case "search":
 				ui.tree.search();
+				break;
+			case "tree_scanvirus":
+				ui.tree.av();
 				break;
 			case "newfolder":
 				ui.tree.create("folder");
@@ -4124,6 +4238,30 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				height: 420
 			})
 		},
+		av: function(){
+			let e = d().path;
+			if(!e){
+				return false;
+			}
+			if (core.scanvirusCheck() && e) {
+				var t = "index.php?explorer/scanvirus&path=" + urlEncode2(e);
+				G.share_page !== void 0 && (t = "index.php?share/scanvirus&user=" + G.user + "&sid=" + G.sid + "&path=" + urlEncode2(e));
+				let av_status = $('#noc_status').text().split(': ') == '已连接'?'病毒扫描已入队':LNG.scanvirus_ready;
+				var a = '<iframe src="' + t + '" style="width:0px;height:0px;border:0;" frameborder=0></iframe>' + av_status + "...",
+					i = $.dialog({
+						icon: "succeed",
+						title: !1,
+						time: 1,
+						content: a
+					});
+				i.DOM.wrap.find(".aui_loading").remove();
+				return true;
+			}
+			return false;
+		},
+		// tree_av_getpath(){
+
+		// }
 		create: function(e) {
 			var t = s.getSelectedNodes();
 			if (0 >= t.length) {
@@ -5333,7 +5471,6 @@ define("app/src/explorer/path", ["../../common/pathOperate", "../../tpl/fileinfo
 	var s = function(e, t, a) {
 
 			if (void 0 != e) {
-				console.log(G.this_path);
 				if ("explorer" != Config.pageApp) return core.explorer(e), void 0;
 				if (e == G.this_path) return void 0 != t && "" != t && core.tips.tips(LNG.path_is_current, "info"), void 0;
 				if (G.this_path = e.replace(/\\/g, "/"), 
@@ -5673,7 +5810,14 @@ define("app/src/explorer/path", ["../../common/pathOperate", "../../tpl/fileinfo
 			if(e.length == 1){
 				a.scanvirus(b(!0));
 			}else{
-				tips('请选择单个文件或文件夹',false);
+				if(e.length > 1){
+					tips('请选择单个文件或文件夹',false);
+					return;
+				}
+				let res = ui.tree.av();
+				if(!res){
+					tips('请选择单个文件或文件夹',false);
+				}
 			}
 			//1 == e.length && "file" == e[0].type ? a.download(b().path) : t.zipDownload(e)
 			//if (1 == e.length && "file" == e[0].type){
