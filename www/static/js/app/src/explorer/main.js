@@ -546,7 +546,6 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			},
 			gotoPath: function() {
 				var e = $("input.path").val();
-				console.log('qqq');
 				e = e.replace(/\\/g, "/"), $("input.path").val(e), "/" != e.substr(e.length - 1, 1) && (e += "/"), ui.path.list(e), ui.header.addressSet()
 			},
 			updateHistoryStatus: function() {
@@ -3851,7 +3850,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			});
 			//连接成功事件
 			function onConnect() {
-				console.log("连接成功！");
+				// console.log("连接成功！");
 				mqttclient.subscribe("sample-values/USBOX/usbevent/#"); 
 				mqttclient.subscribe("sample-values/USBOX/avscan/#");
 				mqttclient.subscribe("sample-values/USBOX/virus/#");
@@ -4323,8 +4322,10 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			return t(e, a) ? (core.tips.tips(LNG.path_not_allow + ':/  : * ? " < > |', !1), !1) : !0
 		},
 		n = function(e) {
-			for (var t = "list=[", a = 0; e.length > a; a++) t += '{"type":"' + e[a].type + '","path":"' + urlEncode2(e[a].path) + '"}', e.length - 1 > a && (t += ",");
-			return t + "]"
+			for (var t = 'list=[', a = 0; e.length > a; a++) t += '{"type":"' + e[a].type + '","path":"' + urlEncode2(e[a].path) + '"}', e.length - 1 > a && (t += ",");
+			let where = urlEncode2(e[0].path).split('%252F');
+			where.pop();
+			return t + ']&where='+where.join('%2F');
 		},
 		s = function(e, t) {
 			if (e) {

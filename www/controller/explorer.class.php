@@ -279,6 +279,7 @@ class explorer extends Controller{
     }
     public function pathDelete(){
         $list = json_decode($this->in['list'],true);
+        $where = rawurldecode($this->in['where']);
         if (!is_writable(USER_RECYCLE)) show_json($this->L['no_permission_write'],false);
         $success=0;$error=0;
         foreach ($list as $val) {
@@ -307,7 +308,11 @@ class explorer extends Controller{
         if ($error==0) {
         		system("sync");
             $info = $this->L['remove_success'];
+            write_audit('信息','删除','成功','删除'.$where.'中的'.$success.'个文件');
+        }else{
+            write_audit('警告','删除','失败','删除'.$where.'中的文件,'.$info);
         }
+        
         show_json($info,$state);
     }
     public function pathDeleteRecycle(){

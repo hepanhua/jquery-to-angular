@@ -1,4 +1,4 @@
-define("app/src/setting/main", ["lib/jquery-lib", "lib/util", "lib/artDialog/jquery-artDialog", "../../common/core", "../../tpl/copyright.html", "../../tpl/search.html", "../../tpl/search_list.html", "../../tpl/upload.html", "./setting", "./fav", "./group", "./member", "./antivirus","./platform", "./file","./system","./usblist"], function(e) {
+define("app/src/setting/main", ["lib/jquery-lib", "lib/util", "lib/artDialog/jquery-artDialog", "../../common/core", "../../tpl/copyright.html", "../../tpl/search.html", "../../tpl/search_list.html", "../../tpl/upload.html", "./setting", "./fav", "./group", "./member", "./antivirus","./platform", "./file","./system","./usblist","./remotelog"], function(e) {
     e("lib/jquery-lib"),
     e("lib/util"),
     e("lib/artDialog/jquery-artDialog"),
@@ -12,12 +12,14 @@ define("app/src/setting/main", ["lib/jquery-lib", "lib/util", "lib/artDialog/jqu
     System = e("./system"),
     Antivirus = e("./antivirus"),
     Platform = e("./platform"),
+    Remotelog = e("./remotelog"),
     Setting.init(),
     Fav.bindEvent(),
     Member.bindEvent(),
     Filetype.bindEvent(),
     Usblist.bindEvent(),
     Group.bindEvent(),
+    Remotelog.bindEvent(),
     Platform.bindEvent(),
     Antivirus.bindEvent(),
     System.bindEvent()
@@ -784,6 +786,7 @@ define("app/src/setting/setting", [], function() {
                 $(".main").html(a),
                 $(".main").fadeIn("fast"),
                 "fav" == t && Fav.init(e),
+                "remotelog" == t && Remotelog.init(),
                 "member" == t && Group.init(),
                 "file" == t && Filetype.init(),
                 "usblist" == t && Usblist.init(),
@@ -1901,6 +1904,79 @@ define("app/src/setting/antivirus", [], function() {
     }
     ;
     return {
+        bindEvent: m
+    }
+}),
+define("app/src/setting/remotelog", [], function() {
+   var  t = "index.php?remotelog/",
+   a = function() {
+    $.ajax({
+        url: t + "get",
+        dataType: "json",
+        async: !1,
+        success: function(e) {
+            if (!e.code)
+                return tips(e),
+                void 0;
+            var a = e.data;
+            let remotelogserver = document.getElementById('remotelogserver');
+            if(a.remotelog == "enabled"){
+                $("#remotelogstatus").prop("checked",true);
+                remotelogserver.disabled=false; 
+                $("#remotelogserver").val(a.remotelogserver);
+            }else{
+                $("#remotelogstatus").prop("checked",false);
+                remotelogserver.disabled=true;
+                remotelogserver.placeholder="";
+                $("#remotelogserver").val('');
+              }
+        },
+        error: function() {
+            return !1
+        }
+    })
+},d =function(){
+    let remotelogserver = $("#remotelogserver").val();
+    let remotelog = "";
+    if ($("#remotelogstatus").attr("checked")) {
+        remotelog = "enabled";
+    }else{
+        remotelog = '';
+    }
+    if(!remotelogserver && remotelog == "enabled" ){
+        return tips(LNG.not_null, "error");
+    }
+    var aa = {
+        remotelogserver:remotelogserver,
+        remotelog:remotelog
+    }
+    $.ajax({
+        url: t + "set",
+        dataType: "json",
+        data: aa,
+        type: 'POST',
+        success: function(t) {
+            tips(t)
+        }
+    })
+   },
+   cc = function(){
+    let remotelogserver = document.getElementById('remotelogserver');
+    if($("#remotelogstatus").attr("checked")){
+        remotelogserver.disabled=false; 
+        remotelogserver.placeholder="远程日志服务器IP";
+    }
+    else{
+        remotelogserver.disabled=true;
+        remotelogserver.placeholder="";
+    }
+   },
+   m = function() {
+    $(".remotelog_s a.save").live("click", d);
+    $("#remotelogstatus").live("change",cc);
+};
+    return {
+        init:a,
         bindEvent: m
     }
 }),

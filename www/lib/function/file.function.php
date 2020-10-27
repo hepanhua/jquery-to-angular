@@ -772,7 +772,7 @@ function file_put_out($file,$download=false){
 		$mime = get_file_mime(get_path_ext($file));
 		if ($GLOBALS['config']['system_info']['deepcheck']==1 && $type[0] != $mime) {
 			$filename = get_path_this($file);
-			write_audit('警告','下载','失败','下载非法文件'.$file_name);
+			// write_audit('警告','下载','失败','下载非法文件'.$file_name);
 			write_dblog("下载",$filename,"阻断","非法文件");
 			show_json('deepcheck nodownload');
 		}
@@ -996,16 +996,13 @@ function upload_chunk($fileInput, $path = './',$temp_path){
 				$mime = get_file_mime($ext);
 				if ($GLOBALS['config']['system_info']['deepcheck']==1 && $type[0] != $mime) {
 					unlink($save_path);
-					write_audit('警告','上传','失败',$L['deepcheck_nodownload']);
 				write_dblog("上传",$filename,"出错",$L['deepcheck_nodownload']);
 					show_json($L['deepcheck_nodownload'],false);
 				}
 			}
-			write_audit('信息','上传','成功','上传'.$file_name);
 			write_dblog("上传",$file_name,"通过","");
 			show_json($L['upload_success'],true,iconv_app($save_path));
 		}else {
-			write_audit('警告','上传','失败','上传'.$file_name);
 			write_dblog("上传",$filename,"出错","文件错误");
 			show_json($L['move_error'],false);
 		}
@@ -1026,16 +1023,13 @@ function upload_chunk($fileInput, $path = './',$temp_path){
 			$mime = get_file_mime($ext);
 			if ($GLOBALS['config']['system_info']['deepcheck']==1 && $type[0] != $mime) {
 				unlink($save_path);
-				write_audit('警告','上传','失败',$L['deepcheck_nodownload']);
 				write_dblog("上传",$filename,"出错",$L['deepcheck_nodownload']);
 				show_json($L['deepcheck_nodownload'],false);
 			}
 		}
-		write_audit('信息','上传','成功','上传'.$file_name);
 		write_dblog("上传",$file_name,"通过","");
 		show_json($L['upload_success'],true,iconv_app($save_path));
 	}else {
-		write_audit('警告','上传','失败','上传'.$file_name);
 		write_dblog("上传",$filename,"出错","文件错误");
 		show_json($L['move_error'],false);
 	}
