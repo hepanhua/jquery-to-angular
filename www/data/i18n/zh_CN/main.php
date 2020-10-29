@@ -85,9 +85,9 @@ $L= array(
 
 	"system_setting"  			=> "系统设置",
 	"setting_sso"				=> "SSO管理",
-	"sso_label"					=> "重定向地址",
-	"ssocheck_label" 			=> "校验地址",
-	"ssoout_label" 			=> "登出地址",
+	"sso_label"					=> "重定向URL",
+	"ssocheck_label" 			=> "认证校验URL",
+	"ssoout_label" 				=> "退出URL",
 	"system_setting_menu"  		=> "菜单管理",
 	"system_setting_net"  		=> "网络设置",
 	"system_setting_file"  		=> "文件管理",

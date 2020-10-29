@@ -267,7 +267,15 @@ class user extends Controller
         session_start();
         $_SESSION['sso_login'] = true;
         $member = new fileCache(CONFIG_PATH.'member.php');
-        $user = $member->get($res_json['name']);
+        if($res_json['uid'] == 'sysadmin'){
+            $user = $member->get('admin');
+        }else if($res_json['uid'] == 'sysaudit'){
+            $user = $member->get('admin');
+            $user['role'] = 'audit';
+            $user['name'] = 'audit';
+        }else{
+            $user = $member->get('user');
+        }
         $_SESSION['secros_user']=  $user;
         write_audit('信息','登录','成功','ip:'.get_client_ip().',sso登录');
         header('location:./index.php');

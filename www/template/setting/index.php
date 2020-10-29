@@ -27,7 +27,7 @@ $platform = config_get_unsign_int_from_file('/etc/system/quota.conf','noc');
 			<?php } ?>
 				<li id="member"><i class="font-icon icon-group"></i><?php echo $L['setting_member'];?></li>
 				<?php
-				if ($antivirus == 1 && $GLOBALS['is_root']) {
+				if ($antivirus == 1 && $GLOBALS['is_root'] && X86 == 1) {
 				?>	
 				<li id="antivirus"><i class="font-icon icon-star"></i><?php echo $L['setting_antivirus'];?></li>
 				<?php
