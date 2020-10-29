@@ -84,6 +84,10 @@ $L= array(
 	"group_role_share"  		=> "共享",
 
 	"system_setting"  			=> "系统设置",
+	"setting_sso"				=> "SSO管理",
+	"sso_label"					=> "重定向地址",
+	"ssocheck_label" 			=> "校验地址",
+	"ssoout_label" 			=> "登出地址",
 	"system_setting_menu"  		=> "菜单管理",
 	"system_setting_net"  		=> "网络设置",
 	"system_setting_file"  		=> "文件管理",

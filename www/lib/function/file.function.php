@@ -1107,7 +1107,7 @@ function write_dblog($direct, $filename, $action, $desc)
 	$db->close();
 	$ck_noc = config_get_value_from_file('/var/run/roswan','noc_connected');
 	if($ck_noc){
-		exec("hfslogpub 1 ".$_SESSION['secros_user']['name']." ". get_client_ip() ." ". $filename . " ".$direct." ".$action." ".$desc);
+		exec("hfslogpub 1 ".$_SESSION['secros_user']['name']." ". get_client_ip() ." '". $filename . "' ".$direct." ".$action." ".$desc);
 	}
 }
 

@@ -309,7 +309,16 @@ function user_logout(){
     setcookie('secros_token', '', time()-3600);
     setcookie('secros_user_language', '', time()-3600);
     session_destroy();
-    header('location:./index.php?user/login');
+    
+    $outurl = config_get_value_from_file(CONFIG_PATH.'sso.conf','outurl');
+    if(SSO_ON == 1 && $outurl){
+        $ip = $_SERVER['SERVER_ADDR'];
+        $port = $_SERVER['SERVER_PORT'];
+        $spurl = strtolower(explode('/',$_SERVER['SERVER_PROTOCOL'])[0]).'://'. $ip.':'.$port.'/index.php?user/login';
+        header('location:'. $outurl .'&spUrl='. $spurl);// https://10.1.2.152/passport/logout?spUrl=http://ehr.citicsinfo.com/hr/&remoteAppId=HR@CRSC.COM
+    }else{
+        header('location:./index.php?user/login');
+    }
     exit;
 }
 

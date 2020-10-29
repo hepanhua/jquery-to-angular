@@ -1326,7 +1326,6 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					}), $("#search_value,#search_ext,#search_path").keyEnter(r), $(".search_header a.button").die("click").live("click", r), $(".search_result .list .name").die("click").live("click", function() {
 						var e = $(this).find("a").html(),
 							t = $(this).parent().find(".path a").html() + e;
-							console.log('ggb');
 						$(this).parent().hasClass("file") ? ui.pathOpen.open(t) : "explorer" == Config.pageApp ? ui.path.list(t + "/", "tips") : core.explorer(t + "/")
 					}), $(".search_result .list .path a").die("click").live("click", function() {
 						var e = $(this).html();
@@ -1639,7 +1638,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 
 			uploader.on("uploadBeforeSend", function(e, t) {
 				var a = urlEncode(e.file.fullPath);
-				console.log(e);
+				// console.log(e);
 				(void 0 == a || "undefined" == a) && (a = ""), t.fullPath = a;
 			}).on("fileQueued", function(t) {
 				if (!core.upload_check()) return uploader.skipFile(t), uploader.removeFile(t), void 0;

@@ -1,4 +1,4 @@
-define("app/src/setting/main", ["lib/jquery-lib", "lib/util", "lib/artDialog/jquery-artDialog", "../../common/core", "../../tpl/copyright.html", "../../tpl/search.html", "../../tpl/search_list.html", "../../tpl/upload.html", "./setting", "./fav", "./group", "./member", "./antivirus","./platform", "./file","./system","./usblist","./remotelog"], function(e) {
+define("app/src/setting/main", ["lib/jquery-lib", "lib/util", "lib/artDialog/jquery-artDialog", "../../common/core", "../../tpl/copyright.html", "../../tpl/search.html", "../../tpl/search_list.html", "../../tpl/upload.html", "./setting", "./fav", "./group", "./member", "./antivirus","./platform", "./file","./system","./usblist","./remotelog","./ssoset"], function(e) {
     e("lib/jquery-lib"),
     e("lib/util"),
     e("lib/artDialog/jquery-artDialog"),
@@ -13,12 +13,14 @@ define("app/src/setting/main", ["lib/jquery-lib", "lib/util", "lib/artDialog/jqu
     Antivirus = e("./antivirus"),
     Platform = e("./platform"),
     Remotelog = e("./remotelog"),
+    Ssoset = e("./ssoset"),
     Setting.init(),
     Fav.bindEvent(),
     Member.bindEvent(),
     Filetype.bindEvent(),
     Usblist.bindEvent(),
     Group.bindEvent(),
+    Ssoset.bindEvent(),
     Remotelog.bindEvent(),
     Platform.bindEvent(),
     Antivirus.bindEvent(),
@@ -787,6 +789,7 @@ define("app/src/setting/setting", [], function() {
                 $(".main").fadeIn("fast"),
                 "fav" == t && Fav.init(e),
                 "remotelog" == t && Remotelog.init(),
+                "ssoset" == t && Ssoset.init(),
                 "member" == t && Group.init(),
                 "file" == t && Filetype.init(),
                 "usblist" == t && Usblist.init(),
@@ -1980,6 +1983,56 @@ define("app/src/setting/remotelog", [], function() {
         bindEvent: m
     }
 }),
+define("app/src/setting/ssoset", [], function() {
+    var  t = "index.php?ssoset/",
+    a = function() {
+     $.ajax({
+         url: t + "get",
+         dataType: "json",
+         async: !1,
+         success: function(e) {
+             if (!e.code)
+                 return tips(e),
+                 void 0;
+             var a = e.data;
+            $("#ssourl").val(a.url);
+            $("#ssocheckurl").val(a.checkurl);
+            $("#ssoouturl").val(a.outurl);
+         },
+         error: function() {
+             return !1
+         }
+     })
+ },d =function(){
+     let url = $("#ssourl").val();
+     let checkurl = $("#ssocheckurl").val();
+     let outurl =   $("#ssoouturl").val();
+     if(!url || !checkurl || !outurl){
+         return tips(LNG.not_null, "error");
+     }
+     var aa = {
+         url:url,
+         checkurl:checkurl,
+         outurl:outurl
+     };
+     $.ajax({
+         url: t + "set",
+         dataType: "json",
+         data: aa,
+         type: 'POST',
+         success: function(t) {
+             tips(t)
+         }
+     })
+    },
+    m = function() {
+     $(".sso_s a.save").live("click", d);
+ };
+     return {
+         init:a,
+         bindEvent: m
+     }
+ }),
 define("app/src/setting/platform", [], function() {
     var  url = "/cgi-bin/setnoc.cgi", 
     d = function() {

@@ -16,13 +16,61 @@ class user extends Controller
         }
         //不需要判断的action
         $this->notCheck = array('loginFirst','login','logout','loginSubmit','checkCode','public_link');
+        $this->ip = $_SERVER['SERVER_ADDR'];
+        $this->port = $_SERVER['SERVER_PORT'];
+        $this->spurl = strtolower(explode('/',$_SERVER['SERVER_PROTOCOL'])[0]).'://'. $this->ip .':'. $this->port .'/index.php?user/login';
+        $this->url = config_get_value_from_file(CONFIG_PATH.'sso.conf','url');
+        $this->checkurl = config_get_value_from_file(CONFIG_PATH.'sso.conf','checkurl');
     }
     
     /**
-     * 登录状态检测;并初始化数据状态
+     * 登录状态检测;并初始化数据状态 logincheck-> logout -> login
      */
     public function loginCheck(){
         if (ST == 'share') return true;//共享页面
+        if(SSO_ON == 1){ //单点登录
+           if($_SESSION['sso_login']===true){
+            define('USER',USER_PATH.$this->user['name'].'/');
+            define('USER_TEMP','/mnt/temp/');
+            //define('USER_RECYCLE',USER.'recycle/');
+            define('USER_RECYCLE','/var/spool/antivirus/recycle/');
+            if (!file_exists(USER)) {
+                $this->logout();
+            }
+            if ($this->user['role'] == 'root') {
+                define('MYHOME','/');
+                define('HOME',PUBLIC_PATH);
+                $GLOBALS['web_root'] = str_replace(WEB_ROOT,'',HOME);//从服务器开始到用户目录
+                $GLOBALS['is_root'] = 1;
+            }else if(AUDIT_ON == 1 && $this->user['role'] == 'audit'){
+                define('MYHOME','/');
+                 define('HOME',PUBLIC_PATH);
+                $GLOBALS['web_root'] = str_replace(WEB_ROOT,'',HOME);//从服务器开始到用户目录
+                $GLOBALS['is_root'] = 'audit';
+            }else{
+                define('MYHOME','/');
+                 define('HOME',PUBLIC_PATH);
+                $GLOBALS['web_root'] = str_replace(WEB_ROOT,'',HOME);//从服务器开始到用户目录
+                $GLOBALS['is_root'] = 0;
+            }
+            date_default_timezone_set("Asia/Shanghai");
+            $this->config['user_share_file']   = USER.'data/share.php';    // 收藏夹文件存放地址.
+            $this->config['user_fav_file']     = USER.'data/fav.php';    // 收藏夹文件存放地址.
+            $this->config['user_seting_file']  = USER.'data/config.php'; //用户配置文件
+            $this->config['user']  = fileCache::load($this->config['user_seting_file']);
+            $this->config['user'] = $this->config['setting_default'];
+            $theme = config_get_value_from_file('/etc/system/oem.conf','THEME');
+            if (isset($theme)){
+            	$this->config['user']['theme']= $theme;
+          	}
+            return;
+           }
+           if($this->url){
+            header('location:'. $this->url .'&spUrl='. $this->spurl);    
+            return;
+           }
+        }
+     
         if(in_array(ACT,$this->notCheck)){//不需要判断的action
             return;
         }else if($_SESSION['auto_login']===true){
@@ -59,6 +107,12 @@ class user extends Controller
                 define('HOME',PUBLIC_PATH);
                 $GLOBALS['web_root'] = str_replace(WEB_ROOT,'',HOME);//从服务器开始到用户目录
                 $GLOBALS['is_root'] = 1;
+            }else if(AUDIT_ON == 1 && $this->user['role'] == 'audit'){
+                define('MYHOME','/');
+                //define('HOME',USER.'home/');
+                 define('HOME',PUBLIC_PATH);
+                $GLOBALS['web_root'] = str_replace(WEB_ROOT,'',HOME);//从服务器开始到用户目录
+                $GLOBALS['is_root'] = 'audit';
             }else{
                 define('MYHOME','/');
                 //define('HOME',USER.'home/');
@@ -196,7 +250,37 @@ class user extends Controller
                 write_audit('信息','登录','失败','ip:'.get_client_ip().',自动登录');
             }
         }
-
+        //单点登录
+    
+        if(SSO_ON == 1 && $this->url){
+            $SESSION_DATA = $this->in['SESSION_DATA'];
+            if($SESSION_DATA){
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $this->checkurl);//'https://10.1.2.152/passport/accessApplication'
+                curl_setopt($ch, CURLOPT_POSTFIELDS, 'sessionData=' . $SESSION_DATA);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $res= curl_exec($ch);
+        $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);    // 获取http请求后返回的状态码
+        curl_close($ch);
+        if ($http_status == 200) {
+        $res_json = json_decode($res,true); 
+        session_start();
+        $_SESSION['sso_login'] = true;
+        $member = new fileCache(CONFIG_PATH.'member.php');
+        $user = $member->get($res_json['name']);
+        $_SESSION['secros_user']=  $user;
+        write_audit('信息','登录','成功','ip:'.get_client_ip().',sso登录');
+        header('location:./index.php');
+        return;
+    }else{// sessendata erro
+        header('location:'. $this->url .'&spUrl='. $this->spurl);
+        return;
+    }
+            }
+           //no seesiondata
+            header('location:'. $this->url .'&spUrl='. $this->spurl);//https://10.1.2.152/passport/authn?remoteAppId=OA@CRSC.COM&spUrl=http://'
+        }
+       
         if (is_wap()) {
             $this->display('login_wap.html');
         }else{
@@ -210,7 +294,11 @@ class user extends Controller
      */
     public function loginFirst(){
         touch(USER_SYSTEM.'install.lock');
-        header('location:./index.php?user/login');
+        if(SSO_ON == 1 && $this->url){
+            header('location:'. $this->url .'&spUrl='. $this->spurl);
+        }else{
+            header('location:./index.php?user/login');
+        }
         exit;
     }
     /**
@@ -296,6 +384,7 @@ class user extends Controller
      */
     public function authCheck(){
         if (isset($GLOBALS['is_root']) && $GLOBALS['is_root'] == 1) return;
+        if (isset($GLOBALS['is_root']) && $GLOBALS['is_root'] == 'audit') return;
         if (in_array(ACT,$this->notCheck)) return;
         if (!array_key_exists(ST,$this->config['role_setting']) ) return;
         if (!in_array(ACT,$this->config['role_setting'][ST]) &&

@@ -27,11 +27,12 @@
 					<a href="javascript:core.saveAll();"><img src="<?php echo STATIC_PATH;?>images/save.png"></a>
 				</div>
 			<?php }?>
+			
 	<div class="menu_group">
 	<a href="javascript:core.downLoad();"><img src="<?php echo STATIC_PATH;?>images/tools.png"></a>
 	</div>
 
-	<?php if ($GLOBALS['is_root'] == 1) {?>
+	<?php if (AUDIT_ON != 1 &&  $GLOBALS['is_root'] == 1) {?>
       <div class="menu_group">
               <a href="javascript:core.openLog();"><img src="<?php echo STATIC_PATH;?>images/log.png"></a>
 	  </div>  

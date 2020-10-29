@@ -33,7 +33,14 @@ $platform = config_get_unsign_int_from_file('/etc/system/quota.conf','noc');
 				<?php
 				}
 				?>
-				    <li id="remotelog"><i class="font-icon icon-picture"></i><?php echo $L['remotelog'];?></li>
+				<?php
+				if (SSO_ON == 1) {
+				?>	
+				<li id="ssoset"><i class="font-icon icon-globe"></i><?php echo $L['setting_sso'];?></li>
+				<?php
+				}
+				?>
+				    <li id="remotelog"><i class="font-icon icon-share"></i><?php echo $L['remotelog'];?></li>
 					<li id="user"><i class="font-icon icon-user"></i><?php echo $L['setting_user'];?></li>
 				<?php
 				if ($platform == 1 && $GLOBALS['is_root']) {

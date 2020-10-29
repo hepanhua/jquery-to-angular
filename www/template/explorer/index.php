@@ -17,6 +17,13 @@
 	<link rel="stylesheet" href="./static/style/font-awesome/css/font-awesome.css">
 	<link href="<?php echo STATIC_PATH;?>style/skin/<?php echo $config['user']['theme'];?>app_explorer.css?ver=<?php echo SECROS_VERSION;?>" rel="stylesheet" id='link_css_list'/>
 	<script src="<?php echo STATIC_PATH;?>js/lib/pahomqtt.js?ver=<?php echo SECROS_VERSION;?>"></script>
+	<style>
+		html,body{
+			padding:0;
+			width:100%;
+			height:100%;
+		}
+	</style>
 </head>
 <?php
 	if (file_exists('/etc/system/Test.key')){
@@ -62,6 +69,12 @@
 
 <body style="overflow:hidden;" oncontextmenu="return core.contextmenu();">
 	<?php include(TEMPLATE.'common/navbar.html');?>
+	<?php if ( AUDIT_ON == 1 &&  $GLOBALS['is_root'] === 'audit') {?>
+<div style="display:flex;flex-direction: column;overflow:hidden;width:100%;height:100%;">
+<div style="width:100%;height:90px"></div>
+<iframe src="./index.php?log" frameborder="0" allowtransparency="true" style="flex:auto;border:0px none;"></iframe>
+</div>
+	<?php }else{ ?>
 <div class="hidden"  id="devUpdataTips"  style="position: absolute;top: 0;left: 0;width: 100%;z-index: 9999;display: flex;justify-content: center;">
 	<div style="background-color: #fffbe6;border: 1px solid #ffe58f;padding: 4px 32px;display: flex;justify-content: center;align-items: center;">
 	<i class="font-icon icon-cog icon-spin" style="color: #EEAD0E;"></i><span style="margin-left:6px">设备正在升级中,请勿断开电源</span></div>
@@ -202,7 +215,7 @@
 			</div>
 		</div><!-- / frame-right end-->
 	</div><!-- / frame-main end-->
-
+	<?php } ?>
 
 	<div class="getusbsid_frame_warning hidden"></div>
 
