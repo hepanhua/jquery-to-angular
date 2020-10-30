@@ -50,7 +50,7 @@ define('STATIC_PATH',"./static/");//静态文件目录
 
 define('X86',0);    //X86系统
 define('SSO_ON',1);    //单点登录
-define('AUDIT_ON',0); //日志审计员
+define('AUDIT_ON',1); //日志审计员
 /*
  可以自定义【用户目录】和【公共目录】;移到web目录之外，
  可以使程序更安全, 就不用限制用户的扩展名权限了;

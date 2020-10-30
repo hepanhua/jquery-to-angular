@@ -309,8 +309,8 @@ function user_logout(){
     setcookie('secros_token', '', time()-3600);
     setcookie('secros_user_language', '', time()-3600);
     session_destroy();
-    
-    $outurl = config_get_value_from_file(CONFIG_PATH.'sso.conf','outurl');
+    $sso = new fileCache(CONFIG_PATH.'sso.php');
+    $outurl = $sso->get('outurl');
     if(SSO_ON == 1 && $outurl){
         $ip = $_SERVER['SERVER_ADDR'];
         $port = $_SERVER['SERVER_PORT'];

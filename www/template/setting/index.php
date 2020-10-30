@@ -19,31 +19,34 @@ $platform = config_get_unsign_int_from_file('/etc/system/quota.conf','noc');
 			<h1><?php echo $L['setting_title'];?></h1>
 			<ul class='setting'>
 
-			<?php if($GLOBALS['is_root']){ ?>
+			<?php if($GLOBALS['is_root'] == 1 ){ ?>
 				<li id="system"><i class="font-icon icon-cog"></i><?php echo $L['system_setting'];?></li>
 				<li id="net"><i class="font-icon icon-picture"></i><?php echo $L['setting_net'];?></li>
 				<li id="file"><i class="font-icon icon-dashboard"></i><?php echo $L['setting_file'];?></li>
 				<li id="usblist"><i class="font-icon icon-anchor"></i><?php echo $L['setting_usblist'];?></li>
-			<?php } ?>
 				<li id="member"><i class="font-icon icon-group"></i><?php echo $L['setting_member'];?></li>
+			<?php } ?>
+			
 				<?php
-				if ($antivirus == 1 && $GLOBALS['is_root'] && X86 == 1) {
+				if ($antivirus == 1 && $GLOBALS['is_root'] == 1 && X86 == 1) {
 				?>	
 				<li id="antivirus"><i class="font-icon icon-star"></i><?php echo $L['setting_antivirus'];?></li>
 				<?php
 				}
 				?>
 				<?php
-				if (SSO_ON == 1) {
+				if (SSO_ON == 1 && $GLOBALS['is_root'] == 1) {
 				?>	
 				<li id="ssoset"><i class="font-icon icon-globe"></i><?php echo $L['setting_sso'];?></li>
 				<?php
 				}
 				?>
-				    <li id="remotelog"><i class="font-icon icon-share"></i><?php echo $L['remotelog'];?></li>
+				<?php if($GLOBALS['is_root'] == 1 ){ ?>
+					<li id="remotelog"><i class="font-icon icon-share"></i><?php echo $L['remotelog'];?></li>
+					<?php } ?>
 					<li id="user"><i class="font-icon icon-user"></i><?php echo $L['setting_user'];?></li>
 				<?php
-				if ($platform == 1 && $GLOBALS['is_root']) {
+				if ($platform == 1 && $GLOBALS['is_root'] == 1 ) {
 				?>	
 				<li id="platform"><i class="font-icon icon-star"></i><?php echo $L['setting_platform'];?></li>
 				<?php
