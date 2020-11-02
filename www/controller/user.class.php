@@ -211,6 +211,7 @@ class user extends Controller
             'sort_order'    => $this->config['user']['list_sort_order'], //列表排序升序or降序
             'musictheme'    => $this->config['user']['musictheme'],
             'movietheme'    => $this->config['user']['movietheme'],
+            'X86'           => X86,
             'av_status'			=> $av_status
         );
 				if (!file_exists('/mnt/config/antivirus.conf')){

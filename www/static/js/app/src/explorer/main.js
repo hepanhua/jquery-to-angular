@@ -1063,9 +1063,13 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 		},
 		scanvirusCheck: function() {
 			if (G.av_status == 0){
-				t = LNG.antivirus_nolicence;
-				core.tips.tips(t, !1);
-				return 0;
+				if(G.X86 != 1){
+					return 0;
+				}else{
+					t = LNG.antivirus_nolicence;
+					core.tips.tips(t, !1);
+					return 0;
+				}
 			}else if (G.av_expired == 1){
 				t = LNG.antivirus_licence_expired_tips;
 				core.tips.tips(t, !1);
