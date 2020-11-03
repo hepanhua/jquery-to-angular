@@ -3859,6 +3859,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				mqttclient.subscribe("sample-values/USBOX/virus/#");
 				mqttclient.subscribe("sample-values/USBOX/avupdate/progress");
 				mqttclient.subscribe("sample-values/USBOX/CAVP/status");
+				mqttclient.subscribe("sample-values/USBOX/upgrade/progress");
 			}
 			//连接失败事件
 			function onError(e) {
@@ -4056,13 +4057,19 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 						$('.antivirus_update .loading_btn_frame').html('<div class="loading_btn antivirus_update_end">确认</div>');
 							}
 							break;
-						case "virus":
+						case "upgrade":
 							let update = json.value;
 							if(update == 0){
+								$('#devUpdataTips').addClass('hidden');
+								core.tips.tips('升级失败');
+								upgradeclen();
+							}else if(update == 1){
 								$('#devUpdataTips').removeClass('hidden');
 							}
 							if(update == 100){
 								$('#devUpdataTips').addClass('hidden');
+								core.tips.tips('升级已完成,将在5秒后自动重启');
+								upgradeclen();
 							}
 							break;
 						case "CAVP":
@@ -4106,6 +4113,19 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 
 				}
 			}
+		},
+		upgradeclen = function(){
+			let msg = {
+				"channelId": "progress",
+				"monitoringUnitId": "USBOX",
+				"sampleUnitId": "upgrade",
+				"value":null
+						};
+						var message = new Paho.MQTT.Message(JSON.stringify(msg));
+						message.destinationName = "sample-values/USBOX/upgrade/progress";
+						message.qos = 0;
+						message.retained = true;
+						mqttclient.send(message);
 		},
 		u = function() {
 			"explorer" == Config.pageApp && ui.f5()
@@ -5784,7 +5804,11 @@ define("app/src/explorer/path", ["../../common/pathOperate", "../../tpl/fileinfo
 			var e = b(!0);
 			//1 == e.length && "file" == e[0].type ? a.download(b().path) : t.zipDownload(e)
 			if (1 == e.length){
+				//获取高危文件列表
+				// ajax
+
 				if("file" == e[0].type){
+					//检查是否在高危列表中
 					a.download(b().path);
 				}else if("folder" == e[0].type){
 					$.ajax({
@@ -5794,6 +5818,7 @@ define("app/src/explorer/path", ["../../common/pathOperate", "../../tpl/fileinfo
 							let arr = e.data.filelist;
 							for(let k=0;k<arr.length;k++){
 								setTimeout(() => {
+									//检查是否在高危列表中
 									a.download(arr[k].path+arr[k].name);
 								}, k*800); 
 							}
