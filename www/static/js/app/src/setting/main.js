@@ -1995,9 +1995,9 @@ define("app/src/setting/ssoset", [], function() {
                  return tips(e),
                  void 0;
              var a = e.data;
-            $("#ssourl").val(a.url);
-            $("#ssocheckurl").val(a.checkurl);
-            $("#ssoouturl").val(a.outurl);
+            $("#ssourl").val(a.url?a.url:'');
+            $("#ssocheckurl").val(a.checkurl?a.checkurl:'');
+            $("#ssoouturl").val(a.outurl?a.outurl:'');
          },
          error: function() {
              return !1

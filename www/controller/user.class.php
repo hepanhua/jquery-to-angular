@@ -280,18 +280,13 @@ class user extends Controller
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $this->checkurl);//'https://10.1.2.152/passport/accessApplication'
                 // curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);//不验证证书
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);//不验证证书
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
                 curl_setopt($ch, CURLOPT_POST, true);
                 curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-                // curl_setopt($ch,CURLOPT_HEADER,0); 
-                // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); //不验证证书
-                // curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); //不验证证书
-                // curl_setopt($ch,CURLOPT_RETURNTRANSFER,1 );
-                // curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,10); 
         // show_json(curl_error($ch));
         $res= curl_exec($ch);
         $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);    // 获取http请求后返回的状态码
