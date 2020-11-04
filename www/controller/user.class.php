@@ -15,8 +15,8 @@ class user extends Controller
         }
         //不需要判断的action
         $this->notCheck = array('loginFirst','login','logout','loginSubmit','checkCode','public_link');
-        $this->ip = $_SERVER['SERVER_ADDR'];
-        $this->port = $_SERVER['SERVER_PORT'];
+        // $this->ip = $_SERVER['SERVER_ADDR'];
+        // $this->port = $_SERVER['SERVER_PORT'];
 
         $sso = new fileCache(CONFIG_PATH.'sso.php');
         $this->url = $sso->get('url');
@@ -311,9 +311,7 @@ if( !empty($headers) ){
         }
         $_SESSION['secros_user']=  $user;
         write_audit('信息','登录','成功','ip:'.get_client_ip().',sso登录');
-        // header('location:'.$rew);
         header('location:./index.php');
-        // show_json('norunnnnnn');
         return;
     }else{// sessendata erro
         header('location:'. $this->url);

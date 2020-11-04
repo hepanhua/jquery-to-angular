@@ -1091,6 +1091,9 @@ function write_audit($type, $event, $result, $desc)
 	if($ck_noc){
 		exec("oplogpub ". $type ." ".$_SESSION['secros_user']['name']." ".$event." ".$result." ".$desc);
 	}
+	openlog("httplog", LOG_PID , LOG_LOCAL1);
+	syslog(LOG_INFO,$type ." | ".$_SESSION['secros_user']['name']." | ".$event." | ".$result." | ".$desc );
+	closelog();
 }
 
 
@@ -1109,6 +1112,9 @@ function write_dblog($direct, $filename, $action, $desc)
 	if($ck_noc){
 		exec("hfslogpub 1 ".$_SESSION['secros_user']['name']." ". get_client_ip() ." '". $filename . "' ".$direct." ".$action." ".$desc);
 	}
+	openlog("httplog", LOG_PID , LOG_LOCAL1);
+	syslog(LOG_INFO,$_SESSION['secros_user']['name']." | ". get_client_ip() ." | ". $filename . " | ".$direct." |　".$action." ｜".$desc);
+	closelog();
 }
 
 function config_read($filename){
