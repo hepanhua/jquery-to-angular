@@ -317,7 +317,8 @@ if( !empty($headers) ){
         }
         $_SESSION['secros_user']=  $user;
         write_audit('信息','登录','成功','ip:'.get_client_ip().',sso登录');
-        header('location:'.$rew);
+        // header('location:'.$rew);
+        header('location:./index.php');
         // show_json('norunnnnnn');
         return;
     }else{// sessendata erro
