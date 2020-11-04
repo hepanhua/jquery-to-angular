@@ -314,8 +314,8 @@ function user_logout(){
     if(SSO_ON == 1 && $outurl){
         $ip = $_SERVER['SERVER_ADDR'];
         $port = $_SERVER['SERVER_PORT'];
-        $spurl = strtolower(explode('/',$_SERVER['SERVER_PROTOCOL'])[0]).'://'. $ip.':'.$port.'/index.php?user/login';
-        header('location:'. $outurl .'&spUrl='. $spurl);// https://10.1.2.152/passport/logout?spUrl=http://ehr.citicsinfo.com/hr/&remoteAppId=HR@CRSC.COM
+        // $spurl = strtolower(explode('/',$_SERVER['SERVER_PROTOCOL'])[0]).'://'. $ip.':'.$port.'/index.php?user/login';
+        header('location:'. $outurl);// https://10.1.2.152/passport/logout?spUrl=http://ehr.citicsinfo.com/hr/&remoteAppId=HR@CRSC.COM
     }else{
         header('location:./index.php?user/login');
     }
