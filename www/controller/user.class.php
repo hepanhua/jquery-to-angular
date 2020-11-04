@@ -290,7 +290,7 @@ if( !empty($headers) ){
        
         $res= curl_exec($ch);
         if(!empty(curl_error($ch))){
-            show_json(curl_error($ch));  
+            show_json('erro'.curl_error($ch),false);  
         }
         show_json($res);  
         $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);    // 获取http请求后返回的状态码
