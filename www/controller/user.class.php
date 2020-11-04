@@ -302,6 +302,7 @@ if( !empty($headers) ){
         }else{
             $rew = 'http://'. $this->ip .':'. $this->port .'/index.php';
         }
+        show_json($rew);
         session_start();
         $_SESSION['sso_login'] = true;
         $member = new fileCache(CONFIG_PATH.'member.php');
