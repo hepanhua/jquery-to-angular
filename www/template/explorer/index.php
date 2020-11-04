@@ -17,46 +17,6 @@
 	<link rel="stylesheet" href="./static/style/font-awesome/css/font-awesome.css">
 	<link href="<?php echo STATIC_PATH;?>style/skin/<?php echo $config['user']['theme'];?>app_explorer.css?ver=<?php echo SECROS_VERSION;?>" rel="stylesheet" id='link_css_list'/>
 	<script src="<?php echo STATIC_PATH;?>js/lib/pahomqtt.js?ver=<?php echo SECROS_VERSION;?>"></script>
-	<?php
-	if(SSO_ON == 1){
-	?>
-		<link rel="stylesheet" href="http://passport.citics.com/passport/resources/captcha/css/captcha.css" type="text/css">
-		<script src="http://passport.citics.com/passport/resources/captcha/js/captcha.js" type="text/javascript"></script>
-		<script language="javascript">
-		var authLevel = '${authLevel}';
-			var errorMessage = '${error}';
-			var capthca = '${captcha}';
-			initCaptcha({
-				element : '#captcha_div',// requred by type [3/4/5]
-				imgElement : '#captchaImg', // requred by type [1/2]
-				inputElement : '#captchaInput',// requred by type [1/2]
-				logLevel : 5, // logLevel error[1],warning[2],log[3],debug[4],all[5]
-				type : '1', // TEXT("字符验证码", 1), ARITHMETIC("数字计算验证码", 2), DRAG("滑动验证码", 3), CHOOSE("选择结果验证码", 4), POSITION("位置选择验证码", 5);
-				width : "260px",
-				onVerify : function(message, instance) {
-					if (message.result) {
-						$('#captchaInput')[0].style.borderColor = "#00ff00";
-						$('#captchaValidate')[0].value = message.validate;
-						$('#captchaToken')[0].value = message.data.token;
-					} else {
-						$('#captchaInput')[0].style.borderColor = "#ff0000";
-						instance.refresh();
-					}
-				}
-			}, function(instance) {
-				if (instance.conf.type >= 3) {
-					$('#tr_validation_code')[0].style.display = '';
-				} else {
-					$('#tr_validation_code_input')[0].style.display = '';
-				}
-				instance.log("captcha instance initialization success, waiting for image loading");
-			}, function(err) {
-				alert(err);
-			});
-			</script>
-	<?php
-	}
-	?>
 	<style>
 		html,body{
 			padding:0;
@@ -397,26 +357,6 @@
   </div>
 	<!-- 病毒库升级end -->
 
-	<?php
-	if (SSO_ON == 1) {
-	?>
-	<tr id="tr_validation_code_input" >
-	<td class="lui_login_input_title">验证码：</td>
-		<td class="lui_login_input_td">
-			<div class="lui_login_input_div">
-				<input type="text" id="captchaInput" name="j_validation_code" class="lui_login_input_vcode" placeholder="验证码"> <img id="captchaImg" style="cursor: pointer;"> 
-                <input type="hidden" id="captchaValidate" name="captchaValidation"/>
-                <input type="hidden" id="captchaToken" name="captchaToken"/>
-			</div>
-	    </td>
-</tr>
-<tr id="tr_validation_code" style="display: block">
-	<td>
-		<div id="captcha_div" width="260px"></div>
-	</tr>
-	<?php
-	}
-	?>
 
 <?php include(TEMPLATE.'common/footer.html');?>
 <script src="<?php echo STATIC_PATH;?>js/lib/seajs/sea.js?ver=<?php echo SECROS_VERSION;?>"></script>
