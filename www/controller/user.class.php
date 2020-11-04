@@ -279,7 +279,12 @@ class user extends Controller
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);//不验证证书
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
                 curl_setopt($ch, CURLOPT_POST, true);
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded\nAuthorization: Basic V1NCREBDUlNDLkNPTTpGR04kSXBIMXI1aUZhUndq'));
+$accessToken = "V1NCREBDUlNDLkNPTTpGR04kSXBIMXI1aUZhUndq";
+$headers[]  =  "Content-Type: application/x-www-form-urlencoded";
+$headers[]  =  "Authorization: Basic ". $accessToken;
+if( !empty($headers) ){
+    curl_setopt( $curl, CURLOPT_HTTPHEADER, $headers );
+}
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         // show_json(curl_error($ch));
