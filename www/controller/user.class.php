@@ -283,7 +283,7 @@ $accessToken = "V1NCREBDUlNDLkNPTTpGR04kSXBIMXI1aUZhUndq";
 $headers[]  =  "Content-Type: application/x-www-form-urlencoded";
 $headers[]  =  "Authorization: Basic ". $accessToken;
 if( !empty($headers) ){
-    curl_setopt( $curl, CURLOPT_HTTPHEADER, $headers );
+    curl_setopt( $ch, CURLOPT_HTTPHEADER, $headers );
 }
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
