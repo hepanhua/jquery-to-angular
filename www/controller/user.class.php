@@ -297,12 +297,6 @@ if( !empty($headers) ){
         curl_close($ch);
         if ($http_status == 200) {
         $res_json = json_decode($res,true);
-        if($_SERVER['HTTPS'] == 'on'){
-            $rew = 'https://'. $this->ip .':'. $this->port .'/index.php';
-        }else{
-            $rew = 'http://'. $this->ip .':'. $this->port .'/index.php';
-        }
-        show_json($rew);
         session_start();
         $_SESSION['sso_login'] = true;
         $member = new fileCache(CONFIG_PATH.'member.php');
