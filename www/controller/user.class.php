@@ -289,9 +289,9 @@ if( !empty($headers) ){
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
        
         $res= curl_exec($ch);
-        // if(!empty(curl_error($ch))){
-        //     show_json(curl_error($ch));  
-        // }
+        if(!empty(curl_error($ch))){
+            show_json(curl_error($ch));  
+        }
         show_json($res);  
         $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);    // 获取http请求后返回的状态码
         curl_close($ch);
