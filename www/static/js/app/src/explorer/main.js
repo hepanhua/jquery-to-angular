@@ -1455,7 +1455,13 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 		upload: function() {
 			G.upload_path = G.this_path;
 			var e = urlDecode(G.upload_path);
-			if (uploader.option("server","index.php?explorer/fileUpload&path=" + urlEncode(G.upload_path)), 30 >= e.length ? e : "..." + e.substr(e.length - 30), 0 != $(".dialog_file_upload").length) return $.dialog.list.dialog_file_upload.display(!0), void 0;
+			
+			if (uploader.option("server","index.php?explorer/fileUpload&path=" + urlEncode(G.upload_path)), 
+			30 >= e.length ? e : "..." + e.substr(e.length - 30), //名字超过30字省略号 ...xxx
+			 0 != $(".dialog_file_upload").length){//弹窗存在
+				console.log($.dialog.list.dialog_file_upload);
+				return $.dialog.list.dialog_file_upload.display(!0), void 0;
+			} 
 			if (uploaderfol.option("server","index.php?explorer/fileUpload&path=" + urlEncode(G.upload_path)), 30 >= e.length ? e : "..." + e.substr(e.length - 30), 0 != $(".dialog_file_upload").length) return $.dialog.list.dialog_file_upload.display(!0), void 0;
 			var t = require("../tpl/upload.html"),
 				a = template.compile(t),
@@ -1463,6 +1469,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			$.dialog({
 				padding: 5,
 				resize: !0,
+				lock: !0,
 				ico: core.ico("up"),
 				id: "dialog_file_upload",
 				fixed: !0,
@@ -1471,9 +1478,20 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					LNG: LNG,
 					maxsize: i
 				}),
-				close: function() {
+				close: function() { //关闭
 					$.each(uploader.getFiles(), function(e, t) {
-						uploader.skipFile(t), uploader.removeFile(t)
+						let a = 1024*1024*4;
+						let chunks = Math.ceil(t.size/a); 
+						$.ajax({
+							url: "index.php?explorer/delChunks&path=" + urlEncode(G.upload_path) + "&filename="+t.name+"&chunks=" + chunks,
+							dataType: "json",
+							success: function(e) {
+								// console.log(e);
+								ui.f5();
+							}
+						});
+						uploader.skipFile(t);
+						uploader.removeFile(t);
 					}), 
 					$.each(uploaderfol.getFiles(), function(e, t) {
 						uploaderfol.skipFile(t), uploaderfol.removeFile(t)
@@ -1489,7 +1507,8 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				$(".file_upload .tab_download").removeClass("this"), 
 				$(".file_upload .upload_box").removeClass("hidden"), 
 				$(".file_upload .download_box").addClass("hidden")) : ($(".file_upload .tab_upload").removeClass("this"),
-				$(".file_upload .tab_download").addClass("this"), $(".file_upload .upload_box").addClass("hidden"),
+				$(".file_upload .tab_download").addClass("this"), 
+				$(".file_upload .upload_box").addClass("hidden"),
 				$(".file_upload .download_box").removeClass("hidden"))
 			}),
 			//  $(".file_upload .download_box button").unbind("click").bind("click", function() {
@@ -1505,26 +1524,26 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			var e = "#thelist",
 				t = !0;
 			$.browser.msie && (t = !1);
-			var a = 10485760;
-			a >= G.upload_max && (a = .5 * G.upload_max),
+			var a = 1024*1024*4;
+			// a >= G.upload_max && (a = .5 * G.upload_max),
 			uploader = WebUploader.create({
 				swf: G.static_path + "js/lib/webuploader/Uploader.swf",
 				dnd: "body", //文件拖拽
 				// auto:false,
 				// fileSingleSizeLimit: 209715200,
-				threads: 2,
+				threads: 3,
 				compress: !1,
 				resize: !1,
 				prepareNextFile: !0,
 				duplicate: !0,
 				chunked: t,
-				chunkRetry: 3,
+				chunkRetry: 3,//出错，自动重传
 				chunkSize: a
 			}),
 			uploaderfol = WebUploader.create({
 				swf: G.static_path + "js/lib/webuploader/Uploader.swf",
 				webkitdirectory:1,
-				threads: 2,
+				threads: 3,
 				compress: !1,
 				resize: !1,
 				prepareNextFile: !0,
@@ -1556,6 +1575,16 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					uploaderfol.skipFile(t);
 					uploaderfol.removeFile(t, !0);
 				}else{
+					let rm_file = uploader.getFile(t);
+					let a = 1024*1024*4;
+					let chunks = Math.ceil(rm_file.size/a); 
+					$.ajax({
+						url: "index.php?explorer/delChunks&path=" + urlEncode(G.upload_path) + "&filename="+rm_file.name+"&chunks=" + chunks,
+						dataType: "json",
+						success: function(e) {
+							ui.f5();
+						}
+					});
 					uploader.skipFile(t);
 					uploader.removeFile(t, !0);
 				}

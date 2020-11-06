@@ -741,6 +741,7 @@ function ext_type($ext){
 /**
  * 输出、文件下载
  * 默认以附件方式下载；$download为false时则为输出文件
+ * 下载
  */
 function file_put_out($file,$download=false){
 	// ob_clean();
@@ -937,11 +938,23 @@ function upload($fileInput, $path = './'){
 }
 
 //分片上传处理
+//删除
+function del_chunk($name,$chunks,$path){
+$temp_path = $path.$name;
+$temp_file_pre = $temp_path.md5($temp_path.$name).'.part';
+for( $index = 0; $index < $chunks; $index++ ) {
+	if (file_exists($temp_file_pre.$index)) {
+		unlink($temp_file_pre.$index);
+	}
+}
+show_json(true);
+}
+//上传
 function upload_chunk($fileInput, $path = './',$temp_path){
 	global $config,$L;
 	$file = $_FILES[$fileInput];
-	$chunk = isset($_REQUEST["chunk"]) ? intval($_REQUEST["chunk"]) : 0;
-	$chunks = isset($_REQUEST["chunks"]) ? intval($_REQUEST["chunks"]) : 1;
+	$chunk = isset($_REQUEST["chunk"]) ? intval($_REQUEST["chunk"]) : 0;//which chunk
+	$chunks = isset($_REQUEST["chunks"]) ? intval($_REQUEST["chunks"]) : 1;//total chunks
 	if (!isset($file)) show_json($L['upload_error_null'],false);
 	$file_name = iconv_system($file['name']);
 	$ex_name = $GLOBALS['config']['whitelist'];
@@ -954,10 +967,70 @@ function upload_chunk($fileInput, $path = './',$temp_path){
   }
         
 	if ($chunks>1) {//并发上传，不一定有前后顺序
+		$temp_path = $path.$file_name;
 		$temp_file_pre = $temp_path.md5($temp_path.$file_name).'.part';
 		if (get_filesize($file['tmp_name']) ==0) {
 			show_json($L['upload_success'],false,'chunk_'.$chunk.' error!');
 		}
+
+// //第一次上传时没有文件，就创建文件，此后上传只需要把数据追加到此文件中 
+// if(!file_exists($temp_file_pre)){
+// 	// if($chunk == 0){
+//  move_uploaded_file($file['tmp_name'],$temp_file_pre); 
+//  show_json($L['upload_success'],true,'first chunk_'.$chunk.' success!');
+// }else{ 
+// 	// methoda:
+// 	// $out = fopen($temp_file_pre, "a");
+// 	// 	if (flock($out, LOCK_EX)) {
+	   
+// 	//             if (!$in = fopen($file['tmp_name'],"rb")) break;
+// 	//             while ($buff = fread($in, 1024*1024*8)) {
+// 	//                 fwrite($out, $buff);
+// 	//             }
+// 	//             fclose($in);
+// 	//         sleep(1);
+// 	//         flock($out, LOCK_UN);
+// 	// 	    fclose($out);
+// 	// 	}
+// // methodb:
+//  file_put_contents($temp_file_pre,file_get_contents($file['tmp_name']),FILE_APPEND | LOCK_EX); 
+//  if($chunk + 1 >= $chunks){
+// 	if (file_exists($temp_path)) {
+// 		unlink($temp_path);
+// 	}
+// 	$save_path = $temp_path;
+// 	rename($temp_file_pre,$save_path);
+
+// 	if ($GLOBALS['is_root'] != 1){
+// 		if(X86 == 1){//x86
+// 			$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/magic.mgc");
+// 			}else{//mips
+// 			$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/web.mgc");
+// 			}
+// 	  if($finfo){
+// 		$type = @finfo_file($finfo, $save_path);
+// 		$type = explode(';', $type);
+// 		$mime = get_file_mime($ext);
+// 		if ($GLOBALS['config']['system_info']['deepcheck']==1 && $type[0] != $mime) {
+// 			unlink($save_path);
+// 			write_dblog("上传",$filename,"出错",$L['deepcheck_nodownload']);
+// 			show_json($L['deepcheck_nodownload'],false);
+// 		}
+// 	  }else{
+// 		write_dblog("上传",$filename,"出错","文件错误");
+// 		show_json($L['move_error'],false);
+// 	  }
+// 	}
+// 	write_dblog("上传",$file_name,"通过","");
+// 	show_json($L['upload_success'],true,iconv_app($save_path));
+// }
+// 测试 //write_dblog("上传",$file_name,"通过",'chunk_'.$chunk.' success!'.$chunks);
+//  show_json($L['upload_success'],true,'chunk_'.$chunk.' success!'.$chunks);
+// } 
+
+
+	
+	//上传完合并
 		if(move_uploaded_file($file['tmp_name'],$temp_file_pre.$chunk)){
 			$done = true;
 			for($index = 0; $index<$chunks; $index++ ){
@@ -975,7 +1048,7 @@ function upload_chunk($fileInput, $path = './',$temp_path){
 			if ($done && flock($out, LOCK_EX)) {
 		        for( $index = 0; $index < $chunks; $index++ ) {
 		            if (!$in = fopen($temp_file_pre.$index,"rb")) break;
-		            while ($buff = fread($in, 4096)) {
+		            while ($buff = fread($in, 1024*8)) {
 		                fwrite($out, $buff);
 		            }
 		            fclose($in);
@@ -1006,6 +1079,10 @@ function upload_chunk($fileInput, $path = './',$temp_path){
 			write_dblog("上传",$filename,"出错","文件错误");
 			show_json($L['move_error'],false);
 		}
+
+
+		
+
 	}
 
 	//正常上传

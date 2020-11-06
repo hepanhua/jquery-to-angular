@@ -805,6 +805,18 @@ class explorer extends Controller{
         upload_chunk('file',$save_path,$temp_dir);
     }
 
+    // 删除切片
+    public function delChunks(){
+        $save_path = $this->path;
+        $name = $this->in['filename'];
+        $chunks = $this->in['chunks'];
+        if ($save_path == '/mnt/usbox/') show_json('',false);
+        if (!is_writeable($save_path)) show_json('',false);
+        if ($save_path == '') show_json('',false);
+
+        del_chunk($name,$chunks,$save_path);
+    }
+
     //share list
     private function path_share(){
         $path_hidden = $this->config['setting_system']['path_hidden'];

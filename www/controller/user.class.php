@@ -346,7 +346,9 @@ if( !empty($headers) ){
      * 退出处理
      */
     public function logout(){
-        write_audit('信息','退出','成功','用户退出');
+        if($_SESSION['secros_user']['name']){
+            write_audit('信息','退出','成功','用户退出');
+        }
         session_start();
         user_logout();
     }

@@ -1160,7 +1160,7 @@ define("app/src/setting/file", [], function() {
                         obj.innerHTML='<img src=\"/static/images/lazy.gif\" />';*/
                 
 if(($('#upload #uploadfile')[0].files[0].size / 1024 /1024).toFixed(0)>200){
-    alert(LNG.group_upload_tips);
+    alert(LNG.group_upload_tips); //智能学习文件不超过200m
     return false;
     }
 let stydy_name = $('#upload #uploadfile')[0].files[0].name;
