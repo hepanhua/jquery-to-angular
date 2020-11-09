@@ -442,6 +442,7 @@ $L= array(
 	"platform_authmode"			 =>"认证方式",
 	"platform_id"				 =>"认证ID",
 	"platform_password"			 =>"认证密码",
+	"platform_certpwd"			 =>"证书保护口令",
 	"platform_filename"			 =>"证书",
 	"setting_usblist"  			 =>	"USB管理",
 	"setting_usblist_method"  	 =>	"U盘准入策略",

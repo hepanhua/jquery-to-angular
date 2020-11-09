@@ -55,7 +55,7 @@ $platform_filename = config_get_value_from_file('/mnt/config/noc.conf','certname
 		<span class='infotitle'><?php echo $L['platform_password'];?>:</span><input type="text" id="password" 
     value="<?php echo $platform_password;?>" />
 	</div>
-    <div class="box_line platform_typeb <?php echo $platform_authmode=="2"?"":"hidden";?>">
+    <div class="box_line platform_typeb <?php echo $platform_authmode=="2"?"":"hidden";?>"  style="margin-bottom: 8px;">
     
 		<span class='infotitle'><?php echo $L['platform_filename'];?>:</span>
         <input id="ssl_file"   type="file"   style="display:none">
@@ -66,6 +66,10 @@ $platform_filename = config_get_value_from_file('/mnt/config/noc.conf','certname
 </div>
 	</div>
 
+	<div class="box_line platform_typeb <?php echo $platform_authmode=="2"?"":"hidden";?>">
+		<span class='infotitle'><?php echo $L['platform_certpwd'];?>:</span><input type="text" id="certpwd" 
+    value="<?php echo $platform_certpwd;?>" />
+	</div>
 
 
   <div class="box_line" style="border-top: 1px solid #ccc!important;margin-top: 16px;padding-top: 16px!important;">

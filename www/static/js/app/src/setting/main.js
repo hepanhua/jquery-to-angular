@@ -2050,8 +2050,14 @@ define("app/src/setting/platform", [], function() {
             formData.append("id",id);
             formData.append("password",password);
         }else{
+            let pwd = $("#certpwd").val();
+            if(!pwd){
+                tips('证书保护口令不能为空',false);
+                return;
+            }
             if($("#ssl_file")[0].files[0]){
                 formData.append("certfile",$("#ssl_file")[0].files[0]);
+                formData.append("certpwd",pwd);
             }else{
                 tips('请添加要上传的证书',false);
                 return;
