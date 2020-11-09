@@ -65,7 +65,7 @@ if (isset($av_status) && ($av_status == 2)){
 		}
 		?>/> <?php echo $L['antivirus_warntip'];?>
 
-<input type="radio" name="deal" value="1"  style="margin: 0;border: none!important;box-shadow: none!important;"
+<input type="radio" name="deal" value="1"  style="margin: 0;margin-left:22px;border: none!important;box-shadow: none!important;"
 <?php
 		if ($antivirus_policy=="1") {
 		?>	
