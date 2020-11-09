@@ -56,17 +56,26 @@ if (isset($av_status) && ($av_status == 2)){
 	<div class="box_line" style="display:flex;align-items:center">
 		<span class='infotitle'><?php echo $L['antivirus_dealmethod'];?>:</span>
 		<div style="display:flex;align-items:center">
-<input type="radio" name="deal" value="0"  style="margin: 0;border: none!important;box-shadow: none!important;"
+		<input type="radio" name="deal" value="0"  style="margin: 0;border: none!important;box-shadow: none!important;"
 <?php
 		if ($antivirus_policy=="0") {
 		?>	
 		checked='true' 
 		<?php
 		}
-		?>/> <?php echo $L['antivirus_isolate'];?>
-<input type="radio" name="deal" value="1"  style="margin: 0;margin-left:22px;border: none!important;box-shadow: none!important;"
+		?>/> <?php echo $L['antivirus_warntip'];?>
+
+<input type="radio" name="deal" value="1"  style="margin: 0;border: none!important;box-shadow: none!important;"
 <?php
 		if ($antivirus_policy=="1") {
+		?>	
+		checked='true' 
+		<?php
+		}
+		?>/> <?php echo $L['antivirus_isolate'];?>
+<input type="radio" name="deal" value="2"  style="margin: 0;margin-left:22px;border: none!important;box-shadow: none!important;"
+<?php
+		if ($antivirus_policy=="2") {
 		?>	
 		checked='true' 
 		<?php

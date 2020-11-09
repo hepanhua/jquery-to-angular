@@ -142,6 +142,7 @@ $L= array(
 	"antivirus_ziptips"		=> "扫描压缩文件将影响扫描速度,请谨慎开启",
 	"antivirus_delete"		=> "删除",
 	"antivirus_isolate"		=> "隔离",
+	"antivirus_warntip"		=> "警告",
 	"antivirus_file"  		=> "病毒检测方式",
 	"antivirus_file_tips"  		=> "插入U盘后，将立即对U盘内文件进行病毒检测",
 	"log_virus"							 => '病毒日志',
