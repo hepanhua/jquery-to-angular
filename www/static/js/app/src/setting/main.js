@@ -2073,7 +2073,7 @@ define("app/src/setting/platform", [], function() {
              if(res.code == 200){
                 tips(LNG.success);
              }else{
-                tips(e.msg,"error");
+                tips(res.msg,"error");
              }
             }
         });
