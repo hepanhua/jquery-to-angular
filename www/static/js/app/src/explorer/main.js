@@ -4113,8 +4113,8 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 								core.tips.tips('升级已完成,将在5秒后自动重启');
 								upgradeclen();
 								//重启动画
-
-				$('.rebootdom',window.parent.document).removeClass('hidden');
+								setTimeout(() => {
+									$('.rebootdom',window.parent.document).removeClass('hidden');
 				  var progresswidth = 0;
 				  var rebootsever = setInterval(() => {
 						if(progresswidth + 3 < 99){
@@ -4150,8 +4150,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 							}
 							});
 					},2000);
-				  
-								
+								}, 5000);
 								//end
 							}
 							break;
