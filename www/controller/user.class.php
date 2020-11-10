@@ -450,7 +450,6 @@ if( !empty($headers) ){
         $auth['user:common_js'] = 1;//权限数据配置后输出到前端
         $auth['explorer:pathChmod']         = $auth['explorer:pathRname'];
         $auth['explorer:pathDeleteRecycle'] = $auth['explorer:pathDelete'];
-        $auth['explorer:fileUpload']        = $auth['explorer:fileUpload'];
         $auth['explorer:pathCopyDrag']      = $auth['explorer:pathCuteDrag'];
         
         $auth['explorer:fileDownloadRemove']= $auth['explorer:fileDownload'];

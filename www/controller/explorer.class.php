@@ -278,6 +278,7 @@ class explorer extends Controller{
         }
     }
     public function pathDelete(){
+        if($GLOBALS['is_root'] == 1 ||  $GLOBALS['auth']['explorer:pathDelete'] == 1){
         $list = json_decode($this->in['list'],true);
         $where = rawurldecode($this->in['where']);
         if (!is_writable(USER_RECYCLE)) show_json($this->L['no_permission_write'],false);
@@ -314,7 +315,12 @@ class explorer extends Controller{
         }
         
         show_json($info,$state);
+    }else{
+        show_json('没有权限',false);
     }
+    }
+
+
     public function pathDeleteRecycle(){
         if(!isset($this->in['list'])){
             if (!del_dir(USER_RECYCLE)) {
@@ -510,8 +516,12 @@ class explorer extends Controller{
     }
     
     public function fileDownload(){
-    $patharry = explode("/",$this->path);
-    file_put_out($this->path,true);
+    if($GLOBALS['is_root'] == 1 ||  $GLOBALS['auth']['explorer:fileDownload'] == 1){
+        $patharry = explode("/",$this->path);
+        file_put_out($this->path,true);
+    }else{
+show_json('没有权限',false);
+    }
     }
 
     // public function newzipdownload(){
@@ -781,7 +791,9 @@ class explorer extends Controller{
      * 上传,html5拖拽  flash 多文件
      */
     public function fileUpload(){
-        //show('error',false);
+
+        if($GLOBALS['is_root'] == 1 ||  $GLOBALS['auth']['explorer:fileUpload'] == 1){
+           //show('error',false);
         $save_path = $this->path;
         //var_dump($save_path);
         //return;
@@ -803,6 +815,11 @@ class explorer extends Controller{
         mk_dir($temp_dir);
         if (!is_writeable($temp_dir)) show_json($this->L['no_permission_write'],false);
         upload_chunk('file',$save_path,$temp_dir);
+        }else{
+    show_json('没有权限',false);
+        }
+        
+        
     }
 
     // 删除切片
