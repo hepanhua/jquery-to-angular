@@ -4112,6 +4112,47 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 								$('#devUpdataTips').addClass('hidden');
 								core.tips.tips('升级已完成,将在5秒后自动重启');
 								upgradeclen();
+								//重启动画
+
+				$('.rebootdom',window.parent.document).removeClass('hidden');
+				  var progresswidth = 0;
+				  var rebootsever = setInterval(() => {
+						if(progresswidth + 3 < 99){
+							$('.rebootdom #rebootdom_text', window.parent.document).text("正在重启中");
+							progresswidth += 3;
+						$('.rebootdom #rebootdom_progress_bar', window.parent.document).css('width', progresswidth + '%');
+						$('.rebootdom #rebootdom_progress_value', window.parent.document).text(progresswidth + '%');
+						}
+						
+						$.ajax({
+							url: "cgi-bin/ready.cgi",
+							dataType:'json',
+							type:'GET',
+							success: function(t) {
+								if(t.code == 200){
+									if(!rebootsever){
+										return false;
+									}
+									clearInterval(rebootsever);
+									rebootsever = null;
+													$('.rebootdom #rebootdom_progress_bar', window.parent.document).css('width', '100%');
+															$('.rebootdom #rebootdom_progress_value', window.parent.document).text('100%');
+											setTimeout(() => {
+											 $('.rebootdom',window.parent.document).addClass('hidden');
+											window.parent.location.reload();
+											}, 1000); 
+									}
+											
+												  if (t.code == 400) {
+													alert(t.msg);
+													$('.rebootdom', window.parent.document).addClass('hidden');
+												}
+							}
+							});
+					},2000);
+				  
+								
+								//end
 							}
 							break;
 						case "CAVP":

@@ -64,7 +64,7 @@ class user extends Controller
                  define('HOME',PUBLIC_PATH);
                  $GLOBALS['web_root'] = str_replace(WEB_ROOT,'',HOME);//从服务器开始到用户目录
                  $GLOBALS['is_root'] = 1;
-             }else if(AUDIT_ON == 1 && $this->user['role'] == 'audit'){
+             }else if(AUDIT_ON == 1 && $this->user['role'] === 'audit'){
                  define('MYHOME','/');
                   define('HOME',PUBLIC_PATH);
                  $GLOBALS['web_root'] = str_replace(WEB_ROOT,'',HOME);//从服务器开始到用户目录
@@ -111,7 +111,7 @@ class user extends Controller
                 define('HOME',PUBLIC_PATH);
                 $GLOBALS['web_root'] = str_replace(WEB_ROOT,'',HOME);//从服务器开始到用户目录
                 $GLOBALS['is_root'] = 1;
-            }else if(AUDIT_ON == 1 && $this->user['role'] == 'audit'){
+            }else if(AUDIT_ON == 1 && $this->user['role'] === 'audit'){
                 define('MYHOME','/');
                 //define('HOME',USER.'home/');
                  define('HOME',PUBLIC_PATH);
@@ -427,7 +427,7 @@ if( !empty($headers) ){
      */
     public function authCheck(){
         if (isset($GLOBALS['is_root']) && $GLOBALS['is_root'] == 1) return;
-        if (isset($GLOBALS['is_root']) && $GLOBALS['is_root'] == 'audit') return;
+        if (isset($GLOBALS['is_root']) && $GLOBALS['is_root'] === 'audit') return;
         if (in_array(ACT,$this->notCheck)) return;
         if (!array_key_exists(ST,$this->config['role_setting']) ) return;
         if (!in_array(ACT,$this->config['role_setting'][ST]) &&
@@ -450,6 +450,7 @@ if( !empty($headers) ){
         $auth['user:common_js'] = 1;//权限数据配置后输出到前端
         $auth['explorer:pathChmod']         = $auth['explorer:pathRname'];
         $auth['explorer:pathDeleteRecycle'] = $auth['explorer:pathDelete'];
+        $auth['explorer:fileUpload']        = $auth['explorer:fileUpload'];
         $auth['explorer:pathCopyDrag']      = $auth['explorer:pathCuteDrag'];
         
         $auth['explorer:fileDownloadRemove']= $auth['explorer:fileDownload'];

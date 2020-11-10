@@ -64,7 +64,27 @@ function get_filesize($path){
 //filesize 解决大于2G 大小问题
 //http://stackoverflow.com/questions/5501451/php-x86-how-to-get-filesize-of-2-gb-file-without-external-program
 function get_filesize($file){
-	$result = false;
+
+	if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
+		if (class_exists("COM")) {
+		  $fsobj = new COM('Scripting.FileSystemObject');
+		  $f = $fsobj->GetFile(realpath($file));
+		  $file = $f->Size;
+		} else {
+		  $file = trim(exec("for %F in (\"" . $file . "\") do @echo %~zF"));
+		}
+	  } elseif (PHP_OS == 'Darwin') {
+		$file = trim(shell_exec("stat -f %z " ."'". $file."'"));
+	  } elseif ((PHP_OS == 'Linux') || (PHP_OS == 'FreeBSD') || (PHP_OS == 'Unix') || (PHP_OS == 'SunOS')) {
+	  //   $file = trim(shell_exec("stat -c%s " . escapeshellarg($file)));
+		$file = trim(shell_exec("stat -c%s " ."'". $file."'"));
+	  } else {
+		$file = filesize($file);
+	  }
+	  return $file;
+
+	  //old
+	// $result = false;
 	// $fp = @fopen($path,"r");
 	// if(! $fp = @fopen($path,"r")) return $result;
 	// if(PHP_INT_SIZE >= 8 ){ //64bit
@@ -113,23 +133,6 @@ function get_filesize($file){
 	// }
 	// fclose($fp);
 	// return $result;
-	if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
-		if (class_exists("COM")) {
-		  $fsobj = new COM('Scripting.FileSystemObject');
-		  $f = $fsobj->GetFile(realpath($file));
-		  $file = $f->Size;
-		} else {
-		  $file = trim(exec("for %F in (\"" . $file . "\") do @echo %~zF"));
-		}
-	  } elseif (PHP_OS == 'Darwin') {
-		$file = trim(shell_exec("stat -f %z " ."'". $file."'"));
-	  } elseif ((PHP_OS == 'Linux') || (PHP_OS == 'FreeBSD') || (PHP_OS == 'Unix') || (PHP_OS == 'SunOS')) {
-	  //   $file = trim(shell_exec("stat -c%s " . escapeshellarg($file)));
-		$file = trim(shell_exec("stat -c%s " ."'". $file."'"));
-	  } else {
-		$file = filesize($file);
-	  }
-	  return $file;
 }
 
 /**
@@ -850,9 +853,9 @@ function showsize($file) {
       } else {
         $file = trim(exec("for %F in (\"" . $file . "\") do @echo %~zF"));
       }
-    } elseif (PHP_OS == 'Darwin') {
+    } else if (PHP_OS == 'Darwin') {
       $file = trim(shell_exec("stat -f %z " ."'". $file."'"));
-    } elseif ((PHP_OS == 'Linux') || (PHP_OS == 'FreeBSD') || (PHP_OS == 'Unix') || (PHP_OS == 'SunOS')) {
+    } else if ((PHP_OS == 'Linux') || (PHP_OS == 'FreeBSD') || (PHP_OS == 'Unix') || (PHP_OS == 'SunOS')) {
 	//   $file = trim(shell_exec("stat -c%s " . escapeshellarg($file)));
 	  $file = trim(shell_exec("stat -c%s " ."'". $file."'"));
     } else {
