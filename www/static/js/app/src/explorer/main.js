@@ -1480,18 +1480,23 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				}),
 				close: function() { //关闭
 					$.each(uploader.getFiles(), function(e, t) {
-						let a = 1024*1024*4;
+						let a = 1024*1024*8;
+						if(G.X86 != 1){
+							a = 1024*1024*2;
+						}
 						let chunks = Math.ceil(t.size/a); 
-						$.ajax({
-							url: "index.php?explorer/delChunks&path=" + urlEncode(G.upload_path) + "&filename="+t.name+"&chunks=" + chunks,
-							dataType: "json",
-							success: function(e) {
-								// console.log(e);
-								ui.f5();
-							}
-						});
 						uploader.skipFile(t);
 						uploader.removeFile(t);
+						setTimeout(() => {
+							$.ajax({
+								url: "index.php?explorer/delChunks&path=" + urlEncode(G.upload_path) + "&filename="+t.name+"&chunks=" + chunks,
+								dataType: "json",
+								success: function(e) {
+									// console.log(e);
+									ui.f5();
+								}
+							});
+						}, 1000);
 					}), 
 					$.each(uploaderfol.getFiles(), function(e, t) {
 						uploaderfol.skipFile(t), uploaderfol.removeFile(t)
@@ -1524,7 +1529,10 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			var e = "#thelist",
 				t = !0;
 			$.browser.msie && (t = !1);
-			var a = 1024*1024*4;
+			var a = 1024*1024*8;
+			if(G.X86 != 1){
+				a = 1024*1024*2;
+			}
 			// a >= G.upload_max && (a = .5 * G.upload_max),
 			uploader = WebUploader.create({
 				swf: G.static_path + "js/lib/webuploader/Uploader.swf",
@@ -1576,17 +1584,22 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					uploaderfol.removeFile(t, !0);
 				}else{
 					let rm_file = uploader.getFile(t);
-					let a = 1024*1024*4;
+					let a = 1024*1024*8;
+			if(G.X86 != 1){
+				a = 1024*1024*2;
+			}
 					let chunks = Math.ceil(rm_file.size/a); 
-					$.ajax({
-						url: "index.php?explorer/delChunks&path=" + urlEncode(G.upload_path) + "&filename="+rm_file.name+"&chunks=" + chunks,
-						dataType: "json",
-						success: function(e) {
-							ui.f5();
-						}
-					});
 					uploader.skipFile(t);
 					uploader.removeFile(t, !0);
+					setTimeout(() => {
+						$.ajax({
+							url: "index.php?explorer/delChunks&path=" + urlEncode(G.upload_path) + "&filename="+rm_file.name+"&chunks=" + chunks,
+							dataType: "json",
+							success: function(e) {
+								ui.f5();
+							}
+						});
+					}, 1000);
 				}
 				$(this).parent().parent().slideUp(function() {
 					$(this).remove()

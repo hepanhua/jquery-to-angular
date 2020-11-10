@@ -508,9 +508,9 @@ class explorer extends Controller{
         $state = ($error ==''?true:false);
         show_json($msg,$state,$data);
     }
+    
     public function fileDownload(){
     $patharry = explode("/",$this->path);
-    write_audit('信息','下载','成功','下载'.end($patharry));
     file_put_out($this->path,true);
     }
 

@@ -746,43 +746,39 @@ function ext_type($ext){
 function file_put_out($file,$download=false){
 	// ob_clean();
 	// clearstatcache();
-	// $fileExt = showsize($file);
-	// show_json($fileExt);
-// $fileExt = get_filesize($file);	
-// $fileExt = file_info($file);
-// if (!is_file($file)) show_json('not a file!');
-	set_time_limit(0); 
-	//ob_clean();//清除之前所有输出缓冲
-	// if (!file_exists($file)) show_json('file not exists',false);
-	if (isset($_SERVER['HTTP_RANGE']) && ($_SERVER['HTTP_RANGE'] != "") && 
-		preg_match("/^bytes=([0-9]+)-$/i", $_SERVER['HTTP_RANGE'], $match) && ($match[1] < $fsize)) { 
-		$start = $match[1];
-	}else{
-		$start = 0;
-	}
+	set_time_limit(0);
+	$filesize = get_filesize($file);
+	if ($filesize > 0){
+
+	// if (isset($_SERVER['HTTP_RANGE']) && ($_SERVER['HTTP_RANGE'] != "") && 
+	// 	preg_match("/^bytes=([0-9]+)-$/i", $_SERVER['HTTP_RANGE'], $match) && ($match[1] < $fsize)) { 
+	// 	$start = $match[1];
+	// }else{
+	// 	$start = 0;
+	// }
 	if ($GLOBALS['is_root'] != 1){
 		if(X86 == 1){//x86
 		$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/magic.mgc");
 		}else{//mips
 		$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/web.mgc");
 		}
-	  if ($finfo)
-	  	$type = @finfo_file($finfo, $file);
+	  if ($finfo){
+		$type = @finfo_file($finfo, $file);
 		$type = explode(';', $type);
-		$size = get_filesize($file);
+		$size = $filesize;
 		$mime = get_file_mime(get_path_ext($file));
 		if ($GLOBALS['config']['system_info']['deepcheck']==1 && $type[0] != $mime) {
 			$filename = get_path_this($file);
-			// write_audit('警告','下载','失败','下载非法文件'.$file_name);
 			write_dblog("下载",$filename,"阻断","非法文件");
 			show_json('deepcheck nodownload');
 		}
+	  }
 	}else{
-		$size = showsize($file);
+		$size = $filesize;
 		$mime = get_file_mime(get_path_ext($file));
 	}
 
-	if ($download || strstr($mime,'application/')) {//下载或者application则设置下载头
+	// if ($download || strstr($mime,'application/')) {//下载或者application则设置下载头
 		$filename = get_path_this($file);//解决在IE中下载时中文乱码问题
 		if( preg_match('/MSIE/',$_SERVER['HTTP_USER_AGENT']) || 
 			preg_match('/Trident/',$_SERVER['HTTP_USER_AGENT'])){
@@ -790,31 +786,58 @@ function file_put_out($file,$download=false){
 				$filename = str_replace('+','%20',urlencode($filename));
 			}
 		}
-		write_dblog("下载",$filename,"通过","");
-		header("Content-Type: application/octet-stream");
-		header("Content-Disposition: attachment;filename=".$filename);
+	// 	header("Content-Type: application/octet-stream");
+	// 	header("Content-Disposition: attachment;filename=".$filename);
+	// }
+	
+	// header("Cache-Control: public");
+	// header("X-Powered-By: SecROS.");
+	// header("Content-Type: ".$mime);
+	// if ($start > 0){
+	// 	header("HTTP/1.1 206 Partial Content");
+	// 	header("Content-Ranges: bytes".$start ."-".($size - 1)."/" .$size);
+	// 	header("Content-Length: ".($size - $start));		
+	// }else{
+	// 	header("Accept-Ranges: bytes");
+	// 	header("Content-Length: $size");
+	// }
+
+
+	$speed = 1024 * 1024;
+	if(X86 == 1){
+		$speed = 1024 * 1024 * 4;
 	}
 	
-	header("Cache-Control: public");
-	header("X-Powered-By: SecROS.");
-	header("Content-Type: ".$mime);
-	if ($start > 0){
-		header("HTTP/1.1 206 Partial Content");
-		header("Content-Ranges: bytes".$start ."-".($size - 1)."/" .$size);
-		header("Content-Length: ".($size - $start));		
-	}else{
-		header("Accept-Ranges: bytes");
-		header("Content-Length: $size");
-	}
+	header('Content-Description: File Transfer');
+    header('Content-Type: application/octet-stream');
+    header('Content-Transfer-Encoding: binary');
+    header('Accept-Ranges: bytes');
+    header('Expires: 0');
+    header('Cache-Control: must-revalidate');
+    header('Pragma: public');
+    header('Content-Length: ' . $filesize);
+    header('Content-Disposition: attachment; filename=' . $filename);
 
-	$fp = fopen($file, "rb");
-	fseek($fp, $start);
-	while (!feof($fp)) {
-		print (fread($fp, 1024 * 8)); //输出文件  
-		flush(); 
-		ob_flush();
-	}  
-	fclose($fp);
+    // 打开文件
+    $fp = fopen($file, 'rb');
+    // 设置指针位置
+    fseek($fp, 0);
+    // 开启缓冲区
+    ob_start();
+    // 分段读取文件
+    while (!feof($fp)) {
+        echo fread($fp, $speed);
+        ob_flush(); // 刷新PHP缓冲区到Web服务器
+        flush(); // 刷新Web服务器缓冲区到浏览器
+    }
+    // 关闭缓冲区
+    ob_end_clean();
+    fclose($fp);
+	write_dblog("下载",$filename,"通过","");
+	}else{
+		write_dblog("下载",$filename,"失败","文件不存在");
+		show_json('文件不存在');
+	}
 }
 
 
@@ -940,8 +963,10 @@ function upload($fileInput, $path = './'){
 //分片上传处理
 //删除
 function del_chunk($name,$chunks,$path){
+	set_time_limit(0);
 $temp_path = $path.$name;
 $temp_file_pre = $temp_path.md5($temp_path.$name).'.part';
+sleep(1);
 for( $index = 0; $index < $chunks; $index++ ) {
 	if (file_exists($temp_file_pre.$index)) {
 		unlink($temp_file_pre.$index);
@@ -951,6 +976,7 @@ show_json(true);
 }
 //上传
 function upload_chunk($fileInput, $path = './',$temp_path){
+	set_time_limit(0);
 	global $config,$L;
 	$file = $_FILES[$fileInput];
 	$chunk = isset($_REQUEST["chunk"]) ? intval($_REQUEST["chunk"]) : 0;//which chunk
@@ -1043,12 +1069,16 @@ function upload_chunk($fileInput, $path = './',$temp_path){
 				show_json($L['upload_success'],true,'chunk_'.$chunk.' success!');
 			}
 
+			$speed = 1024 * 1024;
+			if(X86 == 1){
+				$speed = 1024 * 1024 * 4;
+			}
 			$save_path = $path.$file_name;
 			$out = fopen($save_path, "wb");
 			if ($done && flock($out, LOCK_EX)) {
 		        for( $index = 0; $index < $chunks; $index++ ) {
 		            if (!$in = fopen($temp_file_pre.$index,"rb")) break;
-		            while ($buff = fread($in, 1024*8)) {
+		            while ($buff = fread($in, $speed)) {
 		                fwrite($out, $buff);
 		            }
 		            fclose($in);
