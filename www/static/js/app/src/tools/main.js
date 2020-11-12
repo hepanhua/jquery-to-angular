@@ -8,6 +8,7 @@ var toolsDownload=document.getElementById("toolsDownload");
 var toolsNav=document.getElementById("toolsNav");
 var toolsSpeedView=document.getElementById("toolsSpeedView");
 
+var spvechart = echarts.init(document.getElementById('graphSpeedView'));
 var getbit = [];
 var sendbit = [];
 var dsqtime = null;
@@ -21,6 +22,7 @@ var getmbvalue= [];
 var speed = 'B/S';
 var oldget = null;
 var oldsend = null;
+
 function toolsDownloadInit(e){
     toolsDownload.classList.remove('hidden');
     toolsTraceroute.classList.add("hidden");
@@ -72,7 +74,7 @@ var lineX = [];
 for (let k = 0; k <= 15; k++) {
 lineX.push(k*3);
 }
-var spvechart = echarts.init(document.getElementById('graphSpeedView'));
+
 
 optionvv = {
     legend: {
@@ -215,102 +217,197 @@ optionvv = {
     ]
 };
 spvechart.setOption(optionvv,true);
-if(!dsqtime){
-  dsqtime = setInterval(function (){
-    $.ajax({
- type : "get",
- async : true, 
- url : "/cgi-bin/getifspeed.cgi",
- data : {},
- dataType : "json",        //返回数据形式为json
- success : function(res) {
-var newgetbit = 0;
-var newsendbit = 0;
+serverget();
+// if(!dsqtime){
+//   dsqtime = setInterval(function (){
+//     $.ajax({
+//  type : "get",
+//  async : true, 
+//  url : "/cgi-bin/getifspeed.cgi",
+//  data : {},
+//  dataType : "json",        //返回数据形式为json
+//  success : function(res) {
+// var newgetbit = 0;
+// var newsendbit = 0;
 
-if(oldget == null){
+// if(oldget == null){
+//     oldget = res.data.rxbytes;
+//     oldsend = res.data.txbytes;
+//  }else{
+//     // if(sendbitvalue.length == 0){
+//         newsendbit = res.data.txbytes - oldsend;
+//         newgetbit =  res.data.rxbytes - oldget;
+//     //  }
+//     // if(sendbitvalue.length > 0){
+//     //     newsendbit = res.data.txbytes - sentbitarray[sentbitarray.length-1];
+//     //     newgetbit =  res.data.rxbytes - getbitarray[getbitarray.length-1];
+//     //  }
+//     if (sendbitvalue.length > 15) {
+//         // sentbitarray.splice(0, 1);//删掉第一个
+//         // getbitarray.splice(0, 1);//删掉第一个
+// //速率
+//        sendbitvalue.splice(0, 1);//删掉第一个
+//         getbitvalue.splice(0, 1);//删掉第一个
+//         sendkbvalue.splice(0, 1);//删掉第一个
+//          getkbvalue.splice(0, 1);//删掉第一个
+//         sendmbvalue.splice(0, 1);//删掉第一个
+//          getmbvalue.splice(0, 1);//删掉第一个
+//     }
+//     var kbsent = Math.ceil(newsendbit / 1024);
+//     var kbrevice = Math.ceil(newgetbit / 1024);
+//     var mbsent = Math.ceil((newsendbit / 1048576) * 10) / 10;
+//     var mbrevice = Math.ceil((newgetbit / 1048576) * 10) / 10;
+
+//                 if (mbsent == 0.1) {
+//                     mbsent = Math.ceil((newsendbit / 1048576) * 100) / 100;
+//                     if (mbsent == 0.01) {
+//                         mbsent = Math.ceil((newsendbit / 1048576) * 1000) / 1000;
+//                     }
+//                 }
+//                 if (mbrevice == 0.1) {
+//                     mbrevice = Math.ceil((newgetbit / 1048576) * 100) / 100;
+//                     if (mbrevice == 0.01) {
+//                         mbrevice = Math.ceil((newgetbit / 1048576) * 1000) / 1000;
+//                     }
+//                 }
+
+//                 // getbitarray.push(res.data.rxbytes);
+//                 // sentbitarray.push(res.data.txbytes);             
+//                 sendbitvalue.push(newsendbit); //发送
+//                 getbitvalue.push(newgetbit);//接收
+//                 sendkbvalue.push(kbsent); //发送
+//                 getkbvalue.push(kbrevice);//接收
+//                 sendmbvalue.push(mbsent); //发送
+//                 getmbvalue.push(mbrevice);//接收
+
+//                 getbit=getbitvalue;
+//                 sendbit=sendbitvalue;
+
+//                 speed = 'B/S';
+//                 if (newsendbit > 1024 || newgetbit > 1024) { //大于1kb 用kb为单位
+//                     speed = 'KB/S';
+//                     getbit=getkbvalue;
+//                     sendbit=sendkbvalue;
+//                     if (newsendbit > 1048576 || newgetbit > 1048576) {//大于1mb，用mb为单位
+//                         speed = 'MB/S';
+//                         getbit=getmbvalue;
+//                         sendbit=sendmbvalue;
+//                     }
+//                 }
+//     spvechart.setOption({
+//         yAxis:{name: '流量 ( '+ speed +' )'},
+//         series:[{data:sendbit},{data:getbit}]
+//     });
+//    var textv ='发送：' + sendbit[sendbit.length - 1] + speed;
+//    var textvv = '接收：' + getbit[getbit.length - 1] + speed;
+// $('#Speedviewtext').text(textv);
+// $('#Speedviewtextb').text(textvv);
+//  }
+//  oldget = res.data.rxbytes;
+//  oldsend = res.data.txbytes;
+
+
+//     }
+//      });
+//     },1000);
+// }
+
+}
+
+function serverget(){
+  $.ajax({
+    type : "get",
+    async : true, 
+    url : "/cgi-bin/getifspeed.cgi",
+    data : {},
+    dataType : "json",        //返回数据形式为json
+    success : function(res) {
+   var newgetbit = 0;
+   var newsendbit = 0;
+   
+   if(oldget == null){
+       oldget = res.data.rxbytes;
+       oldsend = res.data.txbytes;
+    }else{
+       // if(sendbitvalue.length == 0){
+           newsendbit = res.data.txbytes - oldsend;
+           newgetbit =  res.data.rxbytes - oldget;
+       //  }
+       // if(sendbitvalue.length > 0){
+       //     newsendbit = res.data.txbytes - sentbitarray[sentbitarray.length-1];
+       //     newgetbit =  res.data.rxbytes - getbitarray[getbitarray.length-1];
+       //  }
+       if (sendbitvalue.length > 15) {
+           // sentbitarray.splice(0, 1);//删掉第一个
+           // getbitarray.splice(0, 1);//删掉第一个
+   //速率
+          sendbitvalue.splice(0, 1);//删掉第一个
+           getbitvalue.splice(0, 1);//删掉第一个
+           sendkbvalue.splice(0, 1);//删掉第一个
+            getkbvalue.splice(0, 1);//删掉第一个
+           sendmbvalue.splice(0, 1);//删掉第一个
+            getmbvalue.splice(0, 1);//删掉第一个
+       }
+       var kbsent = Math.ceil(newsendbit / 1024);
+       var kbrevice = Math.ceil(newgetbit / 1024);
+       var mbsent = Math.ceil((newsendbit / 1048576) * 10) / 10;
+       var mbrevice = Math.ceil((newgetbit / 1048576) * 10) / 10;
+   
+                   if (mbsent == 0.1) {
+                       mbsent = Math.ceil((newsendbit / 1048576) * 100) / 100;
+                       if (mbsent == 0.01) {
+                           mbsent = Math.ceil((newsendbit / 1048576) * 1000) / 1000;
+                       }
+                   }
+                   if (mbrevice == 0.1) {
+                       mbrevice = Math.ceil((newgetbit / 1048576) * 100) / 100;
+                       if (mbrevice == 0.01) {
+                           mbrevice = Math.ceil((newgetbit / 1048576) * 1000) / 1000;
+                       }
+                   }
+   
+                   // getbitarray.push(res.data.rxbytes);
+                   // sentbitarray.push(res.data.txbytes);             
+                   sendbitvalue.push(newsendbit); //发送
+                   getbitvalue.push(newgetbit);//接收
+                   sendkbvalue.push(kbsent); //发送
+                   getkbvalue.push(kbrevice);//接收
+                   sendmbvalue.push(mbsent); //发送
+                   getmbvalue.push(mbrevice);//接收
+   
+                   getbit=getbitvalue;
+                   sendbit=sendbitvalue;
+   
+                   speed = 'B/S';
+                   if (newsendbit > 1024 || newgetbit > 1024) { //大于1kb 用kb为单位
+                       speed = 'KB/S';
+                       getbit=getkbvalue;
+                       sendbit=sendkbvalue;
+                       if (newsendbit > 1048576 || newgetbit > 1048576) {//大于1mb，用mb为单位
+                           speed = 'MB/S';
+                           getbit=getmbvalue;
+                           sendbit=sendmbvalue;
+                       }
+                   }
+       spvechart.setOption({
+           yAxis:{name: '流量 ( '+ speed +' )'},
+           series:[{data:sendbit},{data:getbit}]
+       });
+      var textv ='发送：' + sendbit[sendbit.length - 1] + speed;
+      var textvv = '接收：' + getbit[getbit.length - 1] + speed;
+   $('#Speedviewtext').text(textv);
+   $('#Speedviewtextb').text(textvv);
+    }
     oldget = res.data.rxbytes;
     oldsend = res.data.txbytes;
- }else{
-    // if(sendbitvalue.length == 0){
-        newsendbit = res.data.txbytes - oldsend;
-        newgetbit =  res.data.rxbytes - oldget;
-    //  }
-    // if(sendbitvalue.length > 0){
-    //     newsendbit = res.data.txbytes - sentbitarray[sentbitarray.length-1];
-    //     newgetbit =  res.data.rxbytes - getbitarray[getbitarray.length-1];
-    //  }
-    if (sendbitvalue.length > 15) {
-        // sentbitarray.splice(0, 1);//删掉第一个
-        // getbitarray.splice(0, 1);//删掉第一个
-//速率
-       sendbitvalue.splice(0, 1);//删掉第一个
-        getbitvalue.splice(0, 1);//删掉第一个
-        sendkbvalue.splice(0, 1);//删掉第一个
-         getkbvalue.splice(0, 1);//删掉第一个
-        sendmbvalue.splice(0, 1);//删掉第一个
-         getmbvalue.splice(0, 1);//删掉第一个
-    }
-    var kbsent = Math.ceil(newsendbit / 1024);
-    var kbrevice = Math.ceil(newgetbit / 1024);
-    var mbsent = Math.ceil((newsendbit / 1048576) * 10) / 10;
-    var mbrevice = Math.ceil((newgetbit / 1048576) * 10) / 10;
-
-                if (mbsent == 0.1) {
-                    mbsent = Math.ceil((newsendbit / 1048576) * 100) / 100;
-                    if (mbsent == 0.01) {
-                        mbsent = Math.ceil((newsendbit / 1048576) * 1000) / 1000;
-                    }
-                }
-                if (mbrevice == 0.1) {
-                    mbrevice = Math.ceil((newgetbit / 1048576) * 100) / 100;
-                    if (mbrevice == 0.01) {
-                        mbrevice = Math.ceil((newgetbit / 1048576) * 1000) / 1000;
-                    }
-                }
-
-                // getbitarray.push(res.data.rxbytes);
-                // sentbitarray.push(res.data.txbytes);             
-                sendbitvalue.push(newsendbit); //发送
-                getbitvalue.push(newgetbit);//接收
-                sendkbvalue.push(kbsent); //发送
-                getkbvalue.push(kbrevice);//接收
-                sendmbvalue.push(mbsent); //发送
-                getmbvalue.push(mbrevice);//接收
-
-                getbit=getbitvalue;
-                sendbit=sendbitvalue;
-
-                speed = 'B/S';
-                if (newsendbit > 1024 || newgetbit > 1024) { //大于1kb 用kb为单位
-                    speed = 'KB/S';
-                    getbit=getkbvalue;
-                    sendbit=sendkbvalue;
-                    if (newsendbit > 1048576 || newgetbit > 1048576) {//大于1mb，用mb为单位
-                        speed = 'MB/S';
-                        getbit=getmbvalue;
-                        sendbit=sendmbvalue;
-                    }
-                }
-    spvechart.setOption({
-        yAxis:{name: '流量 ( '+ speed +' )'},
-        series:[{data:sendbit},{data:getbit}]
-    });
-   var textv ='发送：' + sendbit[sendbit.length - 1] + speed;
-   var textvv = '接收：' + getbit[getbit.length - 1] + speed;
-$('#Speedviewtext').text(textv);
-$('#Speedviewtextb').text(textvv);
- }
- oldget = res.data.rxbytes;
- oldsend = res.data.txbytes;
-
-
-    }
-     });
-    },1000);
+   
+   setTimeout(() => {
+    serverget();
+   }, 1000); 
+   console.log('running');
+       }
+        });
 }
-
-}
-
 
 function  SpeedViewclose(){
   $('.speed_view_frame').attr("style","display:none");
@@ -332,9 +429,9 @@ $('#Speedviewtext').text("");
 $('#Speedviewtextb').text("");
 }
 
-$(window).unload(function(){
-  clearInterval(dsqtime);
-}); 
+// $(window).unload(function(){
+//   clearInterval(dsqtime);
+// }); 
 
 
   function tracerouteStart(){
