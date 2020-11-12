@@ -505,6 +505,36 @@ show_json('201');
      
     }
 
+
+    public function offlinefile(){
+        $save_path = '/var/spool/antivirus/'.$_FILES['upgradefile']['name'];
+        // show_json($save_path);
+        $wbspeed = 1024 * 1024;
+        if(X86 == 1){
+            $wbspeed = 1024 * 1024 * 4;
+        }
+        $out = fopen($save_path, "wb");
+            if(flock($out, LOCK_EX)) {
+           
+                    if (!$in = fopen($_FILES['upgradefile']['tmp_name'],"rb")) break;
+                    while ($buff = fread($in, $wbspeed)) {
+                        fwrite($out, $buff);
+                    }
+                    fclose($in);
+                sleep(1);
+                flock($out, LOCK_UN);
+                fclose($out);
+            }
+            if(get_filesize($save_path)>0){
+                write_audit('信息','病毒库离线升级','成功','');
+                show_json(true);
+            }else{
+                write_audit('信息','病毒库离线升级','失败','');
+                show_json(false);
+            }
+    }
+
+
     public function startck(){
         $a = "/tmp/".$this->in['filename'];
         system("/bin/upgrade_kernel ".$a.' >>/dev/null &');

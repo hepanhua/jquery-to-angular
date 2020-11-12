@@ -751,9 +751,6 @@ function file_put_out($file,$download=false){
 	// clearstatcache();
 	set_time_limit(0);
 	$filesize = get_filesize($file);
-	// sleep(120);
-	// write_dblog("下载",'无超时',"通过","");
-	// show_json($filesize);
 	if ($filesize > 0){
 
 	// if (isset($_SERVER['HTTP_RANGE']) && ($_SERVER['HTTP_RANGE'] != "") && 

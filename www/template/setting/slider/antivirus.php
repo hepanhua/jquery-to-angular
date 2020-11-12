@@ -110,6 +110,8 @@ if (isset($av_status) && ($av_status == 2)){
   <div class="box_line">
 	<a href="javascript:void(0);" class="av_save button"><?php echo $L['button_save'];?></a>
 	<a href="javascript:void(0);" class="av_update button"><?php echo $L['button_update'];?></a>
+	<a href="javascript:void(0);" class="av_offline_update button"><?php echo $L['button_offline_update'];?></a>
+	<input type="file"  id="av_offline_update"  class="hidden">
   </div>
   <div style="clear:both;"></div>
 </div>

@@ -1901,9 +1901,66 @@ define("app/src/setting/antivirus", [], function() {
             }
         });
     },
+    offline_update=function(){
+        var file = $('#av_offline_update')[0].files[0];//文件对象 
+        if(!file){
+            return false;
+        }
+        if((file.size / 1024 /1024).toFixed(0)>500){
+        alert('非法文件');
+        return false;
+        }
+    const formData = new FormData();
+  formData.append('upgradefile',file);
+   $('.updatedom #update_text', window.parent.document).text("正在上传中，请勿切断电源");
+    $('.updatedom', window.parent.document).removeClass('hidden');
+
+     var xhr = new XMLHttpRequest();
+     xhr.open('POST', 'index.php?user/offlinefile'); 
+     xhr.onreadystatechange = function() {
+         if (xhr.status === 200) {
+          if (xhr.readyState == 4){
+            console.log(xhr.responseText);
+            if(xhr.responseText){
+             let json = JSON.parse(xhr.responseText);
+             if(json.code == 200){
+                $('.updatedom', window.parent.document).addClass('hidden');
+             }
+            }
+            // $('.updatedom', window.parent.document).addClass('hidden');
+          }
+         } else {
+          tips('上传出错',false);
+          $('.updatedom', window.parent.document).addClass('hidden');
+         }
+     };
+     // 获取上传进度
+     xhr.upload.onprogress = function(event) {
+         if (event.lengthComputable) {
+             var progresswidth = Math.floor(event.loaded / event.total * 100);
+             if (progresswidth < 100) {
+            progresswidth += 1;
+            $('.updatedom #update_progress_bar', window.parent.document).css('width', progresswidth + '%');
+            $('.updatedom #update_progress_value', window.parent.document).text(progresswidth + '%');
+            }
+            if(progresswidth == 100){
+             setTimeout(() => {
+                $('.updatedom', window.parent.document).addClass('hidden');
+             }, 1000);
+            }
+         }
+     };
+     xhr.send(formData);
+
+    },
+    k=function(){
+        $("#av_offline_update").click();
+    },
     m = function() {
         $(".antivirus a.av_save").live("click", d);
         $(".antivirus a.av_update").live("click", update);
+        $(".antivirus #av_offline_update").live("change", offline_update);
+        $(".antivirus a.av_offline_update").live("click", k);
     }
     ;
     return {
