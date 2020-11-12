@@ -1920,18 +1920,25 @@ define("app/src/setting/antivirus", [], function() {
      xhr.onreadystatechange = function() {
          if (xhr.status === 200) {
           if (xhr.readyState == 4){
-            console.log(xhr.responseText);
+            // console.log(xhr.responseText);
             if(xhr.responseText){
              let json = JSON.parse(xhr.responseText);
-             if(json.code == 200){
-                $('.updatedom', window.parent.document).addClass('hidden');
+             if(json.data === 0){
+                $('.updatedom #update_progress_bar', window.parent.document).css('width', '100%');
+                 setTimeout(() => {
+                    $('.updatedom', window.parent.document).addClass('hidden');
+                 }, 1000);
+                $(file).val('');
+             }else{
+                tips('离线升级文件异常',false);
              }
             }
-            // $('.updatedom', window.parent.document).addClass('hidden');
+            $('.updatedom', window.parent.document).addClass('hidden');
           }
          } else {
-          tips('上传出错',false);
+          tips('上传失败',false);
           $('.updatedom', window.parent.document).addClass('hidden');
+          $(file).val('');
          }
      };
      // 获取上传进度
@@ -1942,11 +1949,6 @@ define("app/src/setting/antivirus", [], function() {
             progresswidth += 1;
             $('.updatedom #update_progress_bar', window.parent.document).css('width', progresswidth + '%');
             $('.updatedom #update_progress_value', window.parent.document).text(progresswidth + '%');
-            }
-            if(progresswidth == 100){
-             setTimeout(() => {
-                $('.updatedom', window.parent.document).addClass('hidden');
-             }, 1000);
             }
          }
      };
