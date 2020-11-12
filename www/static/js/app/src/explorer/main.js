@@ -4643,6 +4643,11 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 										core.tips.tips('请选择路径', false);
 										return;
 									}
+									let arr = select_path.split('/');
+			if(!arr[2]){
+				core.tips.tips('禁止还原到此路径',false);
+				return;
+			}
 									// if (core.authCheck("explorer:fileDownload") == true) {//检查下载权限
 										if (1 > fp.length) {
 											return;
@@ -4657,6 +4662,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 											success: function (e) {
 												$('.file_loading').addClass('hidden');
 												core.tips.tips(e)
+												ui.path.list('*recycle*');
 											}
 										});
 									// } else {

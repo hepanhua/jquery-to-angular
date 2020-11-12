@@ -595,7 +595,6 @@ $L= array(
 	"tools_title"                => "工具",
 	"tools_download"                         => "工具下载",
 	"log_transfer"							 => '日志审计',
-	"log_downloadgj"             => '工具下载',
 	"log_type_web"							 => "WEB传输日志",
 	"log_type_ftp"							 => "FTP传输日志",
 	"log_type_audit"						 => "操作日志",

@@ -526,8 +526,12 @@ show_json('201');
                 fclose($out);
             }
             if(get_filesize($save_path)>0){
-                write_audit('信息','病毒库离线升级','成功','');
                 exec("avdbupdate '". $_FILES['upgradefile']['name'] ."'",$output);
+                if($output === 0){
+                    write_audit('信息','病毒库离线升级','成功','');
+                }else{
+                    write_audit('信息','病毒库离线升级','失败','离线升级文件异常');
+                }
                 show_json($output);
             }else{
                 write_audit('信息','病毒库离线升级','失败','');

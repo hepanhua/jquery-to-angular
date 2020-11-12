@@ -925,7 +925,7 @@ show_json('没有权限',false);
     }
 
 
-    //还原
+    //隔离区还原
    public function pathToSelectUsb(){
     $copy_list = json_decode($this->in['list'],true);
     $list_num = count($copy_list);
@@ -936,7 +936,7 @@ show_json('没有权限',false);
     $error = '';
     $data = array();
     $clipboard = $copy_list;
-    $copy_type = 'copy';
+    $copy_type = '';
     $path_past= $this->in['usbPath'];
     $path_past= _DIR($path_past); //解码
     if (!is_writable($path_past)) show_json($this->L['no_permission_write'],false,$data);
@@ -979,7 +979,7 @@ $patharry = explode("/",$auto_path);
 $endpatharry =array_slice($patharry,3);
     write_audit('信息','还原','成功','隔离区文件还原到'.implode('/',$endpatharry));
     $state = ($error ==''?true:false);
-    show_json($this->L['usb_success'],$state,$data);
+    show_json('还原成功',$state,$data);
 }
 
 
