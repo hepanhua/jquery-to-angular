@@ -480,10 +480,15 @@ class explorer extends Controller{
             $filename  = get_path_this($path_copy);
             $filename_out  = iconv_app($filename);
 
-            if (!file_exists($path_copy) && !is_dir($path_copy)){
-                $error .=$path_copy."<li>{$filename_out}'.$this->L['copy_not_exists'].'</li>";
-                continue;
+            if(!is_dir($path_copy) && get_filesize($path_copy)>0){//大文件
+
+            }else{
+                if (!file_exists($path_copy) && !is_dir($path_copy)){
+                    $error .=$path_copy."<li>{$filename_out}'.$this->L['copy_not_exists'].'</li>";
+                    continue;
+                }
             }
+            
             if ($clipboard[$i]['type'] == 'folder'){
                 if ($path_copy == substr($path_past,0,strlen($path_copy))){
                     $error .="<em style='color:#fff;'>{$filename_out}".$this->L['current_has_parent']."</em>";
@@ -493,14 +498,28 @@ class explorer extends Controller{
 
             $auto_path = get_filename_auto($path_past.$filename);
             $filename = get_path_this($auto_path);
-            if ($copy_type == 'copy') {
+            if ($copy_type == 'copy') {//复制
                 if ($clipboard[$i]['type'] == 'folder') {
-                    copy_dir($path_copy,$auto_path);
+                    // copy_dir($path_copy,$auto_path);
+                    if(!is_dir($auto_path)){ //不存在目录
+                        // cp -r dir1 dir2
+                        exec("cp -r '".$path_copy."'  '".$auto_path."'" . ' >>/dev/null &');
+                    }else{
+                        // cp -r dir1/. dir2
+                        exec("cp -r '".$path_copy."/.'  '".$auto_path."'" . ' >>/dev/null &');
+                    }
                 }else{
-                    copy($path_copy,$auto_path);
+                    exec("cp -r '".$path_copy."'  '".$auto_path."'" . ' >>/dev/null &');
+                    // show_json("cp -r '".$path_copy."'  '".$auto_path."'");
+                    // copy($path_copy,$auto_path);
                 }                
-            }else{
-                rename($path_copy,$auto_path);           
+            }else{//剪切
+                // rename($path_copy,$auto_path);
+                if(!is_dir($auto_path)){ //不存在目录
+                    exec("mv  '".$path_copy."'  '".$auto_path."'" . ' >>/dev/null &');
+                }else{
+                    exec("mv  '".$path_copy."/.'  '".$auto_path."'" . ' >>/dev/null &');
+                }
             }
             $data[] = iconv_app($filename);
         }
@@ -831,7 +850,8 @@ show_json('没有权限',false);
         if (!is_writeable($save_path)) show_json('',false);
         if ($save_path == '') show_json('',false);
 
-        del_chunk($name,$chunks,$save_path);
+        // del_chunk($name,$chunks,$save_path);
+        del_beforeuploadfinish($name,$save_path);
     }
 
     //share list

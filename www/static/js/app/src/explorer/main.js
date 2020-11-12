@@ -1480,26 +1480,35 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				}),
 				close: function() { //关闭
 					$.each(uploader.getFiles(), function(e, t) {
-						let a = 1024*1024*8;
-						if(G.X86 != 1){
-							a = 1024*1024*2;
-						}
-						let chunks = Math.ceil(t.size/a); 
+						// let a = 1024*1024*4;
+						// if(G.X86 != 1){
+						// 	a = 1024*1024*2;
+						// }
+						// let chunks = Math.ceil(t.size/a); 
 						uploader.skipFile(t);
 						uploader.removeFile(t);
 						setTimeout(() => {
 							$.ajax({
-								url: "index.php?explorer/delChunks&path=" + urlEncode(G.upload_path) + "&filename="+t.name+"&chunks=" + chunks,
+								url: "index.php?explorer/delChunks&path=" + urlEncode(G.upload_path) + "&filename="+t.name,//+"&chunks=" + chunks
 								dataType: "json",
 								success: function(e) {
-									// console.log(e);
 									ui.f5();
 								}
 							});
 						}, 1000);
 					}), 
 					$.each(uploaderfol.getFiles(), function(e, t) {
-						uploaderfol.skipFile(t), uploaderfol.removeFile(t)
+						uploaderfol.skipFile(t);
+						uploaderfol.removeFile(t);
+						setTimeout(() => {
+							$.ajax({
+								url: "index.php?explorer/delChunks&path=" + urlEncode(G.upload_path) + "&filename="+urlEncode(t.source.source.webkitRelativePath),//+"&chunks=" + chunks
+								dataType: "json",
+								success: function(e) {
+									ui.f5();
+								}
+							});
+						}, 1000);
 					}), 
 					$.each($("#download_list .item"), function() {
 						$(this).find(".remove").click()
@@ -1529,7 +1538,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			var e = "#thelist",
 				t = !0;
 			$.browser.msie && (t = !1);
-			var a = 1024*1024*8;
+			var a = 1024*1024*4;
 			if(G.X86 != 1){
 				a = 1024*1024*2;
 			}
@@ -1539,26 +1548,26 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				dnd: "body", //文件拖拽
 				// auto:false,
 				// fileSingleSizeLimit: 209715200,
-				threads: 3,
+				threads: 1,
 				compress: !1,
 				resize: !1,
 				prepareNextFile: !0,
 				duplicate: !0,
-				chunked: t,
-				chunkRetry: 3,//出错，自动重传
-				chunkSize: a
+				chunked: false
+				// chunkRetry: 3,//出错，自动重传
+				// chunkSize: a
 			}),
 			uploaderfol = WebUploader.create({
 				swf: G.static_path + "js/lib/webuploader/Uploader.swf",
 				webkitdirectory:1,
-				threads: 3,
+				threads: 1,
 				compress: !1,
 				resize: !1,
 				prepareNextFile: !0,
 				duplicate: !0,
-				chunked: t,
-				chunkRetry: 3,
-				chunkSize: a
+				chunked: false
+				// chunkRetry: 3,
+				// chunkSize: a
 			}), $("#uploader .success").die("click").live("click", function() {
 				var e = $(this).find("span.title").attr("title");
 				"explorer" == Config.pageApp ? ui.path.list(core.pathFather(e), "tips", function() {
@@ -1580,20 +1589,31 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				var t = $(this).parent().parent().attr("id");
 				let ckfol = $(this).parent().parent().hasClass('isfol');
 				if(ckfol){
+					let rm_folfile = uploaderfol.getFile(t);
+					let  name = urlEncode(rm_folfile.source.source.webkitRelativePath);
 					uploaderfol.skipFile(t);
 					uploaderfol.removeFile(t, !0);
+					setTimeout(() => {
+						$.ajax({
+							url: "index.php?explorer/delChunks&path=" + urlEncode(G.upload_path) + "&filename="+name,//+"&chunks=" + chunks
+							dataType: "json",
+							success: function(e) {
+								ui.f5();
+							}
+						});
+					}, 1000);
 				}else{
 					let rm_file = uploader.getFile(t);
-					let a = 1024*1024*8;
-			if(G.X86 != 1){
-				a = 1024*1024*2;
-			}
-					let chunks = Math.ceil(rm_file.size/a); 
+			// 		let a = 1024*1024*4;
+			// if(G.X86 != 1){
+			// 	a = 1024*1024*2;
+			// }
+			// 		let chunks = Math.ceil(rm_file.size/a); 
 					uploader.skipFile(t);
 					uploader.removeFile(t, !0);
 					setTimeout(() => {
 						$.ajax({
-							url: "index.php?explorer/delChunks&path=" + urlEncode(G.upload_path) + "&filename="+rm_file.name+"&chunks=" + chunks,
+							url: "index.php?explorer/delChunks&path=" + urlEncode(G.upload_path) + "&filename="+rm_file.name,//+"&chunks=" + chunks
 							dataType: "json",
 							success: function(e) {
 								ui.f5();
@@ -5291,6 +5311,28 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				});
 				//e
 			}else{
+				//new download 2020/11/11
+				// var t = "index.php?explorer/fileDownload&path=" + urlEncode2(e);
+				// G.share_page !== void 0 && (t = "index.php?share/fileDownload&user=" + G.user + "&sid=" + G.sid + "&path=" + urlEncode2(e));
+				// var a = LNG.download_ready + "...",
+				// 	i = $.dialog({
+				// 		icon: "succeed",
+				// 		title: !1,
+				// 		time: 1.5,
+				// 		content: a
+				// 	});
+				
+				// var url = t;
+				// 	const link = document.createElement('a');
+				// 	link.setAttribute('href', url);
+				// 	link.target = '_blank';
+				// 	link.style.visibility = 'hidden';
+				// 	document.body.appendChild(link);
+				// 	link.click();
+				// 	document.body.removeChild(link);
+
+				// 	i.DOM.wrap.find(".aui_loading").remove()
+				//old download method
 				var t = "index.php?explorer/fileDownload&path=" + urlEncode2(e);
 				G.share_page !== void 0 && (t = "index.php?share/fileDownload&user=" + G.user + "&sid=" + G.sid + "&path=" + urlEncode2(e));
 				var a = '<iframe src="' + t + '" style="width:0px;height:0px;border:0;" frameborder=0></iframe>' + LNG.download_ready + "...",
