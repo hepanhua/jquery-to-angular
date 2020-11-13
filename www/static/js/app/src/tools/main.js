@@ -8,7 +8,7 @@ var toolsDownload=document.getElementById("toolsDownload");
 var toolsNav=document.getElementById("toolsNav");
 var toolsSpeedView=document.getElementById("toolsSpeedView");
 
-var spvechart = echarts.init(document.getElementById('graphSpeedView'));
+var spvechart = null;
 var getbit = [];
 var sendbit = [];
 var dsqtime = null;
@@ -69,10 +69,11 @@ function toolsDownloadInit(e){
             }
 
 function SpeedViewEachartinit(){
+  spvechart = echarts.init(document.getElementById('graphSpeedView'));
 var lineX = [];
  //x轴的值 （时间）
 for (let k = 0; k <= 15; k++) {
-lineX.push(k*3);
+lineX.push(k);
 }
 
 
@@ -403,8 +404,8 @@ function serverget(){
    
    setTimeout(() => {
     serverget();
-   }, 1000); 
-   console.log('running');
+   }, 1300); 
+//    console.log('running');
        }
         });
 }

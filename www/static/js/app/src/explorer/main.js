@@ -332,6 +332,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			t = "up" == G.sort_order ? r + o : o + r, "" == t && (t = '<div style="text-align:center;color:#aaa;">' + LNG.path_null + "</div>"), t += "<div style='clear:both'></div>", e ? $(Config.FileBoxSelector).hide().html(t).fadeIn(Config.AnimateTime) : $(Config.FileBoxSelector).html(t), "list" == G.list_type && $(Config.FileBoxSelector + " .file:nth-child(2n)").addClass("file2"), _ajaxLive()
 		},
 		_f5 = function(e, t, a) {
+			$('.noc_d').removeClass('hidden');
 			if(G.this_path == '/'){
 				G.this_path = '*usbox*/';
 			}
