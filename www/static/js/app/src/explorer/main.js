@@ -1,4 +1,5 @@
 var mqttclient = null;
+var canf5 = null;
 define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztree", "lib/contextMenu/jquery-contextMenu", "lib/artDialog/jquery-artDialog", "lib/picasa/picasa", "./ui", "./fileSelect", "../../common/taskTap", "../../common/core", "../../tpl/copyright.html", "../../tpl/search.html", "../../tpl/search_list.html", "../../tpl/upload.html", "../../common/rightMenu", "../../common/tree", "../../common/pathOperate", "../../tpl/fileinfo/file_info.html", "../../tpl/fileinfo/path_info.html", "../../tpl/fileinfo/path_info_more.html", "../../tpl/share.html", "../../tpl/app.html", "../../common/pathOpen", "../../common/CMPlayer", "./path"], function(e) {
 	Config = {
 		BodyContent: ".bodymain",
@@ -1489,12 +1490,18 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 						uploader.skipFile(t);
 						uploader.removeFile(t);
 						if(!t.serverData?.info){
-setTimeout(() => {
+					setTimeout(() => {
 							$.ajax({
 								url: "index.php?explorer/delChunks&path=" + urlEncode(G.upload_path) + "&filename="+t.name,//+"&chunks=" + chunks
 								dataType: "json",
 								success: function(e) {
-									ui.f5();
+								if(!canf5){
+									canf5 = setTimeout(() => {
+										ui.f5();
+										clearTimeout(canf5);
+										canf5 = null;
+									}, 1000);
+								}
 								}
 							});
 						}, 1000);
@@ -1510,7 +1517,13 @@ setTimeout(() => {
 								url: "index.php?explorer/delChunks&path=" + urlEncode(G.upload_path) + "&filename="+urlEncode(t.source.source.webkitRelativePath),//+"&chunks=" + chunks
 								dataType: "json",
 								success: function(e) {
-									ui.f5();
+									if(!canf5){
+										canf5 = setTimeout(() => {
+											ui.f5();
+											clearTimeout(canf5);
+											canf5 = null;
+										}, 1000);
+									}
 								}
 							});
 						}, 1000);
@@ -1604,7 +1617,13 @@ setTimeout(() => {
 							url: "index.php?explorer/delChunks&path=" + urlEncode(G.upload_path) + "&filename="+name,//+"&chunks=" + chunks
 							dataType: "json",
 							success: function(e) {
-								ui.f5();
+								if(!canf5){
+									canf5 = setTimeout(() => {
+										ui.f5();
+										clearTimeout(canf5);
+										canf5 = null;
+									}, 1000);
+								}
 							}
 						});
 					}, 1000);
@@ -1622,7 +1641,13 @@ setTimeout(() => {
 							url: "index.php?explorer/delChunks&path=" + urlEncode(G.upload_path) + "&filename="+rm_file.name,//+"&chunks=" + chunks
 							dataType: "json",
 							success: function(e) {
-								ui.f5();
+								if(!canf5){
+									canf5 = setTimeout(() => {
+										ui.f5();
+										clearTimeout(canf5);
+										canf5 = null;
+									}, 1000);
+								}
 							}
 						});
 					}, 1000);

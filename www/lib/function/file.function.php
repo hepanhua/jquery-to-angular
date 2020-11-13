@@ -751,8 +751,8 @@ function file_put_out($file,$download=false){
 	// clearstatcache();
 	set_time_limit(0);
 	$filesize = get_filesize($file);
+	$filename = get_path_this($file);//解决在IE中下载时中文乱码问题
 	if ($filesize > 0){
-
 	// if (isset($_SERVER['HTTP_RANGE']) && ($_SERVER['HTTP_RANGE'] != "") && 
 	// 	preg_match("/^bytes=([0-9]+)-$/i", $_SERVER['HTTP_RANGE'], $match) && ($match[1] < $fsize)) { 
 	// 	$start = $match[1];
@@ -760,20 +760,25 @@ function file_put_out($file,$download=false){
 	// 	$start = 0;
 	// }
 	if ($GLOBALS['is_root'] != 1){
-		if(X86 == 1){//x86
-		$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/magic.mgc");
-		}else{//mips
-		$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/web.mgc");
-		}
-	  if ($finfo){
-		$type = @finfo_file($finfo, $file);
-		$type = explode(';', $type);
-		$size = $filesize;
-		$mime = get_file_mime(get_path_ext($file));
-		if ($GLOBALS['config']['system_info']['deepcheck']==1 && $type[0] != $mime) {
-			$filename = get_path_this($file);
+	// 	if(X86 == 1){//x86
+	// 	$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/magic.mgc");
+	// 	}else{//mips
+	// 	$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/web.mgc");
+	// 	}
+	//   if ($finfo){
+	// 	$type = @finfo_file($finfo, $file);
+	// 	// $type = explode(';', $type);
+	// 	$size = $filesize;
+		
+	exec("file -i '". $file."'",$out);
+	if($out){
+	$outarr = explode(';', $out[0]);
+	$outarr = explode(' ', $outarr[0]);
+	$type = $outarr[count($outarr)-1];
+	$mime = get_file_mime(get_path_ext($file));
+		if ($GLOBALS['config']['system_info']['deepcheck']==1 && $type != $mime) {
 			write_dblog("下载",$filename,"阻断","非法文件");
-			show_json('deepcheck nodownload');
+			show_json('deepcheck nodownload'.'/深度检测结果：'.$type.'/后缀：'.$mime);
 		}
 	  }else{
 		write_dblog("上传",$filename,"出错","文件错误");
@@ -785,7 +790,7 @@ function file_put_out($file,$download=false){
 	}
 
 	// if ($download || strstr($mime,'application/')) {//下载或者application则设置下载头
-		$filename = get_path_this($file);//解决在IE中下载时中文乱码问题
+		
 		if( preg_match('/MSIE/',$_SERVER['HTTP_USER_AGENT']) || 
 			preg_match('/Trident/',$_SERVER['HTTP_USER_AGENT'])){
 			if($GLOBALS['config']['system_os']!='windows'){//win主机 ie浏览器；中文文件下载urlencode问题
@@ -1050,15 +1055,21 @@ function upload_chunk($fileInput, $path = './',$temp_path){
 			    fclose($out);
 			}
 			if ($GLOBALS['is_root'] != 1){
-				if(X86 == 1){//x86
-					$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/magic.mgc");
-					}else{//mips
-					$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/web.mgc");
-					}
-			  if ($finfo){
-				$type = @finfo_file($finfo, $save_path);
-				$type = explode(';', $type);
-				$mime = get_file_mime($ext);
+			// 	if(X86 == 1){//x86
+			// 		$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/magic.mgc");
+			// 		}else{//mips
+			// 		$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/web.mgc");
+			// 		}
+			//   if ($finfo){
+			// 	$type = @finfo_file($finfo, $save_path);
+			// 	$type = explode(';', $type);
+			// 	$mime = get_file_mime($ext);
+			exec("file -i '". $file."'",$out);
+	if($out){
+	$outarr = explode(';', $out[0]);
+	$outarr = explode(' ', $outarr[0]);
+	$type = $outarr[count($outarr)-1];
+	$mime = get_file_mime(get_path_ext($file));
 				if ($GLOBALS['config']['system_info']['deepcheck']==1 && $type[0] != $mime) {
 					unlink($save_path);
 				write_dblog("上传",$filename,"出错",$L['deepcheck_nodownload']);
@@ -1156,19 +1167,25 @@ function upload_chunk($fileInput, $path = './',$temp_path){
 	// if(move_uploaded_file($file['tmp_name'],$save_path)){
 		if(get_filesize($save_path)>0){
 		if ($GLOBALS['is_root'] != 1){
-			if(X86 == 1){//x86
-				$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/magic.mgc");
-				}else{//mips
-				$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/web.mgc");
-				}
-		  if ($finfo){
-			$type = @finfo_file($finfo, $save_path);
-			$type = explode(';', $type);//文件上传类型
-			$mime = get_file_mime($ext);
+		// 	if(X86 == 1){//x86
+		// 		$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/magic.mgc");
+		// 		}else{//mips
+		// 		$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/web.mgc");
+		// 		}
+		//   if ($finfo){
+		// 	$type = @finfo_file($finfo, $save_path);
+		// 	$type = explode(';', $type);//文件上传类型
+		// 	$mime = get_file_mime($ext);
+		exec("file -i '". $file."'",$out);
+	if($out){
+	$outarr = explode(';', $out[0]);
+	$outarr = explode(' ', $outarr[0]);
+	$type = $outarr[count($outarr)-1];
+	$mime = get_file_mime(get_path_ext($file));
 			if ($GLOBALS['config']['system_info']['deepcheck']==1 && $type[0] != $mime) {
 				unlink($save_path);
 				write_dblog("上传",$filename,"出错",$L['deepcheck_nodownload']);
-				show_json($L['deepcheck_nodownload'],false);
+				show_json($L['deepcheck_nodownload'].'/深度检测结果：'.$type[0].'/后缀：'.$mime,false);
 			}
 		  }else{
 			write_dblog("上传",$filename,"出错","文件错误");
