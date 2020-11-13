@@ -1485,10 +1485,11 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 						// if(G.X86 != 1){
 						// 	a = 1024*1024*2;
 						// }
-						// let chunks = Math.ceil(t.size/a); 
+						// let chunks = Math.ceil(t.size/a);
 						uploader.skipFile(t);
 						uploader.removeFile(t);
-						setTimeout(() => {
+						if(!t.serverData?.info){
+setTimeout(() => {
 							$.ajax({
 								url: "index.php?explorer/delChunks&path=" + urlEncode(G.upload_path) + "&filename="+t.name,//+"&chunks=" + chunks
 								dataType: "json",
@@ -1497,10 +1498,13 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 								}
 							});
 						}, 1000);
+						}
+						
 					}), 
 					$.each(uploaderfol.getFiles(), function(e, t) {
 						uploaderfol.skipFile(t);
 						uploaderfol.removeFile(t);
+						if(!t.serverData?.info){
 						setTimeout(() => {
 							$.ajax({
 								url: "index.php?explorer/delChunks&path=" + urlEncode(G.upload_path) + "&filename="+urlEncode(t.source.source.webkitRelativePath),//+"&chunks=" + chunks
@@ -1510,6 +1514,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 								}
 							});
 						}, 1000);
+					}
 					}), 
 					$.each($("#download_list .item"), function() {
 						$(this).find(".remove").click()
