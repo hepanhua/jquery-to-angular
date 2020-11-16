@@ -989,9 +989,9 @@ function upload($fileInput, $path = './'){
 //上传未完成时
 //删除
 function del_beforeuploadfinish($name,$path){
-	set_time_limit(0);
 $temp_path = $path.$name;
 $temp_file_pre = $temp_path.md5($temp_path.$name).'.part';
+// write_audit('信息','删除临时','成功',$temp_file_pre);
 if (file_exists($temp_file_pre)) {
 	unlink($temp_file_pre);
 }

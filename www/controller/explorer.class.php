@@ -857,9 +857,9 @@ show_json('没有权限',false);
     
      // 删除
      public function delarrChunks(){
-        $json = $this->in['json'];
+         $json = json_decode($this->in['json'],true);
          for ($i=0; $i < count($json); $i++) {
-        $save_path = $json[$i]['path'];
+        $save_path =  _DIR($json[$i]['path']);
         if ($save_path == '/mnt/usbox/') continue;
         if (!is_writeable($save_path)) continue;
         if ($save_path == '') continue;

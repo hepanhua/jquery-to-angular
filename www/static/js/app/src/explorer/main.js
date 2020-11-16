@@ -1522,7 +1522,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 									url: "index.php?explorer/delarrChunks",
 									type: "POST",
 									dataType: "json",
-									data:{json:delarr},
+									data:{json:JSON.stringify(delarr)},
 									success: function(e) {
 										console.log(e);
 									// if(!canf5){
