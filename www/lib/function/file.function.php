@@ -995,7 +995,7 @@ $temp_file_pre = $temp_path.md5($temp_path.$name).'.part';
 if (file_exists($temp_file_pre)) {
 	unlink($temp_file_pre);
 }
-show_json(true);
+
 }
 
 

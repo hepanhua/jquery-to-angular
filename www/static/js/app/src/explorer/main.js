@@ -1481,6 +1481,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					maxsize: i
 				}),
 				close: function() { //关闭
+					let delarr = [];
 					$.each(uploader.getFiles(), function(e, t) {
 						// let a = 1024*1024*4;
 						// if(G.X86 != 1){
@@ -1490,48 +1491,53 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 						uploader.skipFile(t);
 						uploader.removeFile(t);
 						if(!t.serverData){
-					setTimeout(() => {
-							$.ajax({
-								url: "index.php?explorer/delChunks&path=" + urlEncode(G.upload_path) + "&filename="+t.name,//+"&chunks=" + chunks
-								dataType: "json",
-								success: function(e) {
-								if(!canf5){
-									canf5 = setTimeout(() => {
-										ui.f5();
-										clearTimeout(canf5);
-										canf5 = null;
-									}, 1000);
-								}
-								}
-							});
-						}, 1000);
+							delarr.push({filename:t.name,path:urlEncode(G.upload_path)});
+					// setTimeout(() => {
+					// 		$.ajax({
+					// 			url: "index.php?explorer/delChunks&path=" + urlEncode(G.upload_path) + "&filename="+t.name,//+"&chunks=" + chunks
+					// 			dataType: "json",
+					// 			success: function(e) {
+					// 			if(!canf5){
+					// 				canf5 = setTimeout(() => {
+					// 					ui.f5();
+					// 					clearTimeout(canf5);
+					// 					canf5 = null;
+					// 				}, 1000);
+					// 			}
+					// 			}
+					// 		});
+					// 	}, 1000);
 						}
 						
-					}), 
+					});
 					$.each(uploaderfol.getFiles(), function(e, t) {
 						uploaderfol.skipFile(t);
 						uploaderfol.removeFile(t);
 						if(!t.serverData){
-						setTimeout(() => {
-							$.ajax({
-								url: "index.php?explorer/delChunks&path=" + urlEncode(G.upload_path) + "&filename="+urlEncode(t.source.source.webkitRelativePath),//+"&chunks=" + chunks
-								dataType: "json",
-								success: function(e) {
-									if(!canf5){
-										canf5 = setTimeout(() => {
-											ui.f5();
-											clearTimeout(canf5);
-											canf5 = null;
-										}, 1000);
-									}
-								}
-							});
-						}, 1000);
+							delarr.push({filename:urlEncode(t.source.source.webkitRelativePath),path:urlEncode(G.upload_path)});
 					}
-					}), 
+					});
+
+								$.ajax({
+									url: "index.php?explorer/delarrChunks",
+									type: "POST",
+									dataType: "json",
+									data:{json:delarr},
+									success: function(e) {
+										console.log(e);
+									// if(!canf5){
+									// 	canf5 = setTimeout(() => {
+									// 		ui.f5();
+									// 		clearTimeout(canf5);
+									// 		canf5 = null;
+									// 	}, 1000);
+									// }
+									}
+								});
+
 					$.each($("#download_list .item"), function() {
 						$(this).find(".remove").click()
-					})
+					});
 				}
 			}), $(".file_upload .tips").tooltip({
 				placement: "bottom"

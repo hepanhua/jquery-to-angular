@@ -851,7 +851,23 @@ show_json('没有权限',false);
 
         // del_chunk($name,$chunks,$save_path);
         del_beforeuploadfinish($name,$save_path);
+        show_json(true);
     }
+
+    
+     // 删除
+     public function delarrChunks(){
+        $json = $this->in['json'];
+         for ($i=0; $i < count($json); $i++) {
+        $save_path = $json[$i]['path'];
+        if ($save_path == '/mnt/usbox/') continue;
+        if (!is_writeable($save_path)) continue;
+        if ($save_path == '') continue;
+        del_beforeuploadfinish($json[$i]['filename'],$save_path);
+        }
+        show_json(true);
+    }
+
 
     //share list
     private function path_share(){

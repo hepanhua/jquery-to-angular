@@ -1925,20 +1925,28 @@ define("app/src/setting/antivirus", [], function() {
              let json = JSON.parse(xhr.responseText);
              if(json.data === 0){
                 $('.updatedom #update_progress_bar', window.parent.document).css('width', '100%');
+                $('.updatedom #update_progress_value', window.parent.document).text('100%');
                  setTimeout(() => {
                     $('.updatedom', window.parent.document).addClass('hidden');
+                    $('.updatedom #update_progress_bar', window.parent.document).css('width', '0%');
+                    $('.updatedom #update_progress_value', window.parent.document).text('0%');
                  }, 1000);
-                $(file).val('');
+                 tips('更新成功');
+                // $('#av_offline_update').val('');
              }else{
                 tips('离线升级文件异常',false);
+                $('.updatedom', window.parent.document).addClass('hidden');
+                $('.updatedom #update_progress_bar', window.parent.document).css('width', '0%');
+                $('.updatedom #update_progress_value', window.parent.document).text('0%');
              }
             }
-            $('.updatedom', window.parent.document).addClass('hidden');
           }
          } else {
           tips('上传失败',false);
           $('.updatedom', window.parent.document).addClass('hidden');
-          $(file).val('');
+          $('.updatedom #update_progress_bar', window.parent.document).css('width', '0%');
+          $('.updatedom #update_progress_value', window.parent.document).text('0%');
+                // $('#av_offline_update').val('');
          }
      };
      // 获取上传进度
