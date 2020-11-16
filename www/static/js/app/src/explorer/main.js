@@ -1489,7 +1489,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 						// let chunks = Math.ceil(t.size/a);
 						uploader.skipFile(t);
 						uploader.removeFile(t);
-						if(!t.serverData?.info){
+						if(!t.serverData){
 					setTimeout(() => {
 							$.ajax({
 								url: "index.php?explorer/delChunks&path=" + urlEncode(G.upload_path) + "&filename="+t.name,//+"&chunks=" + chunks
@@ -1511,7 +1511,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					$.each(uploaderfol.getFiles(), function(e, t) {
 						uploaderfol.skipFile(t);
 						uploaderfol.removeFile(t);
-						if(!t.serverData?.info){
+						if(!t.serverData){
 						setTimeout(() => {
 							$.ajax({
 								url: "index.php?explorer/delChunks&path=" + urlEncode(G.upload_path) + "&filename="+urlEncode(t.source.source.webkitRelativePath),//+"&chunks=" + chunks

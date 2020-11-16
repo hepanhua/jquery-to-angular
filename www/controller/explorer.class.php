@@ -845,7 +845,6 @@ show_json('没有权限',false);
     public function delChunks(){
         $save_path = $this->path;
         $name = $this->in['filename'];
-        $chunks = $this->in['chunks'];
         if ($save_path == '/mnt/usbox/') show_json('',false);
         if (!is_writeable($save_path)) show_json('',false);
         if ($save_path == '') show_json('',false);

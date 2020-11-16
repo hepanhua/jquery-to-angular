@@ -470,6 +470,7 @@ if( !empty($headers) ){
             'fileSave'  =>  $this->check_key('path')
         );
         if (array_key_exists(ACT,$check_arr) && !checkExt($check_arr[ACT])){
+            write_dblog("上传",$check_arr[ACT],"阻止",$this->L['no_permission_ext']);
             show_json($this->L['no_permission_ext'],false);
         }
     }

@@ -781,8 +781,8 @@ function file_put_out($file,$download=false){
 			show_json('deepcheck nodownload'.'/深度检测结果：'.$type.'/后缀：'.$mime);
 		}
 	  }else{
-		write_dblog("上传",$filename,"出错","文件错误");
-		show_json($L['move_error'],false);
+		write_dblog("下载",$filename,"出错","文件错误");
+		show_json('下载出错',false);
 	  }
 	}else{
 		$size = $filesize;
@@ -974,25 +974,26 @@ function upload($fileInput, $path = './'){
 
 //分片上传处理
 //删除
-function del_chunk($name,$chunks,$path){
-	set_time_limit(0);
-$temp_path = $path.$name;
-$temp_file_pre = $temp_path.md5($temp_path.$name).'.part';
-sleep(1);
-for( $index = 0; $index < $chunks; $index++ ) {
-	if (file_exists($temp_file_pre.$index)) {
-		unlink($temp_file_pre.$index);
-	}
-}
-show_json(true);
-}
+// function del_chunk($name,$chunks,$path){
+// 	set_time_limit(0);
+// $temp_path = $path.$name;
+// $temp_file_pre = $temp_path.md5($temp_path.$name).'.part';
+// sleep(1);
+// for( $index = 0; $index < $chunks; $index++ ) {
+// 	if (file_exists($temp_file_pre.$index)) {
+// 		unlink($temp_file_pre.$index);
+// 	}
+// }
+// show_json(true);
+// }
 //上传未完成时
 //删除
 function del_beforeuploadfinish($name,$path){
 	set_time_limit(0);
 $temp_path = $path.$name;
-if (file_exists($temp_path)) {
-	unlink($temp_path);
+$temp_file_pre = $temp_path.md5($temp_path.$name).'.part';
+if (file_exists($temp_file_pre)) {
+	unlink($temp_file_pre);
 }
 show_json(true);
 }
@@ -1015,144 +1016,146 @@ function upload_chunk($fileInput, $path = './',$temp_path){
   		show_json($L['filetype_noupload'],false);
   	}
   }
-        
-	if ($chunks>1) {//并发上传，不一定有前后顺序
-		$temp_path = $path.$file_name;
-		$temp_file_pre = $temp_path.md5($temp_path.$file_name).'.part';
-		if (get_filesize($file['tmp_name']) ==0) {
-			show_json($L['upload_success'],false,'chunk_'.$chunk.' error!');
-		}
-
-	//上传完合并
-		if(move_uploaded_file($file['tmp_name'],$temp_file_pre.$chunk)){
-			$done = true;
-			for($index = 0; $index<$chunks; $index++ ){
-			    if (!file_exists($temp_file_pre.$index)) {
-			        $done = false;
-			        break;
-			    }
-			}
-			if (!$done){				
-				show_json($L['upload_success'],true,'chunk_'.$chunk.' success!');
-			}
-
-			$speed = 1024 * 1024;
-			if(X86 == 1){
-				$speed = 1024 * 1024 * 4;
-			}
-			$save_path = $path.$file_name;
-			$out = fopen($save_path, "wb");
-			if ($done && flock($out, LOCK_EX)) {
-		        for( $index = 0; $index < $chunks; $index++ ) {
-		            if (!$in = fopen($temp_file_pre.$index,"rb")) break;
-		            while ($buff = fread($in, $speed)) {
-		                fwrite($out, $buff);
-		            }
-		            fclose($in);
-		            unlink($temp_file_pre.$index);
-		        }
-		        flock($out, LOCK_UN);
-			    fclose($out);
-			}
-			if ($GLOBALS['is_root'] != 1){
-			// 	if(X86 == 1){//x86
-			// 		$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/magic.mgc");
-			// 		}else{//mips
-			// 		$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/web.mgc");
-			// 		}
-			//   if ($finfo){
-			// 	$type = @finfo_file($finfo, $save_path);
-			// 	$type = explode(';', $type);
-			// 	$mime = get_file_mime($ext);
-			exec("file -i '". $file."'",$out);
-	if($out){
-	$outarr = explode(';', $out[0]);
-	$outarr = explode(' ', $outarr[0]);
-	$type = $outarr[count($outarr)-1];
-	$mime = get_file_mime(get_path_ext($file));
-				if ($GLOBALS['config']['system_info']['deepcheck']==1 && $type[0] != $mime) {
-					unlink($save_path);
-				write_dblog("上传",$filename,"出错",$L['deepcheck_nodownload']);
-					show_json($L['deepcheck_nodownload'],false);
-				}
-			  }else{
-				write_dblog("上传",$filename,"出错","文件错误");
-				show_json($L['move_error'],false);
-			  }
-			}
-			write_dblog("上传",$file_name,"通过","");
-			show_json($L['upload_success'],true,iconv_app($save_path));
-		}else {
-			write_dblog("上传",$filename,"出错","文件错误");
-			show_json($L['move_error'],false);
-		}
-
-
-// //第一次上传时没有文件，就创建文件，此后上传只需要把数据追加到此文件中 
-// if(!file_exists($temp_file_pre)){
-// 	// if($chunk == 0){
-//  move_uploaded_file($file['tmp_name'],$temp_file_pre); 
-//  show_json($L['upload_success'],true,'first chunk_'.$chunk.' success!');
-// }else{ 
-// 	// methoda:
-// 	// $out = fopen($temp_file_pre, "a");
-// 	// 	if (flock($out, LOCK_EX)) {
-	   
-// 	//             if (!$in = fopen($file['tmp_name'],"rb")) break;
-// 	//             while ($buff = fread($in, 1024*1024*8)) {
-// 	//                 fwrite($out, $buff);
-// 	//             }
-// 	//             fclose($in);
-// 	//         sleep(1);
-// 	//         flock($out, LOCK_UN);
-// 	// 	    fclose($out);
-// 	// 	}
-// // methodb:
-//  file_put_contents($temp_file_pre,file_get_contents($file['tmp_name']),FILE_APPEND | LOCK_EX); 
-//  if($chunk + 1 >= $chunks){
-// 	if (file_exists($temp_path)) {
-// 		unlink($temp_path);
-// 	}
-// 	$save_path = $temp_path;
-// 	rename($temp_file_pre,$save_path);
-
-// 	if ($GLOBALS['is_root'] != 1){
-// 		if(X86 == 1){//x86
-// 			$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/magic.mgc");
-// 			}else{//mips
-// 			$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/web.mgc");
-// 			}
-// 	  if($finfo){
-// 		$type = @finfo_file($finfo, $save_path);
-// 		$type = explode(';', $type);
-// 		$mime = get_file_mime($ext);
-// 		if ($GLOBALS['config']['system_info']['deepcheck']==1 && $type[0] != $mime) {
-// 			unlink($save_path);
-// 			write_dblog("上传",$filename,"出错",$L['deepcheck_nodownload']);
-// 			show_json($L['deepcheck_nodownload'],false);
+		
+  //分片上传
+// 	if ($chunks>1) {//并发上传，不一定有前后顺序
+// 		$temp_path = $path.$file_name;
+// 		$temp_file_pre = $temp_path.md5($temp_path.$file_name).'.part';
+// 		if (get_filesize($file['tmp_name']) ==0) {
+// 			show_json($L['upload_success'],false,'chunk_'.$chunk.' error!');
 // 		}
-// 	  }else{
-// 		write_dblog("上传",$filename,"出错","文件错误");
-// 		show_json($L['move_error'],false);
-// 	  }
-// 	}
-// 	write_dblog("上传",$file_name,"通过","");
-// 	show_json($L['upload_success'],true,iconv_app($save_path));
-// }
-// 测试 //write_dblog("上传",$file_name,"通过",'chunk_'.$chunk.' success!'.$chunks);
-//  show_json($L['upload_success'],true,'chunk_'.$chunk.' success!'.$chunks);
-// } 
+
+// 	//上传完合并
+// 		if(move_uploaded_file($file['tmp_name'],$temp_file_pre.$chunk)){
+// 			$done = true;
+// 			for($index = 0; $index<$chunks; $index++ ){
+// 			    if (!file_exists($temp_file_pre.$index)) {
+// 			        $done = false;
+// 			        break;
+// 			    }
+// 			}
+// 			if (!$done){				
+// 				show_json($L['upload_success'],true,'chunk_'.$chunk.' success!');
+// 			}
+
+// 			$speed = 1024 * 1024;
+// 			if(X86 == 1){
+// 				$speed = 1024 * 1024 * 4;
+// 			}
+// 			$save_path = $path.$file_name;
+// 			$out = fopen($save_path, "wb");
+// 			if ($done && flock($out, LOCK_EX)) {
+// 		        for( $index = 0; $index < $chunks; $index++ ) {
+// 		            if (!$in = fopen($temp_file_pre.$index,"rb")) break;
+// 		            while ($buff = fread($in, $speed)) {
+// 		                fwrite($out, $buff);
+// 		            }
+// 		            fclose($in);
+// 		            unlink($temp_file_pre.$index);
+// 		        }
+// 		        flock($out, LOCK_UN);
+// 			    fclose($out);
+// 			}
+// 			if ($GLOBALS['is_root'] != 1){
+// 			// 	if(X86 == 1){//x86
+// 			// 		$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/magic.mgc");
+// 			// 		}else{//mips
+// 			// 		$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/web.mgc");
+// 			// 		}
+// 			//   if ($finfo){
+// 			// 	$type = @finfo_file($finfo, $save_path);
+// 			// 	$type = explode(';', $type);
+// 			// 	$mime = get_file_mime($ext);
+// 			exec("file -i '". $save_path."'",$out);
+// 	if($out){
+// 	$outarr = explode(';', $out[0]);
+// 	$outarr = explode(' ', $outarr[0]);
+// 	$type = $outarr[count($outarr)-1];
+// 	$mime = get_file_mime($ext);
+// 				if ($GLOBALS['config']['system_info']['deepcheck']==1 && $type != $mime) {
+// 					unlink($save_path);
+// 				write_dblog("上传",$filename,"出错",$L['deepcheck_nodownload']);
+// 					show_json($L['deepcheck_nodownload'],false);
+// 				}
+// 			  }else{
+// 				write_dblog("上传",$filename,"出错","文件错误");
+// 				show_json($L['move_error'],false);
+// 			  }
+// 			}
+// 			write_dblog("上传",$file_name,"通过","");
+// 			show_json($L['upload_success'],true,iconv_app($save_path));
+// 		}else {
+// 			write_dblog("上传",$filename,"出错","文件错误");
+// 			show_json($L['move_error'],false);
+// 		}
+
+
+// // //第一次上传时没有文件，就创建文件，此后上传只需要把数据追加到此文件中 
+// // if(!file_exists($temp_file_pre)){
+// // 	// if($chunk == 0){
+// //  move_uploaded_file($file['tmp_name'],$temp_file_pre); 
+// //  show_json($L['upload_success'],true,'first chunk_'.$chunk.' success!');
+// // }else{ 
+// // 	// methoda:
+// // 	// $out = fopen($temp_file_pre, "a");
+// // 	// 	if (flock($out, LOCK_EX)) {
+	   
+// // 	//             if (!$in = fopen($file['tmp_name'],"rb")) break;
+// // 	//             while ($buff = fread($in, 1024*1024*8)) {
+// // 	//                 fwrite($out, $buff);
+// // 	//             }
+// // 	//             fclose($in);
+// // 	//         sleep(1);
+// // 	//         flock($out, LOCK_UN);
+// // 	// 	    fclose($out);
+// // 	// 	}
+// // // methodb:
+// //  file_put_contents($temp_file_pre,file_get_contents($file['tmp_name']),FILE_APPEND | LOCK_EX); 
+// //  if($chunk + 1 >= $chunks){
+// // 	if (file_exists($temp_path)) {
+// // 		unlink($temp_path);
+// // 	}
+// // 	$save_path = $temp_path;
+// // 	rename($temp_file_pre,$save_path);
+
+// // 	if ($GLOBALS['is_root'] != 1){
+// // 		if(X86 == 1){//x86
+// // 			$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/magic.mgc");
+// // 			}else{//mips
+// // 			$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/web.mgc");
+// // 			}
+// // 	  if($finfo){
+// // 		$type = @finfo_file($finfo, $save_path);
+// // 		$type = explode(';', $type);
+// // 		$mime = get_file_mime($ext);
+// // 		if ($GLOBALS['config']['system_info']['deepcheck']==1 && $type[0] != $mime) {
+// // 			unlink($save_path);
+// // 			write_dblog("上传",$filename,"出错",$L['deepcheck_nodownload']);
+// // 			show_json($L['deepcheck_nodownload'],false);
+// // 		}
+// // 	  }else{
+// // 		write_dblog("上传",$filename,"出错","文件错误");
+// // 		show_json($L['move_error'],false);
+// // 	  }
+// // 	}
+// // 	write_dblog("上传",$file_name,"通过","");
+// // 	show_json($L['upload_success'],true,iconv_app($save_path));
+// // }
+// // 测试 //write_dblog("上传",$file_name,"通过",'chunk_'.$chunk.' success!'.$chunks);
+// //  show_json($L['upload_success'],true,'chunk_'.$chunk.' success!'.$chunks);
+// // } 
 		
 
-	}
+// 	}
 
 	//正常上传
 	$save_path = get_filename_auto($path.$file_name); //自动重命名
+	$temp_file_pre = $save_path.md5($save_path.$file_name).'.part'; //临时文件名
 	$wbspeed = 1024 * 1024;
 	if(X86 == 1){
 		$wbspeed = 1024 * 1024 * 4;
 	}
-	$out = fopen($save_path, "wb");
+	$out = fopen($temp_file_pre, "wb");
 		if(flock($out, LOCK_EX)) {
 	   
 	            if (!$in = fopen($file['tmp_name'],"rb")) break;
@@ -1164,28 +1167,20 @@ function upload_chunk($fileInput, $path = './',$temp_path){
 	        flock($out, LOCK_UN);
 		    fclose($out);
 		}
-	// if(move_uploaded_file($file['tmp_name'],$save_path)){
-		if(get_filesize($save_path)>0){
+		
+		if(get_filesize($temp_file_pre)>0){
+		rename($temp_file_pre,$save_path);
 		if ($GLOBALS['is_root'] != 1){
-		// 	if(X86 == 1){//x86
-		// 		$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/magic.mgc");
-		// 		}else{//mips
-		// 		$finfo = finfo_open(FILEINFO_MIME,"/usr/local/share/misc/web.mgc");
-		// 		}
-		//   if ($finfo){
-		// 	$type = @finfo_file($finfo, $save_path);
-		// 	$type = explode(';', $type);//文件上传类型
-		// 	$mime = get_file_mime($ext);
-		exec("file -i '". $file."'",$out);
+		exec("file -i '". $save_path."'",$out);
 	if($out){
 	$outarr = explode(';', $out[0]);
 	$outarr = explode(' ', $outarr[0]);
 	$type = $outarr[count($outarr)-1];
-	$mime = get_file_mime(get_path_ext($file));
-			if ($GLOBALS['config']['system_info']['deepcheck']==1 && $type[0] != $mime) {
+	$mime = get_file_mime($ext);
+			if ($GLOBALS['config']['system_info']['deepcheck']==1 && $type != $mime) {
 				unlink($save_path);
 				write_dblog("上传",$filename,"出错",$L['deepcheck_nodownload']);
-				show_json($L['deepcheck_nodownload'].'/深度检测结果：'.$type[0].'/后缀：'.$mime,false);
+				show_json($L['deepcheck_nodownload'].'/深度检测结果：'.$type.'/后缀：'.$mime,false);
 			}
 		  }else{
 			write_dblog("上传",$filename,"出错","文件错误");
