@@ -116,7 +116,7 @@
         <div style="clear:both;"></div>
     </div>
 
-    <div class="together combox">
+    <!-- <div class="together combox">
         <div class="title"><i><?php echo $L['group_role_member'];?></i></div>
         <a class="tag" href="javascript:;" data-role='member:get'>
             <input type="checkbox" class="checkbox"><span><?php echo $L['group_role_list'];?></span>
@@ -131,8 +131,8 @@
             <input type="checkbox" class="checkbox"><span><?php echo $L['group_role_member_del'];?></span>
         </a>
         <div style="clear:both;"></div> 
-    </div>    
-    <div class="together combox">
+    </div>     -->
+    <!-- <div class="together combox">
         <div class="title"><i><?php echo $L['group_role_group'];?></i></div>
         <a class="tag" href="javascript:;" data-role='group:get'>
             <input type="checkbox" class="checkbox"><span><?php echo $L['group_role_list'];?></span>
@@ -147,7 +147,7 @@
             <input type="checkbox" class="checkbox"><span><?php echo $L['group_role_group_del'];?></span>
         </a>
         <div style="clear:both;"></div> 
-    </div>
+    </div> -->
     <a href="javascript:;" class="add_save button"><?php echo $L['button_save_submit'];?></a>
     <a href="javascript:;" class="hidden edit_exit button"><?php echo $L['button_back_add'];?></a>
     <a href="javascript:;" class="hidden edit_save button"><?php echo $L['button_save'];?></a>
