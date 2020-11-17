@@ -40,7 +40,7 @@ class user extends Controller
             define('HOME',PUBLIC_PATH);
             $GLOBALS['web_root'] = str_replace(WEB_ROOT,'',HOME);//从服务器开始到用户目录
             $GLOBALS['is_root'] = 1;
-            date_default_timezone_set("Asia/Shanghai");
+       
             $this->config['user'] = $this->config['setting_default'];
             $theme = config_get_value_from_file('/etc/system/oem.conf','THEME');
             if (isset($theme)){
@@ -75,7 +75,7 @@ class user extends Controller
                  $GLOBALS['web_root'] = str_replace(WEB_ROOT,'',HOME);//从服务器开始到用户目录
                  $GLOBALS['is_root'] = 0;
              }
-             date_default_timezone_set("Asia/Shanghai");
+   
              $this->config['user_share_file']   = USER.'data/share.php';    // 收藏夹文件存放地址.
              $this->config['user_fav_file']     = USER.'data/fav.php';    // 收藏夹文件存放地址.
              $this->config['user_seting_file']  = USER.'data/config.php'; //用户配置文件
@@ -124,7 +124,7 @@ class user extends Controller
                 $GLOBALS['web_root'] = str_replace(WEB_ROOT,'',HOME);//从服务器开始到用户目录
                 $GLOBALS['is_root'] = 0;
             }
-            date_default_timezone_set("Asia/Shanghai");
+           
             $this->config['user_share_file']   = USER.'data/share.php';    // 收藏夹文件存放地址.
             $this->config['user_fav_file']     = USER.'data/fav.php';    // 收藏夹文件存放地址.
             $this->config['user_seting_file']  = USER.'data/config.php'; //用户配置文件
@@ -234,6 +234,7 @@ class user extends Controller
      * 登录view
      */
     public function login($msg = ''){
+        
         if (!file_exists(USER_SYSTEM.'install.lock')) {
             $this->display('install.html');exit;
         }
@@ -346,6 +347,7 @@ if( !empty($headers) ){
      * 退出处理
      */
     public function logout(){
+        
         if($_SESSION['secros_user']['name']){
             write_audit('信息','退出','成功','用户退出');
         }
@@ -357,6 +359,7 @@ if( !empty($headers) ){
      * 登录数据提交处理
      */
     public function loginSubmit(){
+        
         if(!isset($this->in['name']) || !isset($this->in['password'])) {
             $msg = $this->L['login_not_null'];
         }else{

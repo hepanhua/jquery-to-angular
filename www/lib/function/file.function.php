@@ -750,6 +750,7 @@ function file_put_out($file,$download=false){
 	// ob_clean();
 	// clearstatcache();
 	set_time_limit(0);
+	$log = str_replace('/mnt/usbox','',$file);
 	$filesize = get_filesize($file);
 	$filename = get_path_this($file);//解决在IE中下载时中文乱码问题
 	if ($filesize > 0){
@@ -777,11 +778,11 @@ function file_put_out($file,$download=false){
 	$type = $outarr[count($outarr)-1];
 	$mime = get_file_mime(get_path_ext($file));
 		if ($GLOBALS['config']['system_info']['deepcheck']==1 && $type != $mime) {
-			write_dblog("下载",$filename,"阻断","非法文件");
+			write_dblog("下载",$log,"阻断","非法文件");
 			show_json('deepcheck nodownload'.'/深度检测结果：'.$type.'/后缀：'.$mime);
 		}
 	  }else{
-		write_dblog("下载",$filename,"出错","文件错误");
+		write_dblog("下载",$log,"出错","文件错误");
 		show_json('下载出错',false);
 	  }
 	}else{
@@ -813,7 +814,6 @@ function file_put_out($file,$download=false){
 	// 	header("Content-Length: $size");
 	// }
 
-
 	$speed = 1024 * 1024;
 	if(X86 == 1){
 		$speed = 1024 * 1024 * 4;
@@ -829,7 +829,7 @@ function file_put_out($file,$download=false){
     header('Content-Length: ' . $filesize);
     header('Content-Disposition: attachment; filename=' . $filename);
 	if ($download){
-		write_dblog("下载",$filename,"通过","");
+		write_dblog("下载",$log,"通过","");
 	}
     // 打开文件
     $fp = fopen($file, 'rb');
@@ -847,7 +847,7 @@ function file_put_out($file,$download=false){
     ob_end_clean();
     fclose($fp);
 	}else{
-		write_dblog("下载",$filename,"失败","文件不存在");
+		write_dblog("下载",$log,"失败","文件不存在");
 		show_json('文件不存在');
 	}
 }
@@ -1149,6 +1149,7 @@ function upload_chunk($fileInput, $path = './',$temp_path){
 // 	}
 
 	//正常上传
+	$log = str_replace('/mnt/usbox','',$path.$file_name);
 	$save_path = get_filename_auto($path.$file_name); //自动重命名
 	$temp_file_pre = $save_path.md5($save_path.$file_name).'.part'; //临时文件名
 	$wbspeed = 1024 * 1024;
@@ -1179,19 +1180,19 @@ function upload_chunk($fileInput, $path = './',$temp_path){
 	$mime = get_file_mime($ext);
 			if ($GLOBALS['config']['system_info']['deepcheck']==1 && $type != $mime) {
 				unlink($save_path);
-				write_dblog("上传",$filename,"出错",$L['deepcheck_nodownload']);
+				write_dblog("上传",$log,"出错",$L['deepcheck_nodownload']);
 				show_json($L['deepcheck_nodownload'].'/深度检测结果：'.$type.'/后缀：'.$mime,false);
 			}
 		  }else{
-			write_dblog("上传",$filename,"出错","文件错误");
+			write_dblog("上传",$log,"出错","文件错误");
 			show_json($L['move_error'],false);
 		  }
 		  
 		}
-		write_dblog("上传",$file_name,"通过","");
+		write_dblog("上传",$log,"通过","");
 		show_json($L['upload_success'],true,iconv_app($save_path));
 	}else {
-		write_dblog("上传",$filename,"出错","文件错误");
+		write_dblog("上传",$log,"出错","文件错误");
 		show_json($L['move_error'],false);
 	}
 }

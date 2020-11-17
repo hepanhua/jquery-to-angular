@@ -404,7 +404,7 @@ function serverget(){
    
    setTimeout(() => {
     serverget();
-   }, 1300); 
+   }, 950); 
 //    console.log('running');
        }
         });
