@@ -803,7 +803,7 @@ function file_put_out($file,$download=false){
 	$type = $outarr[count($outarr)-1];
 	$mime = get_file_mime(get_path_ext($file));
 		if ($GLOBALS['config']['system_info']['deepcheck']==1 && $type != $mime) {
-			write_dblog("下载",$log,"阻断","非法文件");
+			write_dblog("下载",$log,"阻止","非法文件");
 			show_json('deepcheck nodownload'.'/深度检测结果：'.$type.'/后缀：'.$mime);
 		}
 	  }else{
