@@ -252,7 +252,7 @@ class user extends Controller
                 header('location:./index.php');
                 return;
             }else{
-                write_audit('信息','登录','失败','ip:'.get_client_ip().',自动登录');
+                write_audit('信息','登录','失败','ip:'.get_client_ip().',自动登录','super');
             }
         }
 
@@ -378,6 +378,7 @@ if( !empty($headers) ){
             $user = $member->get($name);
             if ($user ===false){
                 $msg = $this->L['user_not_exists'];
+                write_audit('信息','登录','失败','ip:'.get_client_ip().',登录用户不存在',$this->in['name']);
             }else if(md5($password)==$user['password']){
                 if($user['status'] == 0){//初始化app
                     $app = init_controller('app');
@@ -393,7 +394,7 @@ if( !empty($headers) ){
                 header('location:./index.php');
                 return;
             }else{
-                write_audit('信息','登录','失败','ip:'.get_client_ip());
+                write_audit('信息','登录','失败','ip:'.get_client_ip(),$this->in['name']);
                 $msg = $this->L['password_error'];
             }
             $_SESSION['code_error_time'] = intval($_SESSION['code_error_time']) + 1;

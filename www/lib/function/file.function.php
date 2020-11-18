@@ -1262,24 +1262,27 @@ function write_log($log, $type = 'default', $level = 'log'){
 
 
 //写入操作日志
-function write_audit($type, $event, $result, $desc)
+function write_audit($type, $event, $result, $desc,$username="")
 {
 	// get_client_ip() //获取ip
 	if ($event == "")
 		return;
 	$now_time = date('Y-m-d H:i:s');
+	if($_SESSION['secros_user']['name']){
+		$username=$_SESSION['secros_user']['name'];
+	}
 	$db = new SQLite3('/var/spool/antivirus/log.db');
 	$db->busyTimeout(5000);
 	if ($db){
-	$db->exec("insert into auditlog (user,type,time,event,result,desc) values ('" . $_SESSION['secros_user']['name']  . "','" . $type . "','" . $now_time  . "','" . $event . "','" . $result . "','" . $desc . "')");
+	$db->exec("insert into auditlog (user,type,time,event,result,desc) values ('" . $username  . "','" . $type . "','" . $now_time  . "','" . $event . "','" . $result . "','" . $desc . "')");
 	}
 	$db->close();
 	$ck_noc = config_get_value_from_file('/var/run/roswan','noc_connected');
 	if($ck_noc){
-		exec("oplogpub ". $type ." ".$_SESSION['secros_user']['name']." ".$event." ".$result." ".$desc);
+		exec("oplogpub ". $type ." ".$username." ".$event." ".$result." ".$desc);
 	}
 	openlog("httplog", LOG_PID , LOG_LOCAL1);
-	syslog(LOG_INFO,$type ." | ".$_SESSION['secros_user']['name']." | ".$event." | ".$result." | ".$desc );
+	syslog(LOG_INFO,$type ." | ".$username." | ".$event." | ".$result." | ".$desc );
 	closelog();
 }
 
