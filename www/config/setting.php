@@ -57,7 +57,7 @@ $config['role_setting'] = array(
 		'mkdir','mkfile','pathRname','pathDelete','zip','unzip','pathCopy','pathChmod',
 		'pathCute','pathCuteDrag','pathCopyDrag','clipboard','pathPast','pathInfo',
 		'serverDownload','fileUpload','search','pathDeleteRecycle',
-		'fileDownload','zipDownload','fileDownloadRemove','fileProxy','officeView','officeSave'),
+		'fileDownload','fileDownloadCheck','zipDownload','fileDownloadRemove','fileProxy','officeView','officeSave'),
 	'app'		=> array('user_app','init_app','add','edit','del'),//
 	'user'		=> array('changePassword'),//可以设立公用账户
 	'editor'	=> array('fileGet','fileSave'),

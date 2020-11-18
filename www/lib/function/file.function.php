@@ -740,7 +740,32 @@ function ext_type($ext){
 //     // @readfile($zippath);//下载到本地
 //     @unlink($zippath);//删除压缩文件
 // }
-
+/**
+ * 文件下载前检测
+ */
+function filedwcheck($file){
+	$log = str_replace('/mnt/usbox','',$file);
+	$filesize = get_filesize($file);
+	if ($filesize > 0){
+	exec("file -i '". $file."'",$out);
+	if($out){
+	$outarr = explode(';', $out[0]);
+	$outarr = explode(' ', $outarr[0]);
+	$type = $outarr[count($outarr)-1];
+	$mime = get_file_mime(get_path_ext($file));
+		if ($GLOBALS['config']['system_info']['deepcheck']==1 && $type != $mime) {
+			write_dblog("下载",$log,"阻止","非法文件");
+			return false;
+		}
+	  }else{
+		write_dblog("下载",$log,"阻止","深度检测出错");
+		return false;
+	  }
+	}else{ //文件不存在
+		return false;
+	}
+	return true;
+}
 /**
  * 输出、文件下载
  * 默认以附件方式下载；$download为false时则为输出文件
@@ -1180,7 +1205,7 @@ function upload_chunk($fileInput, $path = './',$temp_path){
 	$mime = get_file_mime($ext);
 			if ($GLOBALS['config']['system_info']['deepcheck']==1 && $type != $mime) {
 				unlink($save_path);
-				write_dblog("上传",$log,"出错",$L['deepcheck_nodownload']);
+				write_dblog("上传",$log,"阻止",$L['deepcheck_nodownload']);
 				show_json($L['deepcheck_nodownload'].'/深度检测结果：'.$type.'/后缀：'.$mime,false);
 			}
 		  }else{

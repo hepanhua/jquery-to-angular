@@ -534,6 +534,25 @@ class explorer extends Controller{
         show_json($msg,$state,$data);
     }
     
+
+    
+    public function fileDownloadCheck(){
+        if($GLOBALS['is_root'] == 1){
+            show_json(true);
+        }
+        if($GLOBALS['auth']['explorer:fileDownload'] == 1){
+            $patharry = explode("/",$this->path);
+            $aa = filedwcheck($this->path);
+            if($aa){
+                show_json(true);
+            }else{//文件检测未通过
+                show_json('no_pass',false);
+            }
+        }else{//没有下载权限
+    show_json('no_auth',false);
+        }
+        }
+
     public function fileDownload(){
     if($GLOBALS['is_root'] == 1 ||  $GLOBALS['auth']['explorer:fileDownload'] == 1){
         $patharry = explode("/",$this->path);
@@ -918,8 +937,12 @@ show_json('没有权限',false);
                 if(is_array($json)) $val = array_merge($val,$json);
             }
             $filelist_new[] = $val;*/
-            if ($GLOBALS['is_root'] || in_array($val['ext'],$ex_name))
-            	$filelist_new[] = $val;
+            if ($GLOBALS['is_root']){
+                $filelist_new[] = $val;
+            }else if($val['ext'] && in_array($val['ext'],$ex_name)){
+                $filelist_new[] = $val;
+            }
+            
         }
         foreach ($list['folderlist'] as $key => $val) {
             //if (in_array($val['name'],$ex_name)) continue;

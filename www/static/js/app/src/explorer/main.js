@@ -1679,18 +1679,18 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				},
 				r = [];
 
-				uploader.on("beforeFileQueued",function(file){
-					if((file.size / 1024 /1024).toFixed(0)>200){
-						core.tips.tips('超出200M的文件已拦截,请使用FTP或文件共享方式传输',false);
-						return false;
-					}
-				});
-				uploaderfol.on("beforeFileQueued",function(file){
-					if((file.size / 1024 /1024).toFixed(0)>200){
-						core.tips.tips('超出200M的文件已拦截,请使用FTP或文件共享方式传输',false);
-						return false;
-					}
-				});
+				// uploader.on("beforeFileQueued",function(file){
+				// 	if((file.size / 1024 /1024).toFixed(0)>200){
+				// 		core.tips.tips('超出200M的文件已拦截,请使用FTP或文件共享方式传输',false);
+				// 		return false;
+				// 	}
+				// });
+				// uploaderfol.on("beforeFileQueued",function(file){
+				// 	if((file.size / 1024 /1024).toFixed(0)>200){
+				// 		core.tips.tips('超出200M的文件已拦截,请使用FTP或文件共享方式传输',false);
+				// 		return false;
+				// 	}
+				// });
 
 				uploaderfol.on("uploadBeforeSend", function(e, t) {
 					var a = urlEncode(e.file.source.source.webkitRelativePath);
@@ -1784,6 +1784,9 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					ui.path.setSelectByFilename(e), r = []
 				})
 			}).on("error", function(e) {
+				if(e == 'Q_TYPE_DENIED'){
+				e= '请勿上传空文件';
+				}
 				core.tips.tips(e, !1)
 			});
 
@@ -5354,6 +5357,34 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				});
 				//e
 			}else{
+				//下载
+				var ck = "index.php?explorer/fileDownloadCheck&path=" + urlEncode2(e);
+				G.share_page !== void 0 && (ck = "index.php?share/fileDownloadCheck&user=" + G.user + "&sid=" + G.sid + "&path=" + urlEncode2(e));
+				$.ajax({
+					dataType: "json",
+					url: ck,
+					error: function(e) {
+						console.log(e);
+					},
+					success: function(res) {
+					if(res.data === true){
+//old download method
+				var t = "index.php?explorer/fileDownload&path=" + urlEncode2(e);
+				G.share_page !== void 0 && (t = "index.php?share/fileDownload&user=" + G.user + "&sid=" + G.sid + "&path=" + urlEncode2(e));
+				var a = '<iframe src="' + t + '" style="width:0px;height:0px;border:0;" frameborder=0></iframe>' + LNG.download_ready + "...",
+					i = $.dialog({
+						icon: "succeed",
+						title: !1,
+						time: 1,
+						content: a
+					});
+				i.DOM.wrap.find(".aui_loading").remove()
+					}else if(res.data == 'no_pass'){
+						
+						tips(basename(e)+'没有通过深度检测',false);
+					}
+					}
+				})
 				//new download 2020/11/11
 				// var t = "index.php?explorer/fileDownload&path=" + urlEncode2(e);
 				// G.share_page !== void 0 && (t = "index.php?share/fileDownload&user=" + G.user + "&sid=" + G.sid + "&path=" + urlEncode2(e));
@@ -5375,33 +5406,9 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				// 	document.body.removeChild(link);
 
 				// 	i.DOM.wrap.find(".aui_loading").remove()
-				//old download method
-				var t = "index.php?explorer/fileDownload&path=" + urlEncode2(e);
-				G.share_page !== void 0 && (t = "index.php?share/fileDownload&user=" + G.user + "&sid=" + G.sid + "&path=" + urlEncode2(e));
-				var a = '<iframe src="' + t + '" style="width:0px;height:0px;border:0;" frameborder=0></iframe>' + LNG.download_ready + "...",
-					i = $.dialog({
-						icon: "succeed",
-						title: !1,
-						time: 1,
-						content: a
-					});
-				i.DOM.wrap.find(".aui_loading").remove()
 			}
 
 		}
-		},
-		newzip = function(e){
-			if (core.authCheck("explorer:fileDownload", LNG.no_permission_download) && e) {
-				// var t = "index.php?explorer/newzipdownload&path=" + urlEncode2(e);
-				// var a = '<iframe src="' + t + '" style="width:0px;height:0px;border:0;" frameborder=0></iframe>' + LNG.download_ready + "...",
-				// 	i = $.dialog({
-				// 		icon: "succeed",
-				// 		title: !1,
-				// 		time: 1,
-				// 		content: a
-				// 	});
-				// i.DOM.wrap.find(".aui_loading").remove()
-			}
 		},
 		b = function(s) {
 			let e = s[0].path;
@@ -5475,8 +5482,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 		openEditor: o,
 		openIE: n,
 		download: i,
-		scanvirus: b,
-		newzipdownload:newzip
+		scanvirus: b
 	}
 }), define("app/common/CMPlayer", [], function() {
 	var e = {
@@ -5978,24 +5984,26 @@ define("app/src/explorer/path", ["../../common/pathOperate", "../../tpl/fileinfo
 					//检查是否在高危列表中
 					a.download(b().path);
 				}else if("folder" == e[0].type){
-					$.ajax({
-						url: "/index.php?explorer/pathList&path=" + urlEncode(b().path),
-						dataType: "json",
-						success: function(e) {
-							let arr = e.data.filelist;
-							for(let k=0;k<arr.length;k++){
-								setTimeout(() => {
-									//检查是否在高危列表中
-									a.download(arr[k].path+arr[k].name);
-								}, k*800); 
-							}
-						},
-						error: function(e, t, a) {
-						console.log(e);
-						}
-					});
 
-					// a.newzipdownload(b().path);
+					if(core.authCheck("explorer:fileDownload", LNG.no_permission_downloa)){
+						$.ajax({
+							url: "/index.php?explorer/pathList&path=" + urlEncode(b().path),
+							dataType: "json",
+							success: function(e) {
+								let arr = e.data.filelist;
+								for(let k=0;k<arr.length;k++){
+									setTimeout(() => {
+										//检查是否在高危列表中
+										a.download(arr[k].path+arr[k].name);
+									}, k*800); 
+								}
+							},
+							error: function(e, t, a) {
+							console.log(e);
+							}
+						});
+					}
+				
 				}
 			}else{
 				core.tips.tips("请选择单个文件或文件夹!", "warning");
@@ -6220,7 +6228,19 @@ $(document).on('click', '.loading_btn_cancle', function () {
 });
 
 
-
+function basename(str1)
+	{
+	let str2="/";
+	var s = str1.lastIndexOf(str2);
+	if (s==-1) {
+	let str2="\\";
+	var s = str1.lastIndexOf(str2);
+	}
+	if(s !=-1 ){
+	return(str1.substring(s+1,str1.length));
+	}
+	return str1
+	}
 
 
 
