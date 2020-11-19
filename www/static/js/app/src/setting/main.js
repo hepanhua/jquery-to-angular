@@ -2140,7 +2140,7 @@ define("app/src/setting/platform", [], function() {
              if(res.code == 200){
                 tips(LNG.success);
              }else{
-                tips(res.msg,"error");
+                tips(res.data,"error");
              }
             }
         });
