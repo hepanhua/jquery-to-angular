@@ -1470,7 +1470,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				i = WebUploader.Base.formatSize(G.upload_max);
 			$.dialog({
 				padding: 5,
-				resize: !0,
+				resize: !1,
 				lock: !0,
 				ico: core.ico("up"),
 				id: "dialog_file_upload",
@@ -1679,18 +1679,18 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				},
 				r = [];
 
-				// uploader.on("beforeFileQueued",function(file){
-				// 	if((file.size / 1024 /1024).toFixed(0)>200){
-				// 		core.tips.tips('超出200M的文件已拦截,请使用FTP或文件共享方式传输',false);
-				// 		return false;
-				// 	}
-				// });
-				// uploaderfol.on("beforeFileQueued",function(file){
-				// 	if((file.size / 1024 /1024).toFixed(0)>200){
-				// 		core.tips.tips('超出200M的文件已拦截,请使用FTP或文件共享方式传输',false);
-				// 		return false;
-				// 	}
-				// });
+				uploader.on("beforeFileQueued",function(file){
+					if((file.size / 1024 /1024).toFixed(0)>799){
+						core.tips.tips('超出800M的文件已拦截,请使用FTP或文件共享方式传输',false);
+						return false;
+					}
+				});
+				uploaderfol.on("beforeFileQueued",function(file){
+					if((file.size / 1024 /1024).toFixed(0)>799){
+						core.tips.tips('超出800M的文件已拦截,请使用FTP或文件共享方式传输',false);
+						return false;
+					}
+				});
 
 				uploaderfol.on("uploadBeforeSend", function(e, t) {
 					var a = urlEncode(e.file.source.source.webkitRelativePath);
