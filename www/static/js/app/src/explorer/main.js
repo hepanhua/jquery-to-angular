@@ -3920,7 +3920,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				openssl = false;
 			}
 			var option = {
-				"ServerUri": window.location.host,
+				"ServerUri": window.location.hostname,
 				"ServerPort": sslport?sslport:882,
 				"UserName": "",
 				"Password": "",
