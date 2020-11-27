@@ -281,7 +281,7 @@ class explorer extends Controller{
         if($GLOBALS['is_root'] == 1 ||  $GLOBALS['auth']['explorer:pathDelete'] == 1){
         $list = json_decode($this->in['list'],true);
         $where = rawurldecode($this->in['where']);
-        if (!is_writable(USER_RECYCLE)) show_json($this->L['no_permission_write'],false);
+        // if (!is_writable(USER_RECYCLE)) show_json($this->L['no_permission_write'],false);
         $success=0;$error=0;
         foreach ($list as $val) {
             $path_this = _DIR($val['path']);
