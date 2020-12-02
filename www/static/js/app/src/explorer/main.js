@@ -1680,14 +1680,14 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				r = [];
 
 				uploader.on("beforeFileQueued",function(file){
-					if((file.size / 1024 /1024).toFixed(0)>799){
-						core.tips.tips('超出800M的文件已拦截,请使用FTP或文件共享方式传输',false);
+					if((file.size / 1024 /1024).toFixed(0)>400){
+						core.tips.tips('超出400M的文件已拦截,请使用FTP或文件共享方式传输',false);
 						return false;
 					}
 				});
 				uploaderfol.on("beforeFileQueued",function(file){
-					if((file.size / 1024 /1024).toFixed(0)>799){
-						core.tips.tips('超出800M的文件已拦截,请使用FTP或文件共享方式传输',false);
+					if((file.size / 1024 /1024).toFixed(0)>400){
+						core.tips.tips('超出400M的文件已拦截,请使用FTP或文件共享方式传输',false);
 						return false;
 					}
 				});
