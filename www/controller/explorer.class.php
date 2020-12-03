@@ -876,6 +876,7 @@ show_json('没有权限',false);
     
      // 删除
      public function delarrChunks(){
+         sleep(3);
          $json = json_decode($this->in['json'],true);
          for ($i=0; $i < count($json); $i++) {
         $save_path =  _DIR($json[$i]['path']);

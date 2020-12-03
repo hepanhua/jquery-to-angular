@@ -162,11 +162,14 @@ function file_info($path){
  * 获取文件夹细信息
  */
 function folder_info($path){
+	$size = dirsize($path);
 	$info = array(
 		'name'			=> iconv_app(get_path_this($path)),
 		'path'			=> iconv_app(get_path_father($path)),
 		'type' 			=> 'folder',
 		'mode'			=> get_mode($path),
+		'size'			=> $size,
+		'size_friendly'	=> size_format($size, 2),
 		'atime'			=> fileatime($path), //访问时间
 		'ctime'			=> filectime($path), //创建时间
 		'mtime'			=> filemtime($path), //最后修改时间		
@@ -176,6 +179,24 @@ function folder_info($path){
 	return $info;
 }
 
+
+ // 获取文件夹大小
+ function dirsize($dir){
+    @$dh = opendir($dir);
+    $size = 0;
+    while($file = @readdir($dh)){
+        if($file!="." && $file!=".."){
+            $path = $dir."/".$file;
+            if(is_dir($path)){
+                $size += dirsize($path);
+            }elseif(is_file($path)){
+                $size += filesize($path);
+            }
+        }
+    }
+	@closedir($dh);
+    return $size;
+}
 
 /**
  * 获取一个路径(文件夹&文件) 当前文件[夹]名
@@ -1016,9 +1037,10 @@ function upload($fileInput, $path = './'){
 function del_beforeuploadfinish($name,$path){
 $temp_path = $path.$name;
 $temp_file_pre = $temp_path.md5($temp_path.$name).'.part';
-// write_audit('信息','删除临时','成功',$temp_file_pre);
+// write_audit('信息','删除判断','成功','"'.file_exists($temp_file_pre).'"');
 if (file_exists($temp_file_pre)) {
 	unlink($temp_file_pre);
+	// write_audit('信息','删除','成功','临时文件：'.$temp_file_pre);
 }
 
 }
@@ -1181,7 +1203,8 @@ function upload_chunk($fileInput, $path = './',$temp_path){
 	if(X86 == 1){
 		$wbspeed = 1024 * 1024 * 4;
 	}
-	$out = fopen($temp_file_pre, "wb");
+	try {
+		$out = fopen($temp_file_pre, "wb");
 		if(flock($out, LOCK_EX)) {
 	   
 	            if (!$in = fopen($file['tmp_name'],"rb")) break;
@@ -1193,6 +1216,11 @@ function upload_chunk($fileInput, $path = './',$temp_path){
 	        flock($out, LOCK_UN);
 		    fclose($out);
 		}
+	} catch (\Throwable $th) {
+		write_dblog("上传",$log,"出错",$th);
+		show_json($L['move_error'],false);
+	}
+
 		
 		if(get_filesize($temp_file_pre)>0){
 		rename($temp_file_pre,$save_path);

@@ -263,7 +263,9 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 	}, this._getFolderBox = function(e) {
 		var t = "",
 			a = e.name;
-		return "number" == typeof e.exists && 0 == e.exists && (a = '<b style="color:red;">' + a + "</b>"), t += "<div class='file folderBox menufolder' data-name='" + e.name + "'" + _hover_title(e) + ">", t += "<div class='folder ico' filetype='folder'></div>", t += "<div id='" + e.name + "' class='titleBox'><span class='title' title='" + LNG.double_click_rename + "'>" + a + "</span></div></div>"
+			// 2020/12/3 data-size
+			// data-size='"+e.size+"'
+		return "number" == typeof e.exists && 0 == e.exists && (a = '<b style="color:red;">' + a + "</b>"), t += "<div class='file folderBox menufolder'    data-name='" + e.name + "'" + _hover_title(e) + ">", t += "<div class='folder ico' filetype='folder'></div>", t += "<div id='" + e.name + "' class='titleBox'><span class='title' title='" + LNG.double_click_rename + "'>" + a + "</span></div></div>"
 	}, this._getFileBox = function(e) {
 		var t = "",
 			a = e.name;
@@ -1492,21 +1494,6 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 						uploader.removeFile(t);
 						if(!t.serverData){
 							delarr.push({filename:t.name,path:urlEncode(G.upload_path)});
-					// setTimeout(() => {
-					// 		$.ajax({
-					// 			url: "index.php?explorer/delChunks&path=" + urlEncode(G.upload_path) + "&filename="+t.name,//+"&chunks=" + chunks
-					// 			dataType: "json",
-					// 			success: function(e) {
-					// 			if(!canf5){
-					// 				canf5 = setTimeout(() => {
-					// 					ui.f5();
-					// 					clearTimeout(canf5);
-					// 					canf5 = null;
-					// 				}, 1000);
-					// 			}
-					// 			}
-					// 		});
-					// 	}, 1000);
 						}
 						
 					});
@@ -1524,14 +1511,14 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 									dataType: "json",
 									data:{json:JSON.stringify(delarr)},
 									success: function(e) {
-										console.log(e);
-									// if(!canf5){
-									// 	canf5 = setTimeout(() => {
-									// 		ui.f5();
-									// 		clearTimeout(canf5);
-									// 		canf5 = null;
-									// 	}, 1000);
-									// }
+										// console.log(e);
+									if(!canf5){
+										canf5 = setTimeout(() => {
+											ui.f5();
+											clearTimeout(canf5);
+											canf5 = null;
+										}, 1000);
+									}
 									}
 								});
 
@@ -5879,12 +5866,15 @@ define("app/src/explorer/path", ["../../common/pathOperate", "../../tpl/fileinfo
 		b = function(e) {
 			if (e) {
 				var t = [];
+				// 2020/12/3 data-size
 				return 0 == Global.fileListSelect.length ? t : (Global.fileListSelect.each(function() {
+					// var size = $(this).attr("data-size");
 					var e = G.this_path + fileLight.name($(this)),
 						a = "folder" == fileLight.type($(this)) ? "folder" : "file";
 					"*share*/" == G.this_path && (e = $(this).attr("data-path"), a = "share"), t.push({
 						path: e,
-						type: a
+						type: a,
+						// size:size
 					})
 				}), t)
 			}
@@ -5991,11 +5981,21 @@ define("app/src/explorer/path", ["../../common/pathOperate", "../../tpl/fileinfo
 							dataType: "json",
 							success: function(e) {
 								let arr = e.data.filelist;
+								let totalsize = 0;
+								for(let g=0;g<arr.length;g++){
+									totalsize += parseInt(arr[g].size);
+								}
+								let tgb = Math.round(totalsize/1024/1024/1024);
+								let timez = 1000;
+								if(tgb > 3){
+									timez = 8000;
+									// core.tips.tips("此文件夹大小超过3GB,建议大文件单独下载", "warning");
+								}
 								for(let k=0;k<arr.length;k++){
 									setTimeout(() => {
 										//检查是否在高危列表中
 										a.download(arr[k].path+arr[k].name);
-									}, k*800); 
+									}, k*timez); 
 								}
 							},
 							error: function(e, t, a) {
