@@ -189,8 +189,8 @@ function folder_info($path){
             $path = $dir."/".$file;
             if(is_dir($path)){
                 $size += dirsize($path);
-            }elseif(is_file($path)){
-                $size += filesize($path);
+            }else{
+                $size += get_filesize($path);
             }
         }
     }
