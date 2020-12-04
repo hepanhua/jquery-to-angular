@@ -5985,7 +5985,7 @@ define("app/src/explorer/path", ["../../common/pathOperate", "../../tpl/fileinfo
 								for(let g=0;g<arr.length;g++){
 									totalsize += parseInt(arr[g].size);
 								}
-								let tgb = Math.round(totalsize/1024/1024/1024);
+								let tgb = Math.floor(totalsize/1024/1024/1024);
 								let timez = 1000;
 								if(tgb > 3){
 									timez = 8000;
