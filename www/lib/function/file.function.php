@@ -430,6 +430,19 @@ function path_haschildren($dir,$check_file=false){
  * 删除文件 传入参数编码为操作系统编码. win--gbk
  */
 function del_file($fullpath){
+	$name = basename($fullpath);
+	if($name[0] === "."){
+	$has ='.fuse_hidden';
+ 	$tmparray = explode($has,$name);
+ 	if(count($tmparray)>1){
+	$a = shell_exec("fuser '".$fullpath."'");
+	exec("kill ".$a. ' >>/dev/null &');
+	return true;
+ }
+	}
+	
+
+	
 	if (!@unlink($fullpath)) { // 删除不了，尝试修改文件权限
 		@chmod($fullpath, 0777);
 		if (!@unlink($fullpath)) {
