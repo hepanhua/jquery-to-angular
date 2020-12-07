@@ -891,25 +891,26 @@ function file_put_out($file,$download=false){
 	if ($download){
 		write_dblog("下载",$log,"通过","");
 	}
-	if(X86 == 1){
-		header("X-Sendfile:". $file);
-	}else{
-// 打开文件
-$fp = fopen($file, 'rb');
-// 设置指针位置
-fseek($fp, 0);
-// 开启缓冲区
-ob_start();
-// 分段读取文件
-while (!feof($fp)) {
-	echo fread($fp, $speed);
-	ob_flush(); // 刷新PHP缓冲区到Web服务器
-	flush(); // 刷新Web服务器缓冲区到浏览器
-}
-// 关闭缓冲区
-ob_end_clean();
-fclose($fp);
-	}
+	// if(X86 == 1){
+		// header("X-Sendfile:". $file);
+		header("X-LIGHTTPD-send-file".$file);
+// 	}else{
+// // 打开文件
+// $fp = fopen($file, 'rb');
+// // 设置指针位置
+// fseek($fp, 0);
+// // 开启缓冲区
+// ob_start();
+// // 分段读取文件
+// while (!feof($fp)) {
+// 	echo fread($fp, $speed);
+// 	ob_flush(); // 刷新PHP缓冲区到Web服务器
+// 	flush(); // 刷新Web服务器缓冲区到浏览器
+// }
+// // 关闭缓冲区
+// ob_end_clean();
+// fclose($fp);
+// 	}
 	}else{
 		write_dblog("下载",$log,"失败","文件不存在");
 		show_json('文件不存在');
