@@ -6304,6 +6304,9 @@ $(document).on('click', '.getusbsid_frame_warning .usbwhitekonw', function () {
 	cleanusbevent(channelId);
 	$(".getusbsid_frame_warning").addClass('hidden');
 });
+$(document).on('click', '.go_back', function () {
+	window.location.href = document.location.protocol + '//' + window.location.hostname;
+});
 
 function cleanusbevent(usb) {
 	let msg = {

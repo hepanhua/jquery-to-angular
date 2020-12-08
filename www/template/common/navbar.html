@@ -2,7 +2,13 @@
 <div class="topbar">
 	<div class="content">
 		<div class="top_left">
-			<a href="javascript:void(0)" class="topbar_menu title">
+			<?php  
+			if(SSO_ON == 1){ 
+				echo '<a href="javascript:void(0)" class="topbar_menu title  go_back">';
+			}else{
+				echo '<a href="javascript:void(0)" class="topbar_menu title">';
+			}
+			?>
 				<?php
 				$logoimage = STATIC_PATH."images/secros-logo.gif";
 				$oem  = config_get_value_from_file('/etc/system/oem.conf','OEM');

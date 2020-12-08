@@ -40,11 +40,12 @@ ul.dropdown-menu a:hover,ul.dropdown-menu .this a { transition: all 0.2s;}
 input { border: 1px solid #ddd; background: #fff; outline: none;}
 input[type="radio"],input[type="checkbox"] { border: none; background: none;}
 .topbar { width: 100%; height: 90px; color: #ddd; z-index: 100; top: 0; background: #D50C04; position: fixed;}
-.topbar .content { padding: 0px; line-height: 90px; height: 90px; wordbreak: break-all;}
+.topbar .content { padding: 0px; line-height: 90px; height: 90px; word-break: break-all;}
 .topbar .content i { display: inline-block; padding-right: 10px; font-size: 1.1em;}
 .topbar .content .topbar_menu { display: block; text-decoration: none; color: #fff; border: 0px solid #03cccb; height: 90px; overflow: hidden; -webkit-transition: all 0.2s; -moz-transition: all 0.2s; -o-transition: all 0.2s; -ms-transition: all 0.2s; transition: all 0.2s; padding: 0px 1.2em; border-top: none; border-bottom: none; outline: none; float: left; margin-left: 50px; font-size: 14px;}
 .topbar .content .topbar_menu:hover,.topbar .content .topbar_menu.this { background: #d83c23;}
 .topbar .content .topbar_menu.title { font-size: 20px; width: 200px; padding: 0; text-align: center;}
+.topbar .content .topbar_menu.go_back:hover img{filter: drop-shadow(2px 2px 2px #000);}
 .topbar .content .topbar_menu.title:hover { background: none;}
 .topbar .content .menu-desktop:before { content: "\f108";}
 .topbar .content .menu-explorer:before { content: "\f0ae";}
