@@ -3920,7 +3920,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			if(G.Super == 'super'){
 				option.ServerUri = window.location.hostname;
 				option.ServerPort = parseInt(window.location.port) + 1;
-				option.SSL = false;
+				option.SSL = ishttps;
 			}
 			mqttclient = new Paho.MQTT.Client(option.ServerUri, option.ServerPort, option.ClientId)
 			mqttclient.onConnectionLost = onConnectionLost;
