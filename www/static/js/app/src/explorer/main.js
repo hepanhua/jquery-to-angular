@@ -5974,7 +5974,7 @@ define("app/src/explorer/path", ["../../common/pathOperate", "../../tpl/fileinfo
 					//检查是否在高危列表中
 					a.download(b().path);
 				}else if("folder" == e[0].type){
-
+					console.log('aa');
 					if(core.authCheck("explorer:fileDownload", LNG.no_permission_downloa)){
 						$.ajax({
 							url: "/index.php?explorer/pathList&path=" + urlEncode(b().path),
@@ -5986,8 +5986,9 @@ define("app/src/explorer/path", ["../../common/pathOperate", "../../tpl/fileinfo
 									totalsize += parseInt(arr[g].size);
 								}
 								let tgb = Math.floor(totalsize/1024/1024/1024);
-								let timez = 1000;
-								if(tgb > 3){
+								console.log(tgb);
+								let timez = 1500;
+								if(tgb >= 3){
 									timez = 8000;
 									// core.tips.tips("此文件夹大小超过3GB,建议大文件单独下载", "warning");
 								}
