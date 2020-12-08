@@ -892,8 +892,8 @@ function file_put_out($file,$download=false){
 		write_dblog("下载",$log,"通过","");
 	}
 	// if(X86 == 1){
-		// header("X-Sendfile:". $file);
-		header("X-LIGHTTPD-send-file".$file);
+		// header("X-LIGHTTPD-send-file:".$file);
+		header("X-Sendfile:". $file);
 // 	}else{
 // // 打开文件
 // $fp = fopen($file, 'rb');
