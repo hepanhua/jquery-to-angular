@@ -259,11 +259,14 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			})
 		};
 	this._hover_title = function(e) {
+		if(void 0 == e.size_friendly){
+			return ' data-path="' + e.path + '" data-name="' + e.name + '" title="' + LNG.name + ":" + e.name + "&#10;"  + LNG.permission + ":" + e.mode + "&#10;" + LNG.create_time + ":" + e.ctime + "&#10;" + LNG.modify_time + ":" + e.mtime + '" ';
+		}
 		return void 0 == e.size_friendly && (e.size_friendly = "0B"), ' data-path="' + e.path + '" data-name="' + e.name + '" title="' + LNG.name + ":" + e.name + "&#10;" + LNG.size + ":" + e.size_friendly + "&#10;" + LNG.permission + ":" + e.mode + "&#10;" + LNG.create_time + ":" + e.ctime + "&#10;" + LNG.modify_time + ":" + e.mtime + '" '
 	}, this._getFolderBox = function(e) {
 		var t = "",
 			a = e.name;
-			// 2020/12/3 data-size
+			// 2020/12/3 cqr data-size
 			// data-size='"+e.size+"'
 		return "number" == typeof e.exists && 0 == e.exists && (a = '<b style="color:red;">' + a + "</b>"), t += "<div class='file folderBox menufolder'    data-name='" + e.name + "'" + _hover_title(e) + ">", t += "<div class='folder ico' filetype='folder'></div>", t += "<div id='" + e.name + "' class='titleBox'><span class='title' title='" + LNG.double_click_rename + "'>" + a + "</span></div></div>"
 	}, this._getFileBox = function(e) {

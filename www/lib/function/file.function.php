@@ -162,6 +162,22 @@ function file_info($path){
  * 获取文件夹细信息
  */
 function folder_info($path){
+	$info = array(
+		'name'			=> iconv_app(get_path_this($path)),
+		'path'			=> iconv_app(get_path_father($path)),
+		'type' 			=> 'folder',
+		'mode'			=> get_mode($path),
+		'atime'			=> fileatime($path), //访问时间
+		'ctime'			=> filectime($path), //创建时间
+		'mtime'			=> filemtime($path), //最后修改时间		
+		'is_readable'	=> intval(is_readable($path)),
+		'is_writeable'	=> intval(is_writeable($path))
+	);
+	return $info;
+}
+
+// 文件夹右键详情
+function folder_detail($path){
 	$size = dirsize($path);
 	$info = array(
 		'name'			=> iconv_app(get_path_this($path)),
@@ -178,7 +194,6 @@ function folder_info($path){
 	);
 	return $info;
 }
-
 
  // 获取文件夹大小
  function dirsize($dir){
@@ -340,10 +355,12 @@ function _path_info_more($dir, &$file_num = 0, &$path_num = 0, &$size = 0){
 /**
  * 获取多选文件信息,包含子文件夹数量，文件数量，总大小，父目录权限
  */
+// 2020/12/9 cqr
 function path_info_muti($list,$time_type){
 	if (count($list) == 1) {
 		if ($list[0]['type']=="folder"){
-	        return path_info($list[0]['path'],$time_type);
+			return folder_detail($list[0]['path']);
+	        // return path_info($list[0]['path'],$time_type);
 	    }else{
 	        return file_info($list[0]['path'],$time_type);
 	    }
@@ -360,9 +377,10 @@ function path_info_muti($list,$time_type){
 		if ($val['type'] == 'folder') {
 			$pathinfo['folder_num'] ++;
 			$temp = path_info($val['path']);
+			$size = dirsize($val['path']);
 			$pathinfo['folder_num']	+= $temp['folder_num'];
 			$pathinfo['file_num']	+= $temp['file_num'];
-			$pathinfo['size'] 		+= $temp['size'];
+			$pathinfo['size'] 		+= $size;
 		}else{
 			$pathinfo['file_num']++;
 			$pathinfo['size'] += get_filesize($val['path']);
