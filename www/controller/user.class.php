@@ -303,7 +303,7 @@ if( !empty($headers) ){
         $member = new fileCache(CONFIG_PATH.'member.php');
         if($res_json['uid'] == 'SYSADMIN'){
             $user = $member->get('admin');
-        }else if($res_json['uid'] == 'SYSAUDIT'){
+        }else if($res_json['uid'] == 'AUDITADMIN'){
             $user = $member->get('user');
             $user['role'] = 'audit';
             $user['name'] = 'audit';
