@@ -569,23 +569,16 @@ show_json('没有权限',false);
     // }
 
     public function scanvirus(){
-        if(X86 != 1){
-            $av_path = new fileCache(CONFIG_PATH.'avpath.php');
-            if(! $av_path -> update('path',$this->path)){
-                $av_path -> add('path',$this->path);
-            }
-        }
+        // if(X86 != 1){
+        //     $av_path = new fileCache(CONFIG_PATH.'avpath.php');
+        //     if(! $av_path -> update('path',$this->path)){
+        //         $av_path -> add('path',$this->path);
+        //     }
+        // }
         system('/bin/avscan "'.$this->path.'"');
     }
     public function avscanstop(){
-        if(X86 != 1){
-        $av_path = new fileCache(CONFIG_PATH.'avpath.php');
-        $path = $av_path->get('path');
-        system('/bin/avscanstop '.$path);
-        }else{
-            system('/bin/avscanstop ');
-        }
-        
+            system('/bin/avscanstop '.$_SESSION['secros_user']['name']);
     }
     //文件下载后删除,用于文件夹下载
     public function fileDownloadRemove(){

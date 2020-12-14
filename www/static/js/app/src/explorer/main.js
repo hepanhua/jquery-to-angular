@@ -4047,7 +4047,6 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 							}
 							break;
 						case "avscan": //存在进程文件
-						// console.log(json);
 						json.value.topic = data.destinationName;
 						// console.log(json.value);
 							if(json.value.progress == -1){
@@ -4395,8 +4394,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				height: 420
 			})
 		},
-		av: function(){
-			console.log(1122);
+		av: function(){//树目录右键杀毒
 			let e = d().path;
 			if(!e){
 				return false;
@@ -5404,8 +5402,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 
 		}
 		},
-		b = function(s) {
-			console.log(3344);
+		b = function(s) { //右边界面点击杀毒
 			let e = s[0].path;
 			if (core.scanvirusCheck() && e) {
 				var t = "index.php?explorer/scanvirus&path=" + urlEncode2(e);
