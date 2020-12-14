@@ -4396,6 +4396,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			})
 		},
 		av: function(){
+			console.log(1122);
 			let e = d().path;
 			if(!e){
 				return false;
@@ -5404,6 +5405,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 		}
 		},
 		b = function(s) {
+			console.log(3344);
 			let e = s[0].path;
 			if (core.scanvirusCheck() && e) {
 				var t = "index.php?explorer/scanvirus&path=" + urlEncode2(e);
