@@ -4047,6 +4047,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 							}
 							break;
 						case "avscan": //存在进程文件
+						// console.log(json);
 						json.value.topic = data.destinationName;
 						// console.log(json.value);
 							if(json.value.progress == -1){
@@ -4105,7 +4106,9 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 								$('.rad2').removeClass('boo_ani');
 								$('.canvasframe .loading_btn_frame').removeClass('hidden');
 								$('.shutdown_loading').addClass('hidden');
-								
+								if(G.X86 === 0 ){
+									G['av_progress'] = data.destinationName;
+								}
 							} else {
 								$('.canvasframe .loading_btn_frame').addClass('hidden');
 								$('.shutdown_loading').removeClass('hidden');
@@ -6178,13 +6181,28 @@ $(document).on('click', '.loading_btn_ok', function () {
 	$('.canvasframe').addClass('hidden');//隐藏loading界面
 	$('.canvasframe .loading_btn_frame').addClass('hidden');//隐藏loading按钮
 	$('.canvasframe .shutdown_loading').removeClass('hidden');
-	$.ajax({
-		url: "index.php?explorer/deleteprogress",
-		dataType: "json",
-		success: function (e) {
-			usbout = null;
-		}
-	});
+	if(G['av_progress']){
+		let aa = {progress:-1};
+		let msg = {
+			"monitoringUnitId": "USBOX",
+			"sampleUnitId": "avscan",
+			"value":aa
+					};
+					var message = new Paho.MQTT.Message(JSON.stringify(msg));
+					message.destinationName = G['av_progress'];
+					message.qos = 0;
+					message.retained = true;
+					mqttclient.send(message);
+	}else{
+		$.ajax({
+			url: "index.php?explorer/deleteprogress",
+			dataType: "json",
+			success: function (e) {
+				usbout = null;
+			}
+		});
+	}
+	
 
 });
 

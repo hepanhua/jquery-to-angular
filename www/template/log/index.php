@@ -37,9 +37,15 @@ $antivirus  = config_get_unsign_int_from_file('/etc/system/quota.conf','antiviru
 							<button class="btn btn-default" id="log_filter" title=<?php echo $L['log_filter'];?> type="button">
 									<i class="font-icon icon-filter"></i>
 								</button>
+			<?php
+			if (SSO_ON != 1) {
+			?>
 								<button class="btn btn-default" id="log_clean" title=<?php echo $L['log_clean'];?> type="button">
 									<i class="font-icon icon-trash"></i>
 								</button>
+								<?php
+			}
+			?>
 								<button class="btn btn-default" id="log_fresh" title=<?php echo $L['log_fresh'];?> type="button">
 									<i class="font-icon icon-refresh"></i>
 								</button>
@@ -71,9 +77,15 @@ $antivirus  = config_get_unsign_int_from_file('/etc/system/quota.conf','antiviru
 							<button class="btn btn-default" id="log_filter" title=<?php echo $L['log_filter'];?> type="button">
 									<i class="font-icon icon-filter"></i>
 								</button>
+								<?php
+			if (SSO_ON != 1) {
+			?>
 								<button class="btn btn-default" id="log_clean" title=<?php echo $L['log_clean'];?> type="button">
 									<i class="font-icon icon-trash"></i>
 								</button>
+								<?php
+			}
+			?>
 								<button class="btn btn-default" id="log_fresh" title=<?php echo $L['log_fresh'];?> type="button">
 									<i class="font-icon icon-refresh"></i>
 								</button>
@@ -105,9 +117,15 @@ $antivirus  = config_get_unsign_int_from_file('/etc/system/quota.conf','antiviru
 							<button class="btn btn-default" id="log_filter" title=<?php echo $L['log_filter'];?> type="button">
 									<i class="font-icon icon-filter"></i>
 								</button>
+								<?php
+			if (SSO_ON != 1) {
+			?>
 								<button class="btn btn-default" id="log_clean" title=<?php echo $L['log_clean'];?> type="button">
 									<i class="font-icon icon-trash"></i>
 								</button>
+								<?php
+			}
+			?>
 								<button class="btn btn-default" id="log_fresh" title=<?php echo $L['log_fresh'];?> type="button">
 									<i class="font-icon icon-refresh"></i>
 								</button>
@@ -139,9 +157,15 @@ $antivirus  = config_get_unsign_int_from_file('/etc/system/quota.conf','antiviru
 							<button class="btn btn-default" id="log_filter" title=<?php echo $L['log_filter'];?> type="button">
 									<i class="font-icon icon-filter"></i>
 								</button>
+								<?php
+			if (SSO_ON != 1) {
+			?>
 								<button class="btn btn-default" id="log_clean" title=<?php echo $L['log_clean'];?> type="button">
 									<i class="font-icon icon-trash"></i>
 								</button>
+								<?php
+			}
+			?>
 								<button class="btn btn-default" id="log_fresh" title=<?php echo $L['log_fresh'];?> type="button">
 									<i class="font-icon icon-refresh"></i>
 								</button>
@@ -176,9 +200,15 @@ $antivirus  = config_get_unsign_int_from_file('/etc/system/quota.conf','antiviru
 							<button class="btn btn-default" id="log_filter" title=<?php echo $L['log_filter'];?> type="button">
 									<i class="font-icon icon-filter"></i>
 								</button>
+								<?php
+			if (SSO_ON != 1) {
+			?>
 								<button class="btn btn-default" id="log_clean" title=<?php echo $L['log_clean'];?> type="button">
 									<i class="font-icon icon-trash"></i>
 								</button>
+								<?php
+			}
+			?>
 								<button class="btn btn-default" id="log_fresh" title=<?php echo $L['log_fresh'];?> type="button">
 									<i class="font-icon icon-refresh"></i>
 								</button>
