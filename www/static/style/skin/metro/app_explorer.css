@@ -1244,6 +1244,52 @@ animation: boo  4s  infinite;
   justify-content: center;
   align-items: center;
 }
+
+.getsecretusb_frame{
+  position: fixed;
+  z-index: 9999;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(0,0,0,.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.getsecretusb_frame .getsecretusb_sframe{
+  width: 320px; height: 220px; display: flex; flex-direction: column; justify-content: space-around; align-items: center; background: #fff; border-radius: 20px;
+}
+.getsecretusb_frame .secretframe_title{
+  font-size: 26px;
+}
+.getsecretusb_frame .secreframe_content{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+}
+.getsecretusb_frame .secreframe_bottom{
+  display: flex;
+  justify-content: center;
+}
+.getsecretusb_frame .secreframe_bottom .secretframe_cancle{
+  margin-left: 26px;
+}
+.getsecretusb_frame .secretframe_btn{
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 16px;
+    display: inline-block;
+    border: 1px solid #ddd;
+    text-shadow: none;
+    box-shadow: none;
+    text-align: center;
+    font-weight: 400;
+    padding: 4px 22px;
+    background: #5db2ff;
+    color: #fff;
+}
 .getusbsid_frame .frame_context,.getusbsid_frame_warning .frame_context{
   width: 360px;
     height: 260px;

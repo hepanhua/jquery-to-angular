@@ -1,5 +1,6 @@
 var mqttclient = null;
 var canf5 = null;
+G.secretusb = [];
 define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztree", "lib/contextMenu/jquery-contextMenu", "lib/artDialog/jquery-artDialog", "lib/picasa/picasa", "./ui", "./fileSelect", "../../common/taskTap", "../../common/core", "../../tpl/copyright.html", "../../tpl/search.html", "../../tpl/search_list.html", "../../tpl/upload.html", "../../common/rightMenu", "../../common/tree", "../../common/pathOperate", "../../tpl/fileinfo/file_info.html", "../../tpl/fileinfo/path_info.html", "../../tpl/fileinfo/path_info_more.html", "../../tpl/share.html", "../../tpl/app.html", "../../common/pathOpen", "../../common/CMPlayer", "./path"], function(e) {
 	Config = {
 		BodyContent: ".bodymain",
@@ -4001,11 +4002,11 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 								$(".usb_mount").removeClass('hidden');
 								if(!Config.usbMountTime){
 									Config.usbMountTime = setTimeout(() => {
-										$(".usb_mount").addClass('hidden');
+									$(".usb_mount").addClass('hidden');
 									ui.tree.init();//刷新树目录
 									Config.usbMountTime = null;
 									// cleanusbevent();
-									}, 15000);
+									}, 10000);
 								}else{
 									clearTimeout(Config.usbMountTime);
 									Config.usbMountTime = setTimeout(() => {
@@ -4013,7 +4014,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 									ui.tree.init();//刷新树目录
 									Config.usbMountTime = null;
 									// cleanusbevent();
-									}, 15000);
+									}, 10000);
 								}
 							}
 							//usb+容量接口
@@ -4044,6 +4045,35 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 								'<div class="frame_context_control"><a class="button usbwhitekonw">确认</a></div></div>';
 								$(".getusbsid_frame_warning").html(h);
 								$(".getusbsid_frame_warning").removeClass('hidden');
+							}
+							if(json.value == -2){
+								console.log(json);
+								if(G.secretusb.indexOf(json.channelId) == -1){
+									G.secretusb.push(json.channelId);
+									addSecretUsbFrame();
+								}
+							}
+							if(json.value == -3){
+								console.log(json);
+								cleanusbevent(json.channelId);
+								$('.getsecretusb_frame').addClass('hidden');
+								if($('.getsecretusb_sframe')){
+								$('.getsecretusb_sframe').remove();
+								}
+								if(!Config.usbsecret){
+									Config.usbsecret = setTimeout(() => {
+									$(".usb_mount").addClass('hidden');
+									ui.tree.init();//刷新树目录
+									Config.usbsecret = null;
+									}, 3000);
+								}else{
+									clearTimeout(Config.usbsecret);
+									Config.usbsecret = setTimeout(() => {
+										$(".usb_mount").addClass('hidden');
+									ui.tree.init();//刷新树目录
+									Config.usbsecret = null;
+									},3000);
+								}
 							}
 							break;
 						case "avscan": //存在进程文件
@@ -6339,3 +6369,62 @@ function cleanusbevent(usb) {
 		message.retained = true;
 		mqttclient.send(message);
 }
+
+
+function cleansecretusb(usb) {
+	let msg = {
+		"sampleUnitId": "usbevent",
+		"channelId":usb,
+		"state": 0,
+		"value": -3
+		};
+		var message = new Paho.MQTT.Message(JSON.stringify(msg));
+		message.destinationName = "sample-values/USBOX/usbevent/"+ usb;
+		message.qos = 0;
+		message.retained = false;
+		mqttclient.send(message);
+}
+
+$(document).on('click', '.secretframe_cancle', function () {
+	// cleanusbevent(G.secretusb[0]);
+	$('.getsecretusb_sframe').remove();
+	G.secretusb.shift();
+	addSecretUsbFrame();
+	});
+	
+	$(document).on('click', '.secretframe_ok', function () {
+		let password = $('.secret_password').val();
+		let usbid = G.secretusb[0];
+		$.ajax({
+			url: "index.php?explorer/secretusb&usbid=" + usbid + "&password=" + password,
+			dataType: "json",
+			success: function(res) {
+				if(res.data == true){
+					cleansecretusb(usbid);
+					$('.getsecretusb_sframe').remove();
+					G.secretusb.shift();
+					addSecretUsbFrame();
+					core.tips.tips('解密成功');
+					$(".usb_mount").removeClass('hidden');
+					$("#usbname_loading").text(json.channelId+"加密区挂载中");
+				}else{
+					core.tips.tips('密码错误');
+				}
+			}
+		});
+	
+		
+	});
+	
+	function addSecretUsbFrame(){
+		if(G.secretusb[0]){
+			$('.getsecretusb_frame').removeClass('hidden');
+			let html = '<div class="getsecretusb_sframe"><div class="secretframe_title">'+ G.secretusb[0]+
+	'加密区</div><div class="secreframe_content"><div>密码：</div><input type="password" class="secret_password"></div>'+
+	'<div class="secreframe_bottom"><div class="secretframe_btn secretframe_ok">确认</div><div class="secretframe_btn secretframe_cancle">取消</div></div></div>';
+			$('.getsecretusb_frame').html(html);
+		}else{
+			$('.getsecretusb_frame').addClass('hidden');
+		}
+	}
+	

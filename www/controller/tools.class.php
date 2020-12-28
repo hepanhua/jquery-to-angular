@@ -2,7 +2,7 @@
 
 class tools extends Controller{
     /**
-     * »ñÈ¡tracerouteÊý¾Ý
+     * ï¿½ï¿½È¡tracerouteï¿½ï¿½ï¿½ï¿½
      */
     public function traceroute() {
         $ip = $this->in['tracerouteip'];
@@ -13,7 +13,7 @@ class tools extends Controller{
     }
     
     /**
-     * »ñÈ¡tracerouteÊý¾Ý
+     * ï¿½ï¿½È¡tracerouteï¿½ï¿½ï¿½ï¿½
      */
     public function ping() {
         $ip = $this->in['pingip'];

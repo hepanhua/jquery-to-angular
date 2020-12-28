@@ -219,6 +219,8 @@
 
 	<div class="getusbsid_frame_warning hidden"></div>
 
+	<div class="getsecretusb_frame hidden"></div>
+	
 	
 	<div class="canvasframe hidden">
         <div class="canvasframe_flex">

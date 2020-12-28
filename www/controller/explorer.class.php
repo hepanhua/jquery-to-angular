@@ -1027,5 +1027,13 @@ $endpatharry =array_slice($patharry,3);
     show_json('还原成功',$state,$data);
 }
 
-
+public function secretusb(){
+    $pw = $this->in['password'];
+    $id = $this->in['usbid'];
+    exec("/usr/sbin/skfusb ".$id." ".$pw,$arr,$out);
+    if($out === 0){
+        show_json(true);
+    }
+    show_json(false);
+}
 }
