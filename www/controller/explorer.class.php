@@ -118,6 +118,32 @@ class explorer extends Controller{
             $_SESSION['this_path']=$user_path;
         }
         $list=$this->path($this->path);
+        if($patharr[0] == "*usbox*" && empty($patharr[1])){
+            $list_folist = $list['folderlist'];
+        if(count($list_folist) > 0){
+            $folderlist_filter = array();
+            if(!isset($_SESSION['USBPSD'])){ //无加密区密码
+                foreach ($list_folist as $key => $val) {
+                    if (!file_exists('/tmp/secret/'.$list_folist[$key]['name'])){
+                        $folderlist_filter[] = $val;
+                    }
+                }
+            }else{//有密码
+                exec("/usr/sbin/skfusb  USBN ".$_SESSION['USBPSD'],$arr,$out);
+                if($out === 0){
+                    $folderlist_filter = $list_folist;
+                }else{
+                    foreach ($list_folist as $key => $val) {
+                        if (!file_exists('/tmp/secret/'.$list_folist[$key]['name'])){
+                            $folderlist_filter[] = $val;
+                        }
+                    }
+                }
+            }
+            $list['folderlist'] = $folderlist_filter;
+        }
+        
+        }
         $list['history_status']= array('back'=>$hi->isback(),'next'=>$hi->isnext());
         show_json($list);
     }
@@ -232,6 +258,28 @@ class explorer extends Controller{
         }
         $root_isparent = count($root)>0?true:false;
         $public_isparent = count($public)>0?true:false;
+        if($public_isparent){
+            $folderlist_filter = array();
+            if(!isset($_SESSION['USBPSD'])){ //无加密区密码
+                foreach ($public as $key => $val) {
+                    if (!file_exists('/tmp/secret/'.$public[$key]['name'])){
+                        $folderlist_filter[] = $val;
+                    }
+                }
+            }else{//有密码
+                exec("/usr/sbin/skfusb  USBN ".$_SESSION['USBPSD'],$arr,$out);
+                if($out === 0){
+                    $folderlist_filter = $public;
+                }else{
+                    foreach ($public as $key => $val) {
+                        if (!file_exists('/tmp/secret/'.$public[$key]['name'])){
+                            $folderlist_filter[] = $val;
+                        }
+                    }
+                }
+            }
+            
+        }
         $tree_data = array(
             /*array('name'=>$this->L['fav'],'iconSkin'=>"fav",
                 'menuType'  => "menuTreeFavRoot",'open'=>true,'children'=>$fav),                
@@ -1027,13 +1075,30 @@ $endpatharry =array_slice($patharry,3);
     show_json('还原成功',$state,$data);
 }
 
+
 public function secretusb(){
     $pw = $this->in['password'];
     $id = $this->in['usbid'];
     exec("/usr/sbin/skfusb ".$id." ".$pw,$arr,$out);
     if($out === 0){
+        session_start();
+        $_SESSION['USBPSD'] = $pw;
         show_json(true);
     }
     show_json(false);
 }
+
+public function cksession(){
+    if(isset($_SESSION['USBPSD'])){
+        exec("/usr/sbin/skfusb  USBN ".$_SESSION['USBPSD'],$arr,$out);
+        if($out === 0){
+        show_json(true);
+        }else{
+            show_json(false);
+        }
+    }
+    show_json(false);
+}
+
+
 }

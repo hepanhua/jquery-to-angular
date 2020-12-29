@@ -1,6 +1,7 @@
 var mqttclient = null;
 var canf5 = null;
 G.secretusb = [];
+var showusages = [];
 define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztree", "lib/contextMenu/jquery-contextMenu", "lib/artDialog/jquery-artDialog", "lib/picasa/picasa", "./ui", "./fileSelect", "../../common/taskTap", "../../common/core", "../../tpl/copyright.html", "../../tpl/search.html", "../../tpl/search_list.html", "../../tpl/upload.html", "../../common/rightMenu", "../../common/tree", "../../common/pathOperate", "../../tpl/fileinfo/file_info.html", "../../tpl/fileinfo/path_info.html", "../../tpl/fileinfo/path_info_more.html", "../../tpl/share.html", "../../tpl/app.html", "../../common/pathOpen", "../../common/CMPlayer", "./path"], function(e) {
 	Config = {
 		BodyContent: ".bodymain",
@@ -3670,45 +3671,16 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				success: function(e) {
 					if (!e.code) return $("#folderList").html('<div style="text-align:center;">' + LNG.system_error + "</div>"), void 0;
 					var t = e.data;
+					if(t[0].children){
+						let firstfol = t[0].children;
+						for(let k=0;k<firstfol.length;k++){
+							showusages.push(firstfol[k].name);
+						}
+						getdiskusages();
+					}
 					$.fn.zTree.init($("#folderList"), c, t), s = $.fn.zTree.getZTreeObj("folderList")
 				}
-			}),
-			setTimeout(() => {
-				$(".usbStorage").empty();
-				$.ajax({
-					url: "/cgi-bin/getdiskusages.cgi",
-					dataType: "json",
-					error: function() {},
-					success: function(e) {
-	$(".usbStorage").empty();
-	if(e.data.length == 0){
-		$(".usbStorage").addClass('hidden');
-		return;
-	}else{
-		$(".usbStorage").removeClass('hidden');
-	}
-	for(let k=0;k<e.data.length;k++){
-		$(".usbStorage").append('<div>'+e.data[k].name+'</div>')
-		for(let g=0;g<e.data[k].usages.length;g++){
-			let color = "";
-							if(e.data[k].usages[g].usage < 50){
-									color = "background:green!important;";
-							}else{
-								if(e.data[k].usages[g].usage < 80){
-									color = "background:orange!important;";
-								}
-							}
-							let dev = e.data[k].usages[g].dev;
-							if(dev.length > 4){
-								dev =  dev.substr(dev.length-4);
-							}
-			$(".usbStorage").append('<div class="usbRow"><div>'+dev+'</div><div class="usbProgress"><div style="width:'+e.data[k].usages[g].usage+'%;'+color+'"></div></div><div class="usbPercent">'+e.data[k].usages[g].usage+'%</div></div>');
-		}
-	}
-	
-					}
-				});
-			},500), $(".ztree .switch").die("mouseenter").live("mouseenter", function() {
+			}),$(".ztree .switch").die("mouseenter").live("mouseenter", function() {
 				$(this).addClass("switch_hover")
 			}).die("mouseleave").live("mouseleave", function() {
 				$(this).removeClass("switch_hover")
@@ -4048,10 +4020,20 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 							}
 							if(json.value == -2){
 								console.log(json);
-								if(G.secretusb.indexOf(json.channelId) == -1){
-									G.secretusb.push(json.channelId);
-									addSecretUsbFrame();
-								}
+							
+								$.ajax({
+									url: "index.php?explorer/cksession",
+									dataType: "json",
+									success: function(res) {
+										if(res.data == false){
+											if(G.secretusb.indexOf(json.channelId) == -1){
+												G.secretusb.push(json.channelId);
+												addSecretUsbFrame();
+											}
+										}
+									}
+								});
+
 							}
 							if(json.value == -3){
 								console.log(json);
@@ -4060,20 +4042,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 								if($('.getsecretusb_sframe')){
 								$('.getsecretusb_sframe').remove();
 								}
-								if(!Config.usbsecret){
-									Config.usbsecret = setTimeout(() => {
-									$(".usb_mount").addClass('hidden');
-									ui.tree.init();//刷新树目录
-									Config.usbsecret = null;
-									}, 3000);
-								}else{
-									clearTimeout(Config.usbsecret);
-									Config.usbsecret = setTimeout(() => {
-										$(".usb_mount").addClass('hidden');
-									ui.tree.init();//刷新树目录
-									Config.usbsecret = null;
-									},3000);
-								}
+								ui.tree.init();//刷新树目录
 							}
 							break;
 						case "avscan": //存在进程文件
@@ -6371,19 +6340,19 @@ function cleanusbevent(usb) {
 }
 
 
-function cleansecretusb(usb) {
-	let msg = {
-		"sampleUnitId": "usbevent",
-		"channelId":usb,
-		"state": 0,
-		"value": -3
-		};
-		var message = new Paho.MQTT.Message(JSON.stringify(msg));
-		message.destinationName = "sample-values/USBOX/usbevent/"+ usb;
-		message.qos = 0;
-		message.retained = false;
-		mqttclient.send(message);
-}
+// function cleansecretusb(usb) {
+// 	let msg = {
+// 		"sampleUnitId": "usbevent",
+// 		"channelId":usb,
+// 		"state": 0,
+// 		"value": -3
+// 		};
+// 		var message = new Paho.MQTT.Message(JSON.stringify(msg));
+// 		message.destinationName = "sample-values/USBOX/usbevent/"+ usb;
+// 		message.qos = 0;
+// 		message.retained = false;
+// 		mqttclient.send(message);
+// }
 
 $(document).on('click', '.secretframe_cancle', function () {
 	// cleanusbevent(G.secretusb[0]);
@@ -6400,15 +6369,21 @@ $(document).on('click', '.secretframe_cancle', function () {
 			dataType: "json",
 			success: function(res) {
 				if(res.data == true){
-					cleansecretusb(usbid);
+					// cleansecretusb(usbid);
 					$('.getsecretusb_sframe').remove();
 					G.secretusb.shift();
 					addSecretUsbFrame();
-					core.tips.tips('解密成功');
 					$(".usb_mount").removeClass('hidden');
-					$("#usbname_loading").text(json.channelId+"加密区挂载中");
+					$("#usbname_loading").text("加密U盘,"+usbid+"挂载中");
+					setTimeout(() => {
+						$(".usb_mount").addClass('hidden');
+						ui.tree.init();//刷新树目录
+						if(G.this_path == '*usbox*/'){
+							ui.f5();
+						}
+					}, 5000);
 				}else{
-					core.tips.tips('密码错误');
+					core.tips.tips('密码错误',false);
 				}
 			}
 		});
@@ -6419,8 +6394,8 @@ $(document).on('click', '.secretframe_cancle', function () {
 	function addSecretUsbFrame(){
 		if(G.secretusb[0]){
 			$('.getsecretusb_frame').removeClass('hidden');
-			let html = '<div class="getsecretusb_sframe"><div class="secretframe_title">'+ G.secretusb[0]+
-	'加密区</div><div class="secreframe_content"><div>密码：</div><input type="password" class="secret_password"></div>'+
+			let html = '<div class="getsecretusb_sframe"><div class="secretframe_title">检测到'+ G.secretusb[0]+
+	'加密U盘</div><div class="secreframe_content"><div>密码：</div><input type="password" class="secret_password"></div>'+
 	'<div class="secreframe_bottom"><div class="secretframe_btn secretframe_ok">确认</div><div class="secretframe_btn secretframe_cancle">取消</div></div></div>';
 			$('.getsecretusb_frame').html(html);
 		}else{
@@ -6428,3 +6403,45 @@ $(document).on('click', '.secretframe_cancle', function () {
 		}
 	}
 	
+
+
+	function getdiskusages(){
+
+		$(".usbStorage").empty();
+		$.ajax({
+			url: "/cgi-bin/getdiskusages.cgi",
+			dataType: "json",
+			error: function() {},
+			success: function(e) {
+$(".usbStorage").empty();
+if(e.data.length == 0){
+$(".usbStorage").addClass('hidden');
+return;
+}else{
+$(".usbStorage").removeClass('hidden');
+}
+for(let k=0;k<e.data.length;k++){
+	if(showusages.indexOf(e.data[k].name) >= 0){
+		$(".usbStorage").append('<div>'+e.data[k].name+'</div>')
+		for(let g=0;g<e.data[k].usages.length;g++){
+			let color = "";
+							if(e.data[k].usages[g].usage < 50){
+									color = "background:green!important;";
+							}else{
+								if(e.data[k].usages[g].usage < 80){
+									color = "background:orange!important;";
+								}
+							}
+							let dev = e.data[k].usages[g].dev;
+							if(dev.length > 4){
+								dev =  dev.substr(dev.length-4);
+							}
+			$(".usbStorage").append('<div class="usbRow"><div>'+dev+'</div><div class="usbProgress"><div style="width:'+e.data[k].usages[g].usage+'%;'+color+'"></div></div><div class="usbPercent">'+e.data[k].usages[g].usage+'%</div></div>');
+		}
+	}
+}
+
+			}
+		});
+	
+	}
