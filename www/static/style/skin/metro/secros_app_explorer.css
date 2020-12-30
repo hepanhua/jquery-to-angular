@@ -568,7 +568,7 @@ html { overflow-x: hidden; overflow-y: hidden;}
 .frame-header .header-content .font-icon { font-size: 18px; line-height: 20px; padding-right: 4px;}
 .frame-header .header-content .header-left { float: left; width: 170px; padding-left: 55px;}
 .frame-header .header-content .header-middle { position: absolute; left: 205px; top: 10px; right: 0px;}
-.frame-header .header-content .header-middle #yarnball { width: 50%; cursor: text; height: 27px; overflow: hidden; margin-left: -1px; float: left; border: 1px solid #ddd; box-shadow: #e6e6e6 0px 0px 20px inset; background: #f8f8f8 url("../../../images/bg.gif") 0px -2px repeat-x;}
+.frame-header .header-content .header-middle #yarnball { width: 50%;height: 27px; overflow: hidden; margin-left: -1px; float: left; border: 1px solid #ddd; box-shadow: #e6e6e6 0px 0px 20px inset; background: #f8f8f8 url("../../../images/bg.gif") 0px -2px repeat-x;}
 .frame-header .header-content .header-middle #yarnball .yarnball { list-style: none; margin: 0; margin-top: -1px; padding: 0; position: relative;}
 .frame-header .header-content .header-middle #yarnball .yarnball .yarnlet { display: inline-block; float: left;}
 .frame-header .header-content .header-middle #yarnball .yarnball .yarnlet a,.frame-header .header-content .header-middle #yarnball .yarnball .yarnlet a:link,.frame-header .header-content .header-middle #yarnball .yarnball .yarnlet a:visited { color: #666; display: inline-block; font-size: 12px; padding: 5px 15px 10px 20px; margin-left: -15px; position: relative; text-decoration: none; vertical-align: top; line-height: 20px;}

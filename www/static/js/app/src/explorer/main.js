@@ -480,6 +480,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					var t = $(this).attr("title");
 					$("input.path").val(t), ui.header.gotoPath(), stopPP(e)
 				}), $("#yarnball").die("click").live("click", function() {
+					return;
 					return $("#yarnball").css("display", "none"), $("#yarnball_input").css("display", "block"), $("#yarnball_input input").focus(), !0
 				}), $("#yarnball_input input").die("blur").live("blur", function() {
 					ui.header.gotoPath()
