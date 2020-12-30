@@ -29,6 +29,7 @@ class group extends Controller{
         $role_old = $this->in['role_old'];
         if (!$role_old) show_json($this->L["groupname_can_not_null"],false);
         if ($role_old == 'root') show_json($this->L['default_group_can_not_do'],false);
+        if ($role == 'audit') show_json($this->L['default_group_can_not_do'],false);
 
         if ($this->sql->replace_update($role_old,$this->in['role'],$group)){
             $member = new fileCache(CONFIG_PATH.'member.php');
@@ -49,6 +50,7 @@ class group extends Controller{
         $role = $this->in['role'];
         if (!$role) show_json($this->L["groupname_can_not_null"],false);
         if ($role == 'root') show_json($this->L['default_group_can_not_do'],false);
+        if ($role == 'audit') show_json($this->L['default_group_can_not_do'],false);
         if($this->sql->delete($role)){
             $member = new fileCache(CONFIG_PATH.'member.php');
             $member -> update('role','',$role);//改组用户设置为空

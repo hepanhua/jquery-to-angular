@@ -1480,7 +1480,9 @@ define("app/src/setting/group", [], function() {
         var e = "<tr class='title'><td width='20%'>" + LNG.group + "</td>" + "<td width=''>" + LNG.name + "</td>" + "<td width='35%'>" + LNG.action + "</td>" + "</tr>";
         for (var a in t) {
             var i = "<a href='javascript:void(0)' class='button edit'>" + LNG.button_edit + "</a>" + "<a href='javascript:void(0)' class='button del'> " + LNG.button_del + "</a>";
-            "root" == t[a].role && (i = LNG.default_group_can_not_do),
+            if("root" == t[a].role || "audit" == t[a].role){
+                i = LNG.default_group_can_not_do;
+            }
             e += "<tr role='" + t[a].role + "'>" + "   <td>" + t[a].role + "</td>" + "   <td>" + t[a].name + "</td><td>" + i + "</td>"
         }
         $(".group table#list").html(e)
@@ -1681,7 +1683,9 @@ define("app/src/setting/member", [], function() {
         a = "";
         for (var o = n.length - 1; o >= 0; o--) {
             var r = i[n[o]];
-            a += "<option value='" + r.role + "'>" + r.name + "</option>"
+            if(r.role != 'audit'){
+                a += "<option value='" + r.role + "'>" + r.name + "</option>";
+            }
         }
         for (var o in e)
             t += s(e[o].name, e[o].role);
@@ -1695,7 +1699,9 @@ define("app/src/setting/member", [], function() {
         i[t] ? a = i[t].name : (a = LNG.group_not_exists,
         t = "");
         var n = "<a href='javascript:void(0)' class='button edit'>" + LNG.button_edit + "</a>  " + "<a href='javascript:void(0)' class='button del'>" + LNG.button_del + "</a>";
-        "admin" == e && (n = LNG.default_group_can_not_do);
+        if("admin" == e || "audit" == e){
+            n = LNG.default_group_can_not_do;
+        }
         var o = "<tr name='" + urlDecode(e) + "' role='" + t + "'>" + "   <td>" + e + "</td>" + "   <td><a href='javascript:void(0)' class='edit_role'>" + a + "</a></td>" + "   <td>" + n + "</td>" + "</tr>";
         return o
     }
