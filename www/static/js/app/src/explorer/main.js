@@ -4048,6 +4048,9 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 							break;
 						case "avscan": //存在进程文件
 						json.value.topic = data.destinationName;
+						if(showusages.indexOf(e.data[k].name) == -1){
+							return;
+						}
 						// console.log(json.value);
 							if(json.value.progress == -1){
 								if(usbout == json.channelId){
@@ -6415,7 +6418,7 @@ $(document).on('click', '.secretframe_cancle', function () {
 			error: function() {},
 			success: function(e) {
 $(".usbStorage").empty();
-if(e.data.length == 0){
+if(e.data.length == 0 || showusages.length == 0){
 $(".usbStorage").addClass('hidden');
 return;
 }else{
