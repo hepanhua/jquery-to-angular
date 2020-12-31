@@ -6395,8 +6395,8 @@ $(document).on('click', '.secretframe_cancle', function () {
 	function addSecretUsbFrame(){
 		if(G.secretusb[0]){
 			$('.getsecretusb_frame').removeClass('hidden');
-			let html = '<div class="getsecretusb_sframe"><div class="secretframe_title">检测到'+ G.secretusb[0]+
-	'加密U盘</div><div class="secreframe_content"><div>密码：</div><input type="password" class="secret_password"></div>'+
+			let html = '<div class="getsecretusb_sframe"><div class="secretframe_title">检测到加密U盘('+ G.secretusb[0]+
+	')</div><div class="secreframe_content"><div>密码：</div><input type="password" class="secret_password"></div>'+
 	'<div class="secreframe_bottom"><div class="secretframe_btn secretframe_ok">确认</div><div class="secretframe_btn secretframe_cancle">取消</div></div></div>';
 			$('.getsecretusb_frame').html(html);
 		}else{
