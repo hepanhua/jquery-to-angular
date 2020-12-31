@@ -1097,7 +1097,7 @@ function upload_chunk($fileInput, $path = './',$temp_path){
 
 	if ($GLOBALS['is_root'] != 1){
   	if (!in_array($ext,$ex_name)){
-  		show_json($L['filetype_noupload'],false);
+  		show_json($L['no_permission_ext'],false);
   	}
   }
 		

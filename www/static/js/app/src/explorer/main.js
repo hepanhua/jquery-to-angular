@@ -3947,6 +3947,9 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					payloadString = payloadString.replace(/\\/g,"");
 					let json = JSON.parse(payloadString);
 					// console.log(json);
+					if (G.user_name == "audit") {
+						return;
+					}
 					switch (json.sampleUnitId) {
 						case "virus":
 							let time = json.timestamp;
@@ -6450,7 +6453,10 @@ for(let k=0;k<e.data.length;k++){
 		}
 	}
 }
-
+setTimeout(() => {
+	let bottom = 100 + $(".usbStorage").height();
+	$(".frame-main .frame-left #folderList").css("bottom",bottom + "px");
+}, 2000);
 			}
 		});
 	
