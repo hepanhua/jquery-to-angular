@@ -130,16 +130,16 @@ class explorer extends Controller{
                     }
                 }
             }else{//有密码
-                exec("/usr/sbin/skfusb  USBN ".$_SESSION['USBPSD'],$arr,$out);
-                if($out === 0){
+                // exec("/usr/sbin/skfusb  USBN ".$_SESSION['USBPSD'],$arr,$out);
+                // if($out === 0){
                     $folderlist_filter = $list_folist;
-                }else{
-                    foreach ($list_folist as $key => $val) {
-                        if (!file_exists('/tmp/secret/'.$list_folist[$key]['name'])){
-                            $folderlist_filter[] = $val;
-                        }
-                    }
-                }
+                // }else{
+                //     foreach ($list_folist as $key => $val) {
+                //         if (!file_exists('/tmp/secret/'.$list_folist[$key]['name'])){
+                //             $folderlist_filter[] = $val;
+                //         }
+                //     }
+                // }
             }
             $list['folderlist'] = $folderlist_filter;
         }
@@ -268,16 +268,16 @@ class explorer extends Controller{
                     }
                 }
             }else{//有密码
-                exec("/usr/sbin/skfusb  USBN ".$_SESSION['USBPSD'],$arr,$out);
-                if($out === 0){
+                // exec("/usr/sbin/skfusb  USBN ".$_SESSION['USBPSD'],$arr,$out);
+                // if($out === 0){
                     $folderlist_filter = $public;
-                }else{
-                    foreach ($public as $key => $val) {
-                        if (!file_exists('/tmp/secret/'.$public[$key]['name'])){
-                            $folderlist_filter[] = $val;
-                        }
-                    }
-                }
+                // }else{
+                //     foreach ($public as $key => $val) {
+                //         if (!file_exists('/tmp/secret/'.$public[$key]['name'])){
+                //             $folderlist_filter[] = $val;
+                //         }
+                //     }
+                // }
             }
             $public = $folderlist_filter;
         }
@@ -1091,15 +1091,22 @@ public function secretusb(){
 
 public function cksession(){
     if(isset($_SESSION['USBPSD'])){
-        exec("/usr/sbin/skfusb  USBN ".$_SESSION['USBPSD'],$arr,$out);
-        if($out === 0){
+        // exec("/usr/sbin/skfusb  USBN ".$_SESSION['USBPSD'],$arr,$out);
+        // if($out === 0){
         show_json(true);
-        }else{
-            show_json(false);
-        }
+        // }else{
+        //     show_json(false);
+        // }
     }
     show_json(false);
 }
 
+public function cleanusbpwd(){
+    if(isset($_SESSION['USBPSD'])){
+        session_start();
+        $_SESSION['USBPSD'] = null;
+    }
+    show_json(true);
+}
 
 }

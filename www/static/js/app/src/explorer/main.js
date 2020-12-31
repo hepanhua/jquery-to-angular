@@ -4046,6 +4046,10 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 								$('.getsecretusb_sframe').remove();
 								}
 								ui.tree.init();//刷新树目录
+								$.ajax({ //清除上一次输入的密码
+									url: "index.php?explorer/cleanusbpwd",
+									dataType: "json"
+								});
 							}
 							break;
 						case "avscan": //存在进程文件
@@ -6384,10 +6388,10 @@ $(document).on('click', '.secretframe_cancle', function () {
 					setTimeout(() => {
 						$(".usb_mount").addClass('hidden');
 						ui.tree.init();//刷新树目录
-						if(G.this_path == '*usbox*/'){
-							ui.f5();
-						}
-					}, 5000);
+							if(G.this_path == '*usbox*/'){
+								ui.f5();
+							}
+					}, 3000);
 				}else{
 					core.tips.tips('密码错误',false);
 				}
