@@ -49,7 +49,7 @@ define('STATIC_LESS','css');//less(开发状态)||css(打包压缩)
 define('STATIC_PATH',"./static/");//静态文件目录
 //define('STATIC_PATH','http://www.secros.com/static/');//静态文件统分离,可单独将static部署到CDN
 
-define('X86',0);    //X86系统
+define('X86',1);    //X86系统
 define('SSO_ON',0);    //单点登录
 define('AUDIT_ON',0); //日志审计员
 /*

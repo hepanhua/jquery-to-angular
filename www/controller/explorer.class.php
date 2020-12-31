@@ -118,6 +118,7 @@ class explorer extends Controller{
             $_SESSION['this_path']=$user_path;
         }
         $list=$this->path($this->path);
+        $patharr = explode("/",$user_path);
         if($patharr[0] == "*usbox*" && empty($patharr[1])){
             $list_folist = $list['folderlist'];
         if(count($list_folist) > 0){
@@ -278,7 +279,7 @@ class explorer extends Controller{
                     }
                 }
             }
-            
+            $public = $folderlist_filter;
         }
         $tree_data = array(
             /*array('name'=>$this->L['fav'],'iconSkin'=>"fav",

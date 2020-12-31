@@ -6375,7 +6375,7 @@ $(document).on('click', '.secretframe_cancle', function () {
 					G.secretusb.shift();
 					addSecretUsbFrame();
 					$(".usb_mount").removeClass('hidden');
-					$("#usbname_loading").text("加密U盘,"+usbid+"挂载中");
+					$("#usbname_loading").text("加密U盘："+usbid+"挂载中");
 					setTimeout(() => {
 						$(".usb_mount").addClass('hidden');
 						ui.tree.init();//刷新树目录
