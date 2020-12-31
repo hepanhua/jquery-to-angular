@@ -3946,7 +3946,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					let payloadString = data.payloadString;
 					payloadString = payloadString.replace(/\\/g,"");
 					let json = JSON.parse(payloadString);
-					// console.log(json);
+					console.log(json);
 					switch (json.sampleUnitId) {
 						case "virus":
 							let time = json.timestamp;
@@ -4048,7 +4048,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 							break;
 						case "avscan": //存在进程文件
 						json.value.topic = data.destinationName;
-						if(showusages.indexOf(e.data[k].name) == -1){
+						if(showusages.indexOf(json.channelId) == -1){
 							return;
 						}
 						// console.log(json.value);
