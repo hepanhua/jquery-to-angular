@@ -81,7 +81,7 @@ function get_filesize($file){
 	  } else {
 		$file = filesize($file);
 	  }
-	  return $file;
+	  return (int)$file;
 
 	  //old
 	// $result = false;
