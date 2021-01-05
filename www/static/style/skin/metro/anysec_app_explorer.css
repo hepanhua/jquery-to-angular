@@ -419,7 +419,7 @@ span.tmpzTreeMove_arrow { display: inline-block; margin: 4px 0 0 2px; position: 
 .frame-left .ztree li .ini { background-image: url("./../../../images/file_16/ini.png");}
 .frame-left .ztree li .jpg,.frame-left .ztree li .png,.frame-left .ztree li .bmp,.frame-left .ztree li .gif,.frame-left .ztree li .ttf { background-image: url("./../../../images/file_16/jpg.png");}
 .frame-left .ztree li .mp3,.frame-left .ztree li .wma,.frame-left .ztree li .mp2,.frame-left .ztree li .mid,.frame-left .ztree li .aac { background-image: url("./../../../images/file_16/mp3.png");}
-.frame-left .ztree li .avi,.frame-left .ztree li .rm,.frame-left .ztree li .rmvb,.frame-left .ztree li .mpg,.frame-left .ztree li .mkv,.frame-left .ztree li .wmv,.frame-left .ztree li .mov,.frame-left .ztree li .mp4 { background-image: url("./../../../images/file_16/avi.png");}
+.frame-left .ztree li .avi,.frame-left .ztree li .rm,.frame-left .ztree li .rmvb,.frame-left .ztree li .mpg,.frame-left .ztree li .mkv,.frame-left .ztree li .wmv,.frame-left .ztree li .mov,.frame-left .ztree li .mp4 { background-image: url("./../../../images/file_16/mp4.png");}
 .frame-left .ztree li .doc,.frame-left .ztree li .docx,.frame-left .ztree li .wps { background-image: url("./../../../images/file_16/doc.png");}
 .frame-left .ztree li .xls,.frame-left .ztree li .xlsx { background-image: url("./../../../images/file_16/xls.png");}
 .frame-left .ztree li .ppt,.frame-left .ztree li .pptx { background-image: url("./../../../images/file_16/ppt.png");}
@@ -468,7 +468,7 @@ span.tmpzTreeMove_arrow { display: inline-block; margin: 4px 0 0 2px; position: 
 .fileList_icon .file .bat,.fileList_icon .file .cmd,.fileList_icon .file .sh { background-image: url("./images/cmd.png");}
 .fileList_icon .file .ini,.fileList_icon .file .conf { background-image: url("./images/ini.png");}
 .fileList_icon .file .mp3,.fileList_icon .file .wma,.fileList_icon .file .mp2,.fileList_icon .file .mid,.fileList_icon .file .aac { background-image: url("./images/mp3.png");}
-.fileList_icon .file .avi,.fileList_icon .file .rm,.fileList_icon .file .rmvb,.fileList_icon .file .mpg,.fileList_icon .file .mkv,.fileList_icon .file .wmv,.fileList_icon .file .mov,.fileList_icon .file .mp4 { background-image: url("./images/avi.png");}
+.fileList_icon .file .avi,.fileList_icon .file .rm,.fileList_icon .file .rmvb,.fileList_icon .file .mpg,.fileList_icon .file .mkv,.fileList_icon .file .wmv,.fileList_icon .file .mov,.fileList_icon .file .mp4 { background-image: url("./images/mp4.png");}
 .fileList_icon .file .doc,.fileList_icon .file .docx,.fileList_icon .file .wps { background: url("./images/doc.png");}
 .fileList_icon .file .xls,.fileList_icon .file .xlsx { background-image: url("./images/xls.png");}
 .fileList_icon .file .ppt,.fileList_icon .file .pptx { background-image: url("./images/ppt.png");}
@@ -526,7 +526,7 @@ span.tmpzTreeMove_arrow { display: inline-block; margin: 4px 0 0 2px; position: 
 .fileList_list .file .ini { background-image: url("../../../images/file_16/ini.png");}
 .fileList_list .file .jpg,.fileList_list .file .png,.fileList_list .file .bmp,.fileList_list .file .gif,.fileList_list .file .ttf { background-image: url("../../../images/file_16/jpg.png");}
 .fileList_list .file .mp3,.fileList_list .file .wma,.fileList_list .file .mp2,.fileList_list .file .mid,.fileList_list .file .aac { background-image: url("../../../images/file_16/mp3.png");}
-.fileList_list .file .avi,.fileList_list .file .rm,.fileList_list .file .rmvb,.fileList_list .file .mpg,.fileList_list .file .mkv,.fileList_list .file .wmv,.fileList_list .file .mov,.fileList_list .file .mp4 { background-image: url("../../../images/file_16/avi.png");}
+.fileList_list .file .avi,.fileList_list .file .rm,.fileList_list .file .rmvb,.fileList_list .file .mpg,.fileList_list .file .mkv,.fileList_list .file .wmv,.fileList_list .file .mov,.fileList_list .file .mp4 { background-image: url("../../../images/file_16/mp4.png");}
 .fileList_list .file .doc,.fileList_list .file .docx,.fileList_list .file .wps { background-image: url("../../../images/file_16/doc.png");}
 .fileList_list .file .xls,.fileList_list .file .xlsx { background-image: url("../../../images/file_16/xls.png");}
 .fileList_list .file .ppt,.fileList_list .file .pptx { background-image: url("../../../images/file_16/ppt.png");}
@@ -1458,3 +1458,66 @@ animation: boo  4s  infinite;
     transform: rotate(-315deg);
   }
 }
+
+/* 12 24 cqr new */
+.fileList_list .file .aac { background-image: url("../../../images/file_16/aac.png");}
+.fileList_list .file .ac3 { background-image: url("../../../images/file_16/ac3.png");}
+.fileList_list .file .asf { background-image: url("../../../images/file_16/asf.png");}
+.fileList_list .file .asx { background-image: url("../../../images/file_16/asx.png");}
+.fileList_list .file .bmp { background-image: url("../../../images/file_16/bmp.png");}
+.fileList_list .file .bwf { background-image: url("../../../images/file_16/bwf.png");}
+.fileList_list .file .dot { background-image: url("../../../images/file_16/dot.png");}
+.fileList_list .file .gif { background-image: url("../../../images/file_16/gif.png");}
+.fileList_list .file .ief { background-image: url("../../../images/file_16/ief.png");}
+.fileList_list .file .jpeg { background-image: url("../../../images/file_16/jpeg.png");}
+.fileList_list .file .lsf { background-image: url("../../../images/file_16/lsf.png");}
+.fileList_list .file .m4a { background-image: url("../../../images/file_16/m4a.png");}
+.fileList_list .file .m4v { background-image: url("../../../images/file_16/m4v.png");}
+.fileList_list .file .mid { background-image: url("../../../images/file_16/mid.png");}
+.fileList_list .file .mov { background-image: url("../../../images/file_16/mov.png");}
+.fileList_list .file .mp2 { background-image: url("../../../images/file_16/mp2.png");}
+.fileList_list .file .mpa { background-image: url("../../../images/file_16/mpa.png");}
+.fileList_list .file .mpe { background-image: url("../../../images/file_16/mpe.png");}
+.fileList_list .file .mpeg { background-image: url("../../../images/file_16/mpeg.png");}
+.fileList_list .file .mpg { background-image: url("../../../images/file_16/mpg.png");}
+.fileList_list .file .mxf { background-image: url("../../../images/file_16/mxf.png");}
+.fileList_list .file .png { background-image: url("../../../images/file_16/png.png");}
+.fileList_list .file .ppm { background-image: url("../../../images/file_16/ppm.png");}
+.fileList_list .file .ppt { background-image: url("../../../images/file_16/ppt.png");}
+.fileList_list .file .rm { background-image: url("../../../images/file_16/rm.png");}
+.fileList_list .file .tif { background-image: url("../../../images/file_16/tif.png");}
+.fileList_list .file .w64 { background-image: url("../../../images/file_16/w64.png");}
+.fileList_list .file .wav { background-image: url("../../../images/file_16/wav.png");}
+.fileList_list .file .wma { background-image: url("../../../images/file_16/wma.png");}
+.fileList_list .file .wmv { background-image: url("../../../images/file_16/wmv.png");}
+.fileList_icon .file .aac { background-image: url("./images/aac.png");}
+.fileList_icon .file .ac3 { background-image: url("./images/ac3.png");}
+.fileList_icon .file .asf { background-image: url("./images/asf.png");}
+.fileList_icon .file .asx { background-image: url("./images/asx.png");}
+.fileList_icon .file .bmp { background-image: url("./images/bmp.png");}
+.fileList_icon .file .bwf { background-image: url("./images/bwf.png");}
+.fileList_icon .file .dot { background-image: url("./images/dot.png");}
+.fileList_icon .file .gif { background-image: url("./images/gif.png");}
+.fileList_icon .file .ief { background-image: url("./images/ief.png");}
+.fileList_icon .file .jpeg { background-image: url("./images/jpeg.png");}
+.fileList_icon .file .lsf { background-image: url("./images/lsf.png");}
+.fileList_icon .file .m4a { background-image: url("./images/m4a.png");}
+.fileList_icon .file .m4v { background-image: url("./images/m4v.png");}
+.fileList_icon .file .mid { background-image: url("./images/mid.png");}
+.fileList_icon .file .mov { background-image: url("./images/mov.png");}
+.fileList_icon .file .mp2 { background-image: url("./images/mp2.png");}
+.fileList_icon .file .mpa { background-image: url("./images/mpa.png");}
+.fileList_icon .file .mpe { background-image: url("./images/mpe.png");}
+.fileList_icon .file .mpeg { background-image: url("./images/mpeg.png");}
+.fileList_icon .file .mpg { background-image: url("./images/mpg.png");}
+.fileList_icon .file .mxf { background-image: url("./images/mxf.png");}
+.fileList_icon .file .png { background-image: url("./images/png.png");}
+.fileList_icon .file .ppm { background-image: url("./images/ppm.png");}
+.fileList_icon .file .ppt { background-image: url("./images/ppt.png");}
+.fileList_icon .file .rm { background-image: url("./images/rm.png");}
+.fileList_icon .file .tif { background-image: url("./images/tif.png");}
+.fileList_icon .file .w64 { background-image: url("./images/w64.png");}
+.fileList_icon .file .wav { background-image: url("./images/wav.png");}
+.fileList_icon .file .wma { background-image: url("./images/wma.png");}
+.fileList_icon .file .wmv { background-image: url("./images/wmv.png");}
+/* 12 24 end */
