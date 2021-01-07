@@ -397,6 +397,7 @@ class explorer extends Controller{
             else show_json($this->L['remove_fali'],false);
         }else{
             $code = $error==0?true:false;
+            write_audit('信息','删除','成功','隔离区删除'.$success.'个文件');
             show_json($this->L['remove_success'].$success.'success,'.$error.'error',$code);
         }       
     }
