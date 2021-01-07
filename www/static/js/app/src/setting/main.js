@@ -2294,9 +2294,11 @@ define("app/src/setting/system", [], function() {
         $(".license_setting").die("click").live("click", function() {
             art.dialog.open("./index.php?setting/licence", {
                 title: LNG.system_license,
-                width: "70%",
-                height: "65%",
-                resize: !0
+                width: "360px",
+                height: "300px",
+                drag:!1,
+                resize: !1,
+                lock:!0
             })
         }),
         $(".upgrade_software").die("click").live("click", function() {

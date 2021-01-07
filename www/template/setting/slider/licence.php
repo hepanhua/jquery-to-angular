@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" scroll="no">
+<html xmlns="http://www.w3.org/1999/xhtml" scroll="no"  style="width:100%;height:100%;">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="renderer" content="webkit">
@@ -13,17 +13,18 @@
 <BODY>
 <TABLE border=0 width=100% height=100% align=center cellpadding=2 cellspacing=0>
 <TR valign=middle><TD>
-<TABLE cellPadding=3 width=400 NOWRAP align=center border=0>
+<TABLE cellPadding=3 width=360 NOWRAP align=center border=0>
 <TR><TD>&nbsp;</TD></TR>
 <FORM method=post id=upload name=upload action="/cgi-bin/licence.cgi"  enctype="multipart/form-data">
 <?php 
-if (!file_exists('/etc/system/Test.key')){
+$testlicence  = config_get_unsign_int_from_file('/etc/system/quota.conf','testlicence');
+if (!file_exists('/etc/system/Test.key') && $testlicence == 1){
 	echo "<TR><TD><input type=radio name=licencetype value=1>申请试用（二周）</TD></TR>";
 }
 ?>
-<TR><TD><input type=radio name=licencetype value=2 Checked>下载授权许可证申请</TD></TR>	
-<TR><TD><input type=radio name=licencetype value=3>导入授权许可证：</TD></TR>
-<TR><TD><input id=licencefile_id name=licencefile type=file size=32></TD></TR>
+<TR><TD style="padding-left: 20%;"><input type=radio name=licencetype value=2 Checked>下载授权许可证申请</TD></TR>	
+<TR><TD style="padding-left: 20%;"><input type=radio name=licencetype value=3>导入授权许可证：</TD></TR>
+<TR><TD style="padding-left: 20%;"><input style="width:230px" id=licencefile_id name=licencefile type=file size=32></TD></TR>
 <TR><TD>&nbsp;</TD></TR>
 <TR>
 <TD align=center valign=bottom>
