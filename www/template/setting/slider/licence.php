@@ -19,7 +19,7 @@
 <?php 
 $testlicence  = config_get_unsign_int_from_file('/etc/system/quota.conf','testlicence');
 if (!file_exists('/etc/system/Test.key') && $testlicence == 1){
-	echo "<TR><TD><input type=radio name=licencetype value=1>申请试用（二周）</TD></TR>";
+	echo "<TR><TD style='padding-left: 20%;'><input type=radio name=licencetype value=1>申请试用（二周）</TD></TR>";
 }
 ?>
 <TR><TD style="padding-left: 20%;"><input type=radio name=licencetype value=2 Checked>下载授权许可证申请</TD></TR>	
