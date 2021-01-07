@@ -836,7 +836,7 @@ function() {
     , 
     filter=function(){
 //弹窗内容
-var content ='<div class=fliterdiog> <div class="f_row"> <div class="fd_title">时间</div> <input type="datetime-local" id="fd_filterdatestart" value=""> <div style="margin-left:5px;margin-right:5px;">至</div> <input type="datetime-local" id="fd_filterdateend" value=""> </div> <div class="f_row"> <div class="fd_title">用户名</div> <input type="text" id="fd_username"> </div> <div class="f_row"> <div class="fd_title">文件名</div> <input type="text" id="fd_filename"> </div> <div class="f_row"> <div class="fd_title">传输方向</div> <select id="fd_direct"><option> </option> <option>上传</option> <option>下载</option> </select> </div> <div class="f_row"> <div class="fd_title">处理方式</div> <select id="fd_action"><option> </option> <option>通过</option> <option>阻止</option> </select> </div> </div>';
+var content ='<div class=fliterdiog> <div class="f_row"> <div class="fd_title">时间</div> <input type="datetime-local" id="fd_filterdatestart" value=""> <div style="margin-left:5px;margin-right:5px;">至</div> <input type="datetime-local" id="fd_filterdateend" value=""> </div> <div class="f_row"> <div class="fd_title">用户名</div> <input type="text" id="fd_username"> </div> <div class="f_row"> <div class="fd_title">文件名</div> <input type="text" id="fd_filename"> </div> <div class="f_row"> <div class="fd_title">传输方向</div> <select id="fd_direct"><option> </option> <option>上传</option> <option>下载</option> </select> </div> <div class="f_row"> <div class="fd_title">处理方式</div> <select id="fd_action"><option> </option> <option>通过</option> <option>阻止</option><option>删除</option><option>隔离</option> </select> </div> </div>';
 //时间拼接
 var getaa=function(s) {
     return s < 10 ? '0' + s: s;
@@ -1090,7 +1090,7 @@ function() {
     },
     filter=function(){
         //弹窗内容
-        var content ='<div class=fliterdiog> <div class="f_row"> <div class="fd_title">时间</div> <input type="datetime-local" id="fd_filterdatestart" value=""> <div style="margin-left:5px;margin-right:5px;">至</div> <input type="datetime-local" id="fd_filterdateend" value=""> </div> <div class="f_row"> <div class="fd_title">用户名</div> <input type="text" id="fd_username"> </div> <div class="f_row"> <div class="fd_title">文件名</div> <input type="text" id="fd_filename"> </div> <div class="f_row"> <div class="fd_title">传输方向</div> <select id="fd_direct"><option> </option> <option>上传</option> <option>下载</option> </select> </div> <div class="f_row"> <div class="fd_title">处理方式</div> <select id="fd_action"><option> </option> <option>通过</option> <option>阻止</option> </select> </div> </div>';
+        var content ='<div class=fliterdiog> <div class="f_row"> <div class="fd_title">时间</div> <input type="datetime-local" id="fd_filterdatestart" value=""> <div style="margin-left:5px;margin-right:5px;">至</div> <input type="datetime-local" id="fd_filterdateend" value=""> </div> <div class="f_row"> <div class="fd_title">用户名</div> <input type="text" id="fd_username"> </div> <div class="f_row"> <div class="fd_title">文件名</div> <input type="text" id="fd_filename"> </div> <div class="f_row"> <div class="fd_title">传输方向</div> <select id="fd_direct"><option> </option> <option>上传</option> <option>下载</option> </select> </div> <div class="f_row"> <div class="fd_title">处理方式</div> <select id="fd_action"><option> </option> <option>通过</option> <option>阻止</option><option>删除</option><option>隔离</option> </select> </div> </div>';
         //时间拼接
         var getaa=function(s) {
             return s < 10 ? '0' + s: s;
@@ -1343,7 +1343,7 @@ function() {
     },
     filter=function(){
         //弹窗内容
-        var content ='<div class=fliterdiog> <div class="f_row"> <div class="fd_title">时间</div> <input type="datetime-local" id="fd_filterdatestart" value=""> <div style="margin-left:5px;margin-right:5px;">至</div> <input type="datetime-local" id="fd_filterdateend" value=""> </div> <div class="f_row"> <div class="fd_title">用户名</div> <input type="text" id="fd_username"> </div> <div class="f_row"> <div class="fd_title">文件名</div> <input type="text" id="fd_filename"> </div> <div class="f_row"> <div class="fd_title">传输方向</div> <select id="fd_direct"><option> </option> <option>上传</option> <option>下载</option> </select> </div> <div class="f_row"> <div class="fd_title">处理方式</div> <select id="fd_action"><option> </option> <option>通过</option> <option>阻止</option> </select> </div> </div>';
+        var content ='<div class=fliterdiog> <div class="f_row"> <div class="fd_title">时间</div> <input type="datetime-local" id="fd_filterdatestart" value=""> <div style="margin-left:5px;margin-right:5px;">至</div> <input type="datetime-local" id="fd_filterdateend" value=""> </div> <div class="f_row"> <div class="fd_title">用户名</div> <input type="text" id="fd_username"> </div> <div class="f_row"> <div class="fd_title">文件名</div> <input type="text" id="fd_filename"> </div> <div class="f_row"> <div class="fd_title">传输方向</div> <select id="fd_direct"><option> </option> <option>上传</option> <option>下载</option> </select> </div> <div class="f_row"> <div class="fd_title">处理方式</div> <select id="fd_action"><option> </option> <option>通过</option> <option>阻止</option><option>删除</option><option>隔离</option> </select> </div> </div>';
         //时间拼接
         var getaa=function(s) {
             return s < 10 ? '0' + s: s;
