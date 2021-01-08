@@ -2,6 +2,7 @@ var mqttclient = null;
 var canf5 = null;
 G.secretusb = [];
 var showusages = [];
+var CAVP = false;
 define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztree", "lib/contextMenu/jquery-contextMenu", "lib/artDialog/jquery-artDialog", "lib/picasa/picasa", "./ui", "./fileSelect", "../../common/taskTap", "../../common/core", "../../tpl/copyright.html", "../../tpl/search.html", "../../tpl/search_list.html", "../../tpl/upload.html", "../../common/rightMenu", "../../common/tree", "../../common/pathOperate", "../../tpl/fileinfo/file_info.html", "../../tpl/fileinfo/path_info.html", "../../tpl/fileinfo/path_info_more.html", "../../tpl/share.html", "../../tpl/app.html", "../../common/pathOpen", "../../common/CMPlayer", "./path"], function(e) {
 	Config = {
 		BodyContent: ".bodymain",
@@ -4219,6 +4220,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 							}
 							break;
 						case "CAVP":
+							console.log(json);
 							// if(!G.xmodel_v){
 								// break;
 							// }
@@ -4226,11 +4228,13 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 							if(status == 1){
 								core.tips.tips('集审平台: 已连接');
 								$('#noc_status').text('集审平台: 已连接');
+								CAVP = true;
 								if(G.Super != 'super'){
 									$('.noc_d').remove();
 								}
 							}else if(status == 0){
 								core.tips.tips('集审平台: 未连接','warning');
+								CAVP = false;
 								let exit = $('.menu_group').is('.noc_d');
 								if(!exit){
 								$('#noc_status').text('集审平台: 未连接');
@@ -4412,6 +4416,10 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				return false;
 			}
 			if (core.scanvirusCheck() && e) {
+				if(G.X86 == 0 && !CAVP){//MIPS且未连接平台
+					core.tips.tips("暂未连接上平台,无法杀毒","warning");
+					return;
+				}
 				var t = "index.php?explorer/scanvirus&path=" + urlEncode2(e);
 				G.share_page !== void 0 && (t = "index.php?share/scanvirus&user=" + G.user + "&sid=" + G.sid + "&path=" + urlEncode2(e));
 				let av_status = $('#noc_status').text().split(': ') == '已连接'?'病毒扫描已入队':LNG.scanvirus_ready;
@@ -5417,6 +5425,10 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 		b = function(s) { //右边界面点击杀毒
 			let e = s[0].path;
 			if (core.scanvirusCheck() && e) {
+				if(G.X86 == 0 && !CAVP){//MIPS且未连接平台
+					core.tips.tips("暂未连接上平台,无法杀毒","warning");
+					return;
+				}
 				var t = "index.php?explorer/scanvirus&path=" + urlEncode2(e);
 				G.share_page !== void 0 && (t = "index.php?share/scanvirus&user=" + G.user + "&sid=" + G.sid + "&path=" + urlEncode2(e));
 				let av_status = $('#noc_status').text().split(': ') == '已连接'?'病毒扫描已入队':LNG.scanvirus_ready;

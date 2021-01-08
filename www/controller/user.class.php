@@ -450,9 +450,8 @@ if( !empty($headers) ){
         if(!isset($auth['explorer:fileDownload'])){
             $auth['explorer:fileDownload'] = 1;
         }
-        if(!isset($auth['explorer:fileDownloadCheck'])){
-            $auth['explorer:fileDownloadCheck'] = 1;
-        }
+        
+        $auth['explorer:fileDownloadCheck'] = 1;
         //默认扩展功能 等价权限
         $auth['user:common_js'] = 1;//权限数据配置后输出到前端
         $auth['explorer:pathChmod']         = $auth['explorer:pathRname'];
