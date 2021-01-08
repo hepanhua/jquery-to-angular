@@ -1845,7 +1845,7 @@ var z="get&datestart="+datestart+"&dateend="+dateend+"&virusname="+virusname+"&f
     },
     filter=function(){
         //弹窗内容
-        var content ='<div class=fliterdiog> <div class="f_row"> <div class="fd_title">时间</div> <input type="datetime-local" id="fd_filterdatestart" value=""> <div style="margin-left:5px;margin-right:5px;">至</div> <input type="datetime-local" id="fd_filterdateend" value=""> </div> <div class="f_row"> <div class="fd_title">病毒名称</div> <input type="text" id="fd_virusname"> </div> <div class="f_row"> <div class="fd_title">文件名</div> <input type="text" id="fd_filename"> </div>  <div class="f_row"> <div class="fd_title">处理方式</div> <select id="fd_action"><option> </option> <option>删除文件</option>  <option>隔离文件</option></select> </div> </div>';
+        var content ='<div class=fliterdiog> <div class="f_row"> <div class="fd_title">时间</div> <input type="datetime-local" id="fd_filterdatestart" value=""> <div style="margin-left:5px;margin-right:5px;">至</div> <input type="datetime-local" id="fd_filterdateend" value=""> </div> <div class="f_row"> <div class="fd_title">病毒名称</div> <input type="text" id="fd_virusname"> </div> <div class="f_row"> <div class="fd_title">文件名</div> <input type="text" id="fd_filename"> </div>  <div class="f_row"> <div class="fd_title">处理方式</div> <select id="fd_action"><option> </option><option>危险警告</option> <option>删除文件</option>  <option>隔离文件</option></select> </div> </div>';
         //时间拼接
         var getaa=function(s) {
             return s < 10 ? '0' + s: s;

@@ -61,7 +61,12 @@ margin:0;
 				<td width="40%">ftpclient.rar</td>
 				<td width="30%">FTP文件上传下载工具</td>
 				<td width="20%">
-					<a href="./ftpclient.rar">
+
+	<?php if ( X86 == 0 ) {?>
+	<a target="_blank"  href="http://www.secros.com/Support/Download/index.html"  rel="noopener noreferrer">
+	<?php }else{ ?>
+	<a href="./ftpclient.rar">
+	<?php } ?>
 					<i class="font-icon icon-download-alt" title="下载"></i>
 					</a>
 				</td>
@@ -71,7 +76,14 @@ margin:0;
 				<td width="40%">usbforbid.rar</td>
 				<td width="30%">禁止电脑USB存储工具(需管理员权限运行)</td>
 				<td width="20%">
-					<a href="./usbforbid.rar">
+					
+
+	<?php if ( X86 == 0 ) {?>
+	<a target="_blank"  href="http://www.secros.com/Support/Download/index.html"  rel="noopener noreferrer">
+	<?php }else{ ?>
+		<a href="./usbforbid.rar">
+	<?php } ?>
+
 					<i class="font-icon icon-download-alt" title="下载"></i>
 					</a>
 				</td>
@@ -121,7 +133,7 @@ margin:0;
 
 </div>
 </div>
-	
+ 
 <script src="<?php echo STATIC_PATH;?>js/app/src/tools/main.js"></script>
 </body>
 </html>
