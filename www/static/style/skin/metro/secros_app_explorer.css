@@ -431,7 +431,7 @@ span.tmpzTreeMove_arrow { display: inline-block; margin: 4px 0 0 2px; position: 
 .fileList_icon { padding: 10px 10px 0px 10px;}
 .fileList_icon .app_link { height: 30px; width: 30px; margin-left: 45px; margin-top: -35px; position: absolute; font-size: 25px; color: #666;}
 .fileList_icon .app_link::before { font-family: FontAwesome; content: "\f064"; color: #fff; text-shadow: 0 0 5px #666;}
-.fileList_icon .file { color: #225; -webkit-transition: all 0.2s; -moz-transition: all 0.2s; -o-transition: all 0.2s; -ms-transition: all 0.2s; transition: all 0.2s; width: 80px; overflow: hidden; height: 100px; text-decoration: none; float: left; margin-right: 10px; margin-bottom: 10px;}
+.fileList_icon .file { color: #225; -webkit-transition: all 0.2s; -moz-transition: all 0.2s; -o-transition: all 0.2s; -ms-transition: all 0.2s; transition: all 0.2s; width: 80px; overflow: hidden; height: 104px; text-decoration: none; float: left; margin-right: 10px; margin-bottom: 10px;}
 .fileList_icon .file.hover { background: #ffd987;}
 .fileList_icon .file.select,.fileList_icon .file.selectDragTemp { color: #fff; background: #5db2ff;}
 .fileList_icon .file .titleBox { width: 80px; text-align: center; word-break: break-all; font-size: 12px; margin: 0 auto; line-height: 1.4em;}
