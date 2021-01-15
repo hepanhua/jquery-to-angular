@@ -3974,10 +3974,8 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 							$('.av_content').append(ls);
 							break;
 						case "usbevent":
+							console.log(json);
 							if(json.value == 1){
-								if(showusages.indexOf(json.channelId) == -1){
-									return;
-								}
 								$("#usbname_loading").text(json.channelId + "挂载中");
 								$(".usb_mount").removeClass('hidden');
 								if(!Config.usbMountTime){
@@ -3986,7 +3984,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 									ui.tree.init();//刷新树目录
 									Config.usbMountTime = null;
 									// cleanusbevent();
-									}, 10000);
+									}, 12000);
 								}else{
 									clearTimeout(Config.usbMountTime);
 									Config.usbMountTime = setTimeout(() => {
@@ -3994,7 +3992,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 									ui.tree.init();//刷新树目录
 									Config.usbMountTime = null;
 									// cleanusbevent();
-									}, 10000);
+									}, 12000);
 								}
 							}
 							//usb+容量接口
