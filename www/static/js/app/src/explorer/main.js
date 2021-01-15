@@ -5009,15 +5009,22 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					dataType: "json",
 					data: n(e),
 					beforeSend: function() {
-						core.tips.loading(LNG.zip_download_ready)
+						if(G.is_root != 1){
+							core.tips.loading(LNG.zip_download_ready);
+						}
 					},
 					error: core.ajaxError,
 					success: function(e) {
 						core.tips.close(e), core.tips.tips(e);
 						var t = "index.php?explorer/fileDownloadRemove&path=" + urlEncode2(e.info);
 						G.share_page !== void 0 && (t = "index.php?share/fileDownloadRemove&user=" + G.user + "&sid=" + G.sid + "&path=" + urlEncode2(e.info));
-						var a = '<iframe src="' + t + '" style="width:0px;height:0px;border:0;" frameborder=0></iframe>' + LNG.download_ready + "...",
-							i = $.dialog({
+						var a = '<iframe src="' + t + '" style="width:0px;height:0px;border:0;" frameborder=0></iframe>';
+						if(G.is_root != 1){
+							a = a + LNG.download_ready + "...";
+						}else{
+							a = a + "即将开始下载...";
+						}
+						var	i = $.dialog({
 								icon: "succeed",
 								title: !1,
 								time: 1.5,
@@ -5356,8 +5363,13 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					ok: function() {
 							var t = "index.php?explorer/fileDownload&path=" + urlEncode2(e);
 							G.share_page !== void 0 && (t = "index.php?share/fileDownload&user=" + G.user + "&sid=" + G.sid + "&path=" + urlEncode2(e));
-							var a = '<iframe src="' + t + '" style="width:0px;height:0px;border:0;" frameborder=0></iframe>' + LNG.download_ready + "...",
-								i = $.dialog({
+							var a = '<iframe src="' + t + '" style="width:0px;height:0px;border:0;" frameborder=0></iframe>';
+							if(G.is_root != 1){
+								a = a + LNG.download_ready + "...";
+							}else{
+								a = a + "即将开始下载...";
+							}
+							var	i = $.dialog({
 									icon: "succeed",
 									title: !1,
 									time: 1,
@@ -5383,8 +5395,13 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 //old download method
 				var t = "index.php?explorer/fileDownload&path=" + urlEncode2(e);
 				G.share_page !== void 0 && (t = "index.php?share/fileDownload&user=" + G.user + "&sid=" + G.sid + "&path=" + urlEncode2(e));
-				var a = '<iframe src="' + t + '" style="width:0px;height:0px;border:0;" frameborder=0></iframe>' + LNG.download_ready + "...",
-					i = $.dialog({
+				var a = '<iframe src="' + t + '" style="width:0px;height:0px;border:0;" frameborder=0></iframe>';
+				if(G.is_root != 1){
+					a = a + LNG.download_ready + "...";
+				}else{
+					a = a + "即将开始下载...";
+				}
+				var	i = $.dialog({
 						icon: "succeed",
 						title: !1,
 						time: 1,
