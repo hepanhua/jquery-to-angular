@@ -3676,7 +3676,9 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					if(t[0].children){
 						let firstfol = t[0].children;
 						for(let k=0;k<firstfol.length;k++){
-							showusages.push(firstfol[k].name);
+							if(showusages.indexOf(firstfol[k].name) == -1){
+								showusages.push(firstfol[k].name);
+							}
 						}
 						getdiskusages();
 					}
@@ -3974,8 +3976,23 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 							$('.av_content').append(ls);
 							break;
 						case "usbevent":
-							console.log(json);
 							if(json.value == 1){
+
+							var ckin = true;
+							$.ajax({
+								url: "index.php?explorer/cksecret&usbid="+json.channelId+"&direct=in",
+								dataType: "json",
+								async:false,
+								error: function() {},
+								success: function(e) {
+									console.log(e);
+									ckin = e.data;
+								}
+							});
+							if(!ckin){
+								return;
+							}
+
 								$("#usbname_loading").text(json.channelId + "挂载中");
 								$(".usb_mount").removeClass('hidden');
 								if(!Config.usbMountTime){
@@ -3984,7 +4001,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 									ui.tree.init();//刷新树目录
 									Config.usbMountTime = null;
 									// cleanusbevent();
-									}, 12000);
+									}, 10000);
 								}else{
 									clearTimeout(Config.usbMountTime);
 									Config.usbMountTime = setTimeout(() => {
@@ -3992,11 +4009,15 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 									ui.tree.init();//刷新树目录
 									Config.usbMountTime = null;
 									// cleanusbevent();
-									}, 12000);
+									}, 10000);
 								}
 							}
 							//usb+容量接口
 							if (json.value == 0) {//拔出某个U盘
+								let sindex = showusages.indexOf(json.channelId);
+								if(sindex >= 0){
+									showusages.splice(sindex,1);
+								}
 								ui.tree.init();//刷新树目录
 								let nowpath = $('#yarnball_input #path').val();
 								let lsarr = nowpath.split('/');
@@ -4025,7 +4046,6 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 								$(".getusbsid_frame_warning").removeClass('hidden');
 							}
 							if(json.value == -2){
-								console.log(json);
 								$.ajax({
 									url: "index.php?explorer/cksession",
 									dataType: "json",
@@ -4041,7 +4061,21 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 
 							}
 							if(json.value == -3){
-								console.log(json);
+								var ckout = true;
+								$.ajax({
+									url: "index.php?explorer/cksecret&usbid="+json.channelId+"&direct=out",
+									dataType: "json",
+									async:false,
+									error: function() {},
+									success: function(e) {
+										console.log(e);
+										ckout = e.data;
+									}
+								});
+								if(!ckout){
+									return;
+								}
+
 								cleanusbevent(json.channelId);
 								$('.getsecretusb_frame').addClass('hidden');
 								if($('.getsecretusb_sframe')){
@@ -6421,7 +6455,7 @@ $(document).on('click', '.secretframe_cancle', function () {
 							if(G.this_path == '*usbox*/'){
 								ui.f5();
 							}
-					}, 3000);
+					}, 10000);
 				}else{
 					core.tips.tips('密码错误',false);
 				}

@@ -1110,4 +1110,25 @@ public function cleanusbpwd(){
     show_json(true);
 }
 
+public function cksecret(){
+    $usbid = $this->in['usbid'];
+    $direct =  $this->in['direct'];
+    if($direct == 'in'){
+        if (!file_exists('/tmp/secret/'.$usbid)){
+            show_json(true);
+        }
+    }else if($direct == 'out'){
+
+            if(isset($_SESSION['USBPSD'])){
+                show_json(true);
+            }else{
+                show_json(false);
+            }
+        
+        show_json(true);
+    }
+  
+    show_json(false);
+}
+
 }
