@@ -2146,7 +2146,7 @@ define("app/src/setting/platform", [], function() {
              if(res.code == 200){
                 tips(LNG.success);
              }else{
-                tips(res.data,"error");
+                tips(res.msg,"error");
              }
             }
         });
