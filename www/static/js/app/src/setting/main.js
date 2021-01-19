@@ -1127,13 +1127,16 @@ define("app/src/setting/file", [], function() {
             r = "edit&role_old=" + c + "&role=" + t + "&name=" + i + "&ext_not_allow=" + o
         } else
             r = "set&ext_allow=" + o + "&file_deepcheck=" + a;
+            $('.init_loading',window.parent.document).removeClass('pop_fadeout');
+            $('.init_loading',window.parent.document).css('display','block');
         $.ajax({
             url: e + r,
             data: s,
             type: "POST",
             dataType: "json",
             success: function(e) {
-                tips(e)
+                $('.init_loading',window.parent.document).css('display','none');
+                tips(e);
             }
         })
     }
@@ -2136,6 +2139,8 @@ define("app/src/setting/platform", [], function() {
                 return;
             }
         }
+        $('.init_loading',window.parent.document).removeClass('pop_fadeout');
+        $('.init_loading',window.parent.document).css('display','block');
         $.ajax({
             url:url,
             type:'post',
@@ -2143,8 +2148,9 @@ define("app/src/setting/platform", [], function() {
             contentType: false,
             processData: false,
             success:function(res){
+                $('.init_loading',window.parent.document).css('display','none');
              if(res.code == 200){
-                tips(LNG.success);
+                tips(res.msg);
              }else{
                 tips(res.msg,"error");
              }

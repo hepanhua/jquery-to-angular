@@ -13,7 +13,7 @@ class file extends Controller{
     	system('/usr/sbin/setusboxftpd');
         system('/usr/sbin/setusboxsmbd');
         write_audit('信息','文件白名单','成功','设置文件白名单');
-      show_json('success');
+      show_json($this->L['success']);
     }
     public function ai_study(){
         $res = $this->in['res'];
