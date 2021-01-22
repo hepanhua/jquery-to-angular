@@ -585,7 +585,7 @@ $L= array(
 	"button_add"                 =>	"添加",
 	"button_back_add"            =>	"返回添加",
 	"button_del"                 =>	"删除",
-	"button_save_edit"           =>	"保存修改",
+	"button_save_edit"           =>	"确定",
 	"button_save_submit"         =>	"确定",
 	"button_select_all"          =>	"全选/反选",
 
