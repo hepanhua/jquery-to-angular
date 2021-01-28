@@ -4271,18 +4271,20 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 								if(!exit){
 								$('#noc_status').text('集审平台: 未连接');
 								let html = null;
-							if(G.is_root == 1){
-							html = '<div class="menu_group  noc_d">'+
-							"<a href='javascript:core.setting('system');'><img src='"+G.static_path+"images/settings.png'></a>"+
-							'</div>'+
-							'<div class="menu_group noc_d">'+
-							'<a href="javascript:core.saveAll();"><img src="'+G.static_path+'images/save.png"></a>'+
-							'</div>';
-							}else{
-							html ='<div class="menu_group  noc_d">'+
-							"<a href='javascript:core.setting('user');'><img src='"+G.static_path+"images/settings.png'></a>"+
-							'</div>';
-							}
+								if(G.is_root == 1){
+									html = '<div class="menu_group  noc_d">'+
+									'<a href="'+"javascript:core.setting('system');"+
+									'"><img src="'+G.static_path+'images/settings.png"></a>'+
+									'</div>'+
+									'<div class="menu_group noc_d">'+
+									'<a href="javascript:core.saveAll();"><img src="'+G.static_path+'images/save.png"></a>'+
+									'</div>';
+									}else{
+									html ='<div class="menu_group  noc_d">'+
+									'<a href="'+"javascript:core.setting('user');"+
+									'"><img src="'+G.static_path+'images/settings.png"></a>'+
+									'</div>';
+									}
 								
 								$('.noc_a').prepend(html);
 								}
