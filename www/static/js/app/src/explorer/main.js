@@ -6062,10 +6062,11 @@ define("app/src/explorer/path", ["../../common/pathOperate", "../../tpl/fileinfo
 								for(let g=0;g<arr.length;g++){
 									totalsize += parseInt(arr[g].size);
 								}
+								let length = arr.length;
 								let tgb = Math.floor(totalsize/1024/1024/1024);
 								let timez = 1500;
-								if(tgb >= 3){
-									timez = 8000;
+								if(tgb >= 3 || length >= 8){
+									timez = 10000;
 									// core.tips.tips("此文件夹大小超过3GB,建议大文件单独下载", "warning");
 								}
 								for(let k=0;k<arr.length;k++){

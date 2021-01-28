@@ -2,7 +2,7 @@
 <div class="common_footer">
 	<div><?php echo $L['current_user'].': '.$_SESSION['secros_user']['name'];?></div>
 	<div><?php echo $L['system_model'].': '.$config['system_info']['MODEL'];?></div>
-	<div><?php echo $L['system_uptime'].': '.$config['system_info']['UPTIME'].xmodel_v;?></div>
+	<div><?php echo $L['system_uptime'].': '.$config['system_info']['UPTIME'];?></div>
 	<?php if (xmodel_v != 1) {?>
 		<div  id="noc_status"><?php echo $L['setting_platform'].': '.$L['no_connect'];?></div>
 	<?php }?>
