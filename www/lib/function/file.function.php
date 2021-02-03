@@ -859,7 +859,7 @@ function file_put_out($file,$download=false){
 			show_json('deepcheck nodownload'.'/深度检测结果：'.$type.'/后缀：'.$mime);
 		}
 	  }else{
-		write_dblog("下载",$log,"出错","文件错误");
+		write_dblog("下载",$log,"阻止","文件错误");
 		show_json('下载出错',false);
 	  }
 	}else{
@@ -930,7 +930,7 @@ function file_put_out($file,$download=false){
 // fclose($fp);
 // 	}
 	}else{
-		write_dblog("下载",$log,"失败","文件不存在");
+		write_dblog("下载",$log,"阻止","文件不存在");
 		show_json('文件不存在');
 	}
 }
@@ -1254,7 +1254,7 @@ function upload_chunk($fileInput, $path = './',$temp_path){
 		    fclose($out);
 		}
 	} catch (\Throwable $th) {
-		write_dblog("上传",$log,"出错",$th);
+		write_dblog("上传",$log,"阻止",$th);
 		show_json($L['move_error'],false);
 	}
 
@@ -1274,7 +1274,7 @@ function upload_chunk($fileInput, $path = './',$temp_path){
 				show_json($L['deepcheck_nodownload'].'/深度检测结果：'.$type.'/后缀：'.$mime,false);
 			}
 		  }else{
-			write_dblog("上传",$log,"出错","文件错误");
+			write_dblog("上传",$log,"阻止","文件错误");
 			show_json($L['move_error'],false);
 		  }
 		  
@@ -1282,7 +1282,7 @@ function upload_chunk($fileInput, $path = './',$temp_path){
 		write_dblog("上传",$log,"通过","");
 		show_json($L['upload_success'],true,iconv_app($save_path));
 	}else {
-		write_dblog("上传",$log,"出错","文件错误");
+		write_dblog("上传",$log,"阻止","文件错误");
 		show_json($L['move_error'],false);
 	}
 }

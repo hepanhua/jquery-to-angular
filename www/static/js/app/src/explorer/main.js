@@ -3949,7 +3949,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					let payloadString = data.payloadString;
 					payloadString = payloadString.replace(/\\/g,"");
 					let json = JSON.parse(payloadString);
-					// console.log(json);
+					console.log(json);
 					if (G.user_name == "audit") {
 						return;
 					}
