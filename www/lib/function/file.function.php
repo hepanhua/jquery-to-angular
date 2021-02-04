@@ -1344,7 +1344,7 @@ function write_audit($type, $event, $result, $desc,$username="")
 	$db->close();
 	$ck_noc = config_get_value_from_file('/var/run/roswan','noc_connected');
 	if($ck_noc){
-		exec("oplogpub ". $type ." ".$username." ".$event." ".$result." ".$desc);
+		exec("oplogpub ". $type ." ".$username." ".$event." ".$result." '".$desc."'");
 	}
 	openlog("httplog", LOG_PID , LOG_LOCAL1);
 	syslog(LOG_INFO,$type ." | ".$username." | ".$event." | ".$result." | ".$desc );
