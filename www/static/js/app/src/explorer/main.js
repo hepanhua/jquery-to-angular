@@ -1977,12 +1977,12 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 						accesskey: "d"
 					},
 					sep2: "--------",
-					down: {
-						name: LNG.download,
-						className: "down",
-						icon: "download",
-						accesskey: "x"
-					},
+					// down: {
+					// 	name: LNG.download,
+					// 	className: "down",
+					// 	icon: "download",
+					// 	accesskey: "x"
+					// },
 					info: {
 						name: LNG.info + "<b>Alt+I</b>",
 						className: "info",
@@ -3324,12 +3324,12 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 						icon: "edit",
 						accesskey: "e"
 					},*/
-					download: {
-						name: LNG.download,
-						className: "download",
-						icon: "download",
-						accesskey: "x"
-					},
+					// download: {
+					// 	name: LNG.download,
+					// 	className: "download",
+					// 	icon: "download",
+					// 	accesskey: "x"
+					// },
 					/*share: {
 						name: LNG.share,
 						className: "share",
