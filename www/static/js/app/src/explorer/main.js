@@ -3976,8 +3976,16 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 							$('.av_content').append(ls);
 							break;
 						case "usbevent":
-							if(json.value == 1){
+							if(json.value == 2){ //挂载成功，结束挂载loading，并立即刷新树目录和添加showusages
+								if(Config.usbMountTime){
+									clearTimeout(Config.usbMountTime);
+								}
+								$(".usb_mount").addClass('hidden');
+								ui.tree.init();//刷新树目录
+								Config.usbMountTime = null;
+							}
 
+							if(json.value == 1){
 							var ckin = true;
 							$.ajax({
 								url: "index.php?explorer/cksecret&usbid="+json.channelId+"&direct=in",
@@ -4081,11 +4089,22 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 								if($('.getsecretusb_sframe')){
 								$('.getsecretusb_sframe').remove();
 								}
-								ui.tree.init();//刷新树目录
+								// ui.tree.init();
 								$.ajax({ //清除上一次输入的密码
 									url: "index.php?explorer/cleanusbpwd",
 									dataType: "json"
 								});
+								let sindex = showusages.indexOf(json.channelId);
+								if(sindex >= 0){
+									showusages.splice(sindex,1);
+								}
+								ui.tree.init();//刷新树目录
+								let nowpath = $('#yarnball_input #path').val();
+								let lsarr = nowpath.split('/');
+								core.tips.tips(json.channelId + '已经拔出', true);
+								if (lsarr[1] == json.channelId) {
+									ui.path.list('*usbox*');
+								}
 							}
 							break;
 						case "avscan": //存在进程文件
