@@ -3875,6 +3875,9 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			return "lib" == e.iconSkin ? (ui.tree.init(), void 0) : (s.reAsyncChildNodes(e, "refresh"), void 0)
 		},
 		m = function(e) {
+			if (G.user_name == "audit") {
+				return;
+			}
 			// mqtt===============
 			let clientrad = (Math.random() * 10000000).toString(16).substr(0, 4) + '-' + (new Date()).getTime() + '-' + Math.random().toString().substr(2, 5);
 			let ishttps = 'https:' == document.location.protocol ? true : false;
@@ -3949,7 +3952,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					let payloadString = data.payloadString;
 					payloadString = payloadString.replace(/\\/g,"");
 					let json = JSON.parse(payloadString);
-					console.log(json);
+					// console.log(json);
 					if (G.user_name == "audit") {
 						return;
 					}

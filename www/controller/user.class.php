@@ -31,6 +31,7 @@ class user extends Controller
         if(in_array(ACT,$this->notCheck)){//不需要判断的action
             return;
         }
+        $GLOBALS['noc_connected'] = config_get_value_from_file("/var/run/roswan","noc_connected");
         if($_SESSION['auto_login']===true){
             // show_json(USER_PATH.'admin'.'/');
             // define('USER',USER_PATH.'user'.'/');

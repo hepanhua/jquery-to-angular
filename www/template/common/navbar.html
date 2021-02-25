@@ -20,19 +20,30 @@
 			</a>
 		</div>
 		<div class="top_right noc_a">
-			<div class="menu_group  noc_d  hidden">
-				<?php if ($GLOBALS['is_root'] == 1 || $_SESSION['super'] == 'super') {?>
-						<a href="javascript:core.setting('system');"><img src="<?php echo STATIC_PATH;?>images/settings.png"></a>
-					<?php }
-					else {?>
-						<a href="javascript:core.setting('user');"><img src="<?php echo STATIC_PATH;?>images/settings.png"></a>
+			<?php if ($_SESSION['super'] == 'super') {?>
+				<a href="javascript:core.setting('system');"><img src="<?php echo STATIC_PATH;?>images/settings.png"></a>
+			<?php }
+			else {?>
+				<?php if ($GLOBALS['noc_connected'] !== '1') {?>
+
+					<div class="menu_group  noc_d  hidden">
+						<?php if ($GLOBALS['is_root'] == 1) {?>
+								<a href="javascript:core.setting('system');"><img src="<?php echo STATIC_PATH;?>images/settings.png"></a>
+							<?php }
+							else {?>
+								<a href="javascript:core.setting('user');"><img src="<?php echo STATIC_PATH;?>images/settings.png"></a>
+							<?php }?>
+					</div>
+
+					<?php if ($GLOBALS['is_root'] == 1) {?>
+						<div class="menu_group noc_d hidden">	
+							<a href="javascript:core.saveAll();"><img src="<?php echo STATIC_PATH;?>images/save.png"></a>
+						</div>
 					<?php }?>
-			</div>
-			<?php if ($GLOBALS['is_root'] == 1) {?>
-				<div class="menu_group noc_d hidden">	
-					<a href="javascript:core.saveAll();"><img src="<?php echo STATIC_PATH;?>images/save.png"></a>
-				</div>
+					
+				<?php }?>	
 			<?php }?>
+			
 			
 	<div class="menu_group">
 	<a href="javascript:core.downLoad();"><img src="<?php echo STATIC_PATH;?>images/tools.png"></a>
