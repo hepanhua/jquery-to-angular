@@ -21,7 +21,12 @@
 		</div>
 		<div class="top_right noc_a">
 			<?php if ($_SESSION['super'] == 'super') {?>
-				<a href="javascript:core.setting('system');"><img src="<?php echo STATIC_PATH;?>images/settings.png"></a>
+				<div class="menu_group">
+					<a href="javascript:core.setting('system');"><img src="<?php echo STATIC_PATH;?>images/settings.png"></a>
+					</div>
+					<div class="menu_group">
+					<a href="javascript:core.saveAll();"><img src="<?php echo STATIC_PATH;?>images/save.png"></a>
+					</div>
 			<?php }
 			else {?>
 				<?php if ($GLOBALS['noc_connected'] !== '1') {?>
