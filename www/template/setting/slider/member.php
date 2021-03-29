@@ -3,6 +3,9 @@
     <a href="javascript:;" class="this" data-page="member"><?php echo $L['setting_member'];?></a>
     <a href="javascript:;" data-page="group"><?php echo $L['setting_group'];?></a>
     <a href="javascript:;" class="group_status" data-page="group_editor"><?php echo $L['setting_group_add'];?></a>
+    <a href="javascript:;"   id="group_whitelist"  data-page="group_whitelist"><?php echo $L['whitelist'];?></a>
+    <a href="javascript:;"  data-page="group_blacklist"><?php echo $L['blacklist'];?></a>
+    <a href="javascript:;"  data-page="group_pwdstrategy"><?php echo $L['pwdstrategy'];?></a>
     <div style="clear:both;"></div>
 </div>
 
@@ -15,6 +18,19 @@
 
 <!-- 权限列表 -->
 <div class="section group hidden">
+    <table id='list' align="center" border=0 cellspacing=0 cellpadding=0 ></table>
+    <a href="javascript:void(0)" class='add'><i class="icon-plus"></i><?php echo $L['button_add'];?></a>
+</div>
+
+
+<!-- 黑名单列表 -->
+<div class="section group_blacklist hidden">
+    <table id='list' align="center" border=0 cellspacing=0 cellpadding=0 ></table>
+</div>
+
+
+<!-- 白名单列表 -->
+<div class="section group_whitelist hidden">
     <table id='list' align="center" border=0 cellspacing=0 cellpadding=0 ></table>
     <a href="javascript:void(0)" class='add'><i class="icon-plus"></i><?php echo $L['button_add'];?></a>
 </div>
@@ -154,3 +170,25 @@
     <a href="javascript:;" class="revert"><?php echo $L['button_select_all'];?></a>   
 </div>
 
+
+
+
+<!-- 密码策略 -->
+<div class="section group_pwdstrategy hidden">
+<div class="box_line" style="display: flex; align-items: center;">
+		<span class='infotitle'><?php echo $L['blacklistsetting'];?></span><input type="text" id="blacklistnumbers"/>
+		<span class="text"><?php echo $L['numbers'];?></span>
+	</div>
+<div class="box_line" style="display: flex; align-items: center;">
+		<span class='infotitle'><?php echo $L['safetime'];?></span><input type="text" id="safetime"/>
+		<span class="text"><?php echo $L['time_value'];?></span>
+	</div>
+	<div class="box_line" style="display: flex; align-items: center;">
+		<span class='infotitle'><?php echo $L['pwd_hight'];?></span><input type="checkbox" id='pwd_hight' style="margin:0;"/>
+        <span class="text" style="margin-left:8px;"><?php echo $L['pwd_hight_tips'];?></span>
+	</div>
+    <div class="box_line">
+    <a href="javascript:void(0);" class="add_save button"><?php echo $L['button_save'];?></a>
+  </div>
+  <div style="clear:both;"></div>
+</div>

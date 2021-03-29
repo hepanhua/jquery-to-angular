@@ -871,6 +871,36 @@ define("app/src/setting/setting", [], function() {
             	 tips(LNG.newpassword_wrong, "error");
                 break
             }
+
+            if(a.length < 6){
+                tips('密码未通过校验,最少6位', "warning");
+                break;
+            }
+
+            var pwd_hight_on = 0;
+            $.ajax({
+                url: "index.php?pwdstrategy/get",
+                dataType: "json",
+                async: !1,
+                success: function(e) {
+                let data =  e.data;
+                if(data.pwd_hight == "enabled"){
+                    pwd_hight_on = 1;
+                }else{
+                    pwd_hight_on = 0;
+                }
+    
+                }
+            });
+
+            if(pwd_hight_on == 1){
+                let pasck =  /^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z\\W_!@#$%^&*`~()-+=]+$)(?![a-z0-9]+$)(?![a-z\\W_!@#$%^&*`~()-+=]+$)(?![0-9\\W_!@#$%^&*`~()-+=]+$)[a-zA-Z0-9\\W_!@#$%^&*`~()-+=]{6,}$/;
+                if (!pasck.test(a)) {
+                    tips('密码未通过校验(最少6位，需要满足有大写、小写、数字、符号至少三个)', "warning");
+                    break;
+                }
+            }
+
             $.ajax({
                 url: "index.php?user/changePassword&password_now=" + t + "&password_new=" + a,
                 dataType: "json",
@@ -1466,6 +1496,9 @@ define("app/src/setting/group", [], function() {
                 return !1
             }
         }),
+        blinit(),
+        wlinit(),
+        pwdstrategyinit(),
         $(".group_editor .path_ext_tips").tooltip({
             placement: "bottom",
             html: !0
@@ -1491,6 +1524,209 @@ define("app/src/setting/group", [], function() {
         $(".group table#list").html(e)
     }
       , 
+      towa = function(){
+        let n = {
+            b1: "add_save'>" + LNG.button_add,
+            b2: "add_exit'>" + LNG.button_cancel
+        };
+        let o = "<tr><td><div style='display:flex;align-items: center;'><span style='margin-right: 22px;'>IP</span><input style='width:280px;height: 24px;line-height: 24px;padding: 3px;' type='text' class='inputIp' value=''/></div></td><td>" + "<a href='javascript:void(0)' class='button " + n.b1 + "</a><a href='javascript:void(0)' class='button " + n.b2 + "</a></td></tr>";
+        $(o).insertAfter(".group_whitelist table#list tr:last")
+    //
+},
+wa_cancel = function(){
+    var e = $(this).parent().parent();
+    $(e).detach()
+},
+wa_post = function(){
+    var dom = $(this).parent().parent();
+    let ip = $(dom).find('.inputIp').val();
+if(!ip){
+tips("不能为空", "warning");
+  return false;
+}
+let arr = ip.split('-');
+let iptest = /^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}$/;
+if(arr.length == 1){
+if(!iptest.test(ip)){
+                tips("请输入合法的IP", "warning");
+                return false;
+            }
+}else if(arr.length == 2){
+if(!iptest.test(arr[0]) || !iptest.test(arr[1])){
+        tips("请输入合法的IP", "warning");
+        return false;
+}
+      let arra = arr[0].split('.');
+      let arrb = arr[1].split('.');
+      if(arra[0] != arrb[0] || arra[1] != arrb[1] || arra[2] != arrb[2]){
+        tips("请输入同一网段IP", "warning");
+        return false;
+      }
+      if(arra[3] >= arrb[3]){
+        tips("请输入正确的IP区间", "warning");
+        return false;
+      }
+}else{
+tips("您输入的格式有误", "warning");
+return false;
+}
+$.ajax({
+url: e + "addwhitelist&ip="+ip,
+            dataType: "json",
+            async: !1,
+            success: function(e) {
+                if(e.code == true){
+                    tips(e.data);
+                    wlinit();
+                    $(".nav #group_whitelist").click()
+                }else{
+                    tips(e.data,false);
+                }
+            },
+            error: function() {
+                return !1
+            }
+        });
+},
+wdel = function(){
+var  t = $(this).parent().parent();
+let ip = $(t).attr("ip");
+  $.dialog({
+      fixed: !0,
+      icon: "question",
+      drag: !0,
+      title: LNG.warning,
+      content: LNG.if_remove + ip + "?",
+      ok: function() {
+          $.ajax({
+              url: e + "whitelistdelect&ip=" + ip,
+              async: !1,
+              dataType: "json",
+              success: function(e) {
+                  tips(e);
+                  wlinit();
+              }
+          })
+      },
+      cancel: !0
+  });
+},
+pwdstrategyinit = function(){
+    $.ajax({
+        url: "index.php?pwdstrategy/get",
+        dataType: "json",
+        async: !1,
+        success: function(e) {
+        let data =  e.data;
+        if(data.blacklistnumbers){
+            $("#blacklistnumbers").val(parseInt(data.blacklistnumbers));
+        }else{
+            $("#blacklistnumbers").val(5);
+        }
+        if(data.safetime){
+            $("#safetime").val(parseInt(data.safetime));
+        }else{
+            $("#safetime").val(30);
+        }
+        if(data.pwd_hight == "enabled"){
+            $("#pwd_hight").prop("checked",true);
+        }else{
+            $("#pwd_hight").prop("checked",false);
+        }
+
+        },
+        error: function() {
+            return !1
+        }
+    });
+},
+pwdstrategy_save = function(){
+    var blacklistnumbers = $("#blacklistnumbers").val();
+    var safetime = $("#safetime").val();
+    var pwd_hight = "";
+    if ("" == safetime  || "" == blacklistnumbers){
+        return tips(LNG.not_null, "error");
+    }
+        
+  
+    if ($("#pwd_hight").attr("checked")) {
+        pwd_hight = "enabled";
+    }
+
+   let  aa = {
+            safetime: $("#safetime").val(),
+            blacklistnumbers: $("#blacklistnumbers").val(),
+            pwd_hight: pwd_hight
+        }
+        $.ajax({
+        url: "index.php?pwdstrategy/set",
+        dataType: "json",
+        data: aa,
+        type: 'POST',
+        success: function(t) {
+            tips(t)
+        }
+    });
+},
+    blinit = function(){
+        $.ajax({
+            url: e + "getblacklist",
+            dataType: "json",
+            async: !1,
+            success: function(e) {
+               var blacklistdata =  e.data;
+        var  gg = "<tr class='title'><td>" + LNG.loginip + "</td><td width='35%'>" + LNG.action + "</td>" + "</tr>";
+        for(let k=0;k<blacklistdata.length;k++){
+            gg += "<tr ip='"+blacklistdata[k]+"'><td>" + blacklistdata[k] + "</td><td width='35%'><a href='javascript:void(0)' class='button del'>" + LNG.button_del + "</a></td>" + "</tr>";
+        }
+        $(".group_blacklist table#list").html(gg);
+            },
+            error: function() {
+                return !1
+            }
+        });
+    },
+    wlinit = function(){
+        $.ajax({
+            url: e + "getwhitelist",
+            dataType: "json",
+            async: !1,
+            success: function(e) {
+            let data =  e.data;
+        var  gg = "<tr class='title'><td>" + LNG.loginip + "</td><td width='35%'>" + LNG.action + "</td>" + "</tr>";
+        for(let k=0;k<data.length;k++){
+            gg += "<tr ip='"+data[k]+"'><td>" + data[k] + "</td><td width='35%'><a href='javascript:void(0)' class='button del'>" + LNG.button_del + "</a></td>" + "</tr>";
+        }
+        $(".group_whitelist table#list").html(gg);
+            },
+            error: function() {
+                return !1
+            }
+        });
+    },
+    bldel=function(){
+        var  t = $(this).parent().parent();
+        i = $(t).attr("ip");
+        $.dialog({
+            fixed: !0,
+            icon: "question",
+            drag: !0,
+            title: LNG.warning,
+            content: LNG.if_remove + i + "?",
+            ok: function() {
+                $.ajax({
+                    url: e + "blacklistdelect&ip=" + i,
+                    async: !1,
+                    dataType: "json",
+                    success: function(e) {
+                        tips(e);
+                        blinit();
+                    }
+                })
+            },
+            cancel: !0
+        });
+        },
     n = function() {
         l($(".nav .group_status")),
         $(".group_editor #role").val("").focus(),
@@ -1605,7 +1841,25 @@ define("app/src/setting/group", [], function() {
         $("." + t).removeClass("hidden")
     }
       , 
+      tchange = function(){
+        let type = $("#type_whitelist").val();
+        if(type == 1){
+            $('#moreIp').removeClass('hidden');
+            $('#zerotip').addClass('hidden');
+        }else{
+            $('#moreIp').addClass('hidden');
+            $('#zerotip').removeClass('hidden');
+        }
+              },
     c = function() {
+        $('.group_pwdstrategy .add_save').live('click',pwdstrategy_save),
+        $('.group_whitelist .add_save').live('click',wa_post),
+        $('.group_whitelist .add_exit').live('click',wa_cancel),
+        $(".group_addwhitelist #type_whitelist").live("change",tchange),
+        $(".group_addwhitelist a.button").live("click",towa),
+        $(".group_whitelist a.add").live("click",towa),
+        $(".group_whitelist a.del").live("click",wdel),
+        $(".group_blacklist a.del").live("click", bldel),
         $(".group a.add").live("click", n),
         $(".group a.del").live("click", r),
         $(".group a.edit").live("click", function() {
@@ -1660,6 +1914,7 @@ define("app/src/setting/group", [], function() {
 define("app/src/setting/member", [], function() {
     var e, t = "index.php?member/", 
     a = "", 
+    pwd_hight_on = "",
     i = {}, 
     n = function() {
         i = Group.getData(),
@@ -1676,7 +1931,24 @@ define("app/src/setting/member", [], function() {
             error: function() {
                 return !1
             }
-        })
+        });
+        $.ajax({
+            url: "index.php?pwdstrategy/get",
+            dataType: "json",
+            async: !1,
+            success: function(e) {
+            let data =  e.data;
+            if(data.pwd_hight == "enabled"){
+                pwd_hight_on = 1;
+            }else{
+                pwd_hight_on = 0;
+            }
+
+            },
+            error: function() {
+                return !1
+            }
+        });
     }
     , 
     o = function() {
@@ -1741,8 +2013,23 @@ define("app/src/setting/member", [], function() {
         i = urlEncode($(e).find("#password").val())
           , 
         n = $(e).find("#role").val();
-        return "" == a || "" == i || "" == n ? (tips(LNG.not_null, "warning"),
-        !1) : ($.ajax({
+     
+        if(!a || !i || !n){
+            tips(LNG.not_null, "warning");
+        }else{
+            if(i.length < 6){
+                tips('密码未通过校验,最少6位', "warning");
+                return false;
+            }
+            if(pwd_hight_on == 1){
+                let pasck =  /^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z\\W_!@#$%^&*`~()-+=]+$)(?![a-z0-9]+$)(?![a-z\\W_!@#$%^&*`~()-+=]+$)(?![0-9\\W_!@#$%^&*`~()-+=]+$)[a-zA-Z0-9\\W_!@#$%^&*`~()-+=]{6,}$/;
+                if (!pasck.test(i)) {
+                    tips('密码未通过校验(最少6位，需要满足有大写、小写、数字、符号至少三个)', "warning");
+                    return false;
+                }
+            }
+
+        $.ajax({
             url: t + "add&name=" + a + "&password=" + i + "&role=" + n,
             dataType: "json",
             success: function(t) {
@@ -1753,8 +2040,8 @@ define("app/src/setting/member", [], function() {
                     $(e).detach()
                 }
             }
-        }),
-        void 0)
+        });
+    }
     }
     , 
     p = function() {
@@ -1791,7 +2078,20 @@ define("app/src/setting/member", [], function() {
             return tips(LNG.not_null, "error"),
             !1;
         var r = "";
-        "" != o && (r = "&password_to=" + o),
+        "" != o && (r = "&password_to=" + o);
+
+        if(o.length < 6){
+            tips('密码未通过校验,最少6位', "warning");
+            return false;
+        }
+        if(pwd_hight_on == 1){
+            let pasck =  /^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z\\W_!@#$%^&*`~()-+=]+$)(?![a-z0-9]+$)(?![a-z\\W_!@#$%^&*`~()-+=]+$)(?![0-9\\W_!@#$%^&*`~()-+=]+$)[a-zA-Z0-9\\W_!@#$%^&*`~()-+=]{6,}$/;
+            if (!pasck.test(o)) {
+                tips('密码未通过校验(最少6位，需要满足有大写、小写、数字、符号至少三个)', "warning");
+                return false;
+            }
+        }
+
         $.ajax({
             url: t + "edit&name=" + a + "&name_to=" + i + "&role_to=" + n + r,
             dataType: "json",

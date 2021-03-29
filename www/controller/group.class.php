@@ -5,6 +5,12 @@ class group extends Controller{
     function __construct()    {
         parent::__construct();
         $this->sql=new fileCache(CONFIG_PATH.'group.php');
+        $pwdfile = new fileCache(CONFIG_PATH.'pwdstrategy.php');
+        if(!empty($pwdfile->get('blacklistnumbers')) ){
+            $this->pwdfailnum = intval($pwdfile->get('blacklistnumbers'));
+        }else{
+            $this->pwdfailnum = 5;
+        }
     }
     
     public function get() {
@@ -93,5 +99,129 @@ class group extends Controller{
         $role_arr['explorer:pathPast'] = 1;
         $role_arr['explorer:pathCute'] =1;
         return $role_arr;
+    }
+
+    
+    public  function getblacklist()
+    {
+        $failnum = $this->pwdfailnum;
+        $handle = fopen('/etc/system/faillogin', 'r');
+        $txt =array();
+    while(!feof($handle)){
+        $line = fgets($handle);
+        $line = str_replace("\n","",$line);
+        if($line != ""){
+            $res = explode(":",$line);
+            if($res[1] >= $failnum){
+                array_push($txt,$res[0]);
+            }
+        }
+    }
+    fclose($handle);
+        show_json($txt);
+    }
+    
+    public  function blacklistdelect()
+    {
+        $targetip =  $this->in['ip'];
+        $handle = fopen('/etc/system/faillogin', 'r');
+        $txt =array();
+    while(!feof($handle)){
+        $line = fgets($handle);
+        $line = str_replace("\n","",$line);
+        if($line != ""){
+        array_push($txt,$line);
+          }
+    }
+    fclose($handle);
+  $edit = fopen('/etc/system/faillogin', 'w');
+  for($i=0;$i<count($txt);$i++)
+  {
+    if(strpos($txt[$i],$targetip) !== false){
+        $res = explode(":",$txt[$i]);
+        if($res[0] == $targetip){
+
+        }else{
+            fwrite($edit,$txt[$i]."\n");
+        }
+    }else{
+        fwrite($edit,$txt[$i]."\n");
+    }
+}
+    fclose($edit);
+    write_audit('信息','设置','成功','删除'.$this->L['blacklist'].$targetip);
+    show_json($this->L['success']);
+    }
+    
+    public  function getwhitelist()
+    {   $handle = fopen('/mnt/config/whitelist', 'r');
+        $txt =array();
+    while(!feof($handle)){
+        $line = fgets($handle);
+        $line = str_replace("\n","",$line);
+        if($line != ""){
+            array_push($txt,$line);
+        }
+    }
+    fclose($handle);
+    show_json($txt);
+    }
+
+    public  function addwhitelist()
+    { 
+        $targetip =  $this->in['ip'];
+        $wlfile = fopen('/mnt/config/whitelist', 'r');
+        $wltxt =array();
+    while(!feof($wlfile)){
+        $line = fgets($wlfile);
+        $line = str_replace("\n","",$line);
+        if($line != ""){
+            array_push($wltxt,$line);
+        }
+    }
+    fclose($wlfile);
+
+        if(in_array($targetip,$wltxt)){
+            write_audit('警告','设置','失败','添加'.$this->L['file_whitelist'].',已存在相同IP');
+            show_json('已存在相同IP',false);
+        }
+
+        $add = fopen('/mnt/config/whitelist', 'a');
+        fwrite($add,$targetip."\n" );
+        fclose($add);
+        write_audit('信息','设置','成功','添加'.$this->L['file_whitelist']);
+        show_json('添加成功');
+    }
+   
+    
+    public  function whitelistdelect()
+    {
+        $targetip =  $this->in['ip'];
+        $handle = fopen('/mnt/config/whitelist', 'r');
+        $txt =array();
+    while(!feof($handle)){
+        $line = fgets($handle);
+        $line = str_replace("\n","",$line);
+        if($line != ""){
+        array_push($txt,$line);
+          }
+    }
+    fclose($handle);
+    
+  $edit = fopen('/mnt/config/whitelist', 'w');
+  for($i=0;$i<count($txt);$i++)
+  {
+    if(strpos($txt[$i],$targetip) !== false){
+        if($txt[$i] == $targetip){
+
+        }else{
+            fwrite($edit,$txt[$i]."\n");
+        }
+    }else{
+        fwrite($edit,$txt[$i]."\n");
+    }
+}
+    fclose($edit);
+    show_json($this->L['success']);
     }
 }

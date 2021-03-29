@@ -21,6 +21,18 @@ class user extends Controller
         $sso = new fileCache(CONFIG_PATH.'sso.php');
         $this->url = $sso->get('url');
         $this->checkurl = $sso->get('checkurl');
+
+        $pwdfile = new fileCache(CONFIG_PATH.'pwdstrategy.php');
+        if(!empty($pwdfile->get('blacklistnumbers')) ){
+            $this->pwdfailnum = intval($pwdfile->get('blacklistnumbers'));
+        }else{
+            $this->pwdfailnum = 5;
+        }
+        if(!empty($pwdfile->get('safetime')) && intval($pwdfile->get('safetime')) > 0){
+            $this->safetime = intval($pwdfile->get('safetime'));
+        }else{
+            $this->safetime = 30;
+        }
     }
     
     /**
@@ -360,7 +372,127 @@ if( !empty($headers) ){
      * 登录数据提交处理
      */
     public function loginSubmit(){
+        $failnum = $this->pwdfailnum;
+        $blsafetime = $this->safetime;
+
+        if (getenv('HTTP_CLIENT_IP')) {
+            $ip = getenv('HTTP_CLIENT_IP');
+        }
+        if (getenv('HTTP_X_REAL_IP')) {
+            $ip = getenv('HTTP_X_REAL_IP');
+        } elseif (getenv('HTTP_X_FORWARDED_FOR')) {
+            $ip = getenv('HTTP_X_FORWARDED_FOR');
+            $ips = explode(',', $ip);
+            $ip = $ips[0];
+        } elseif (getenv('REMOTE_ADDR')) {
+            $ip = getenv('REMOTE_ADDR');
+        } else {
+            $ip = '0.0.0.0';
+        }
         
+
+        if(!file_exists("/mnt/config/whitelist")){
+            $newfile = fopen("/mnt/config/whitelist", "w");
+            fclose($newfile);
+        }
+        //只允许白名单通过
+        $wlfile = fopen('/mnt/config/whitelist', 'r');
+        $wltxt =array();
+    while(!feof($wlfile)){
+        $line = fgets($wlfile);
+        $line = str_replace("\n","",$line);
+        if($line != ""){
+            array_push($wltxt,$line);
+        }
+    }
+    fclose($wlfile);
+    $checkwl = false;
+ 
+        if(count($wltxt)>0){
+            for($i=0;$i<count($wltxt);$i++)
+            {
+                $res = explode("-",$wltxt[$i]);
+                if(count($res) == 2){ //区间
+                        $longip = ip2long($ip);
+                        if($longip >= ip2long($res[0]) && $longip <= ip2long($res[1]) ){
+                        $checkwl = true;
+                        break;
+                        }
+                }else{
+                    if($wltxt[$i] == $ip){
+                    $checkwl = true;
+                    break;
+                    }
+                }
+            }
+        }else{ //没设置白名单
+            $checkwl = true;
+        }
+        
+    
+    if($checkwl == false){
+        $this->login('此IP不在白名单中,请联系管理员');
+        return false;
+    }
+    
+        // 获取黑名单
+        $dop = fopen('/etc/system/faillogin', 'r');
+        $txt =array();
+        while(!feof($dop)){
+            $line = fgets($dop);
+            $line = str_replace("\n","",$line);
+            if($line != ""){
+            array_push($txt,$line);
+            }
+        }
+        fclose($dop);
+         // 删除黑名单
+         if(count($txt)>0){
+            $delblack = fopen('/etc/system/faillogin', 'w');
+            for($i=0;$i<count($txt);$i++)
+            {
+                $res = explode(":",$txt[$i]);
+                if(!empty($res[2])){
+                    $ds = time() - $res[2];;
+                    $dmins = floor($ds/60);
+                     if($dmins >  $blsafetime && $res[1]>= $failnum){
+                        //删除
+                    }else{
+                        fwrite($delblack,$txt[$i]."\n");
+                    }
+                }else{
+                    fwrite($delblack,$txt[$i]."\n");
+                }
+                
+            }
+        fclose($delblack);
+         }
+        
+         
+
+            $bldata = fopen('/etc/system/faillogin', 'r');
+        while(!feof($bldata)){
+            $line = fgets($bldata);
+            $line = str_replace("\n","",$line);
+            if($line != ""){
+                if(strpos($line,$ip) !== false){
+                    $res = explode(":",$line);
+                    if($res[0] == $ip && $res[1] >= $failnum){
+                        $s = time() - $res[2];
+                        $mins = floor($s/60);
+                        if($mins <  $blsafetime){
+                            $musttime =  $blsafetime - $mins;
+                            $msg = "该IP已进入黑名单,请在".$musttime.'分钟后再试';
+                            $this->login($msg);
+                            exit;
+                        }
+                    }
+                    
+                }
+            }
+        }
+        fclose($bldata);
+
         if(!isset($this->in['name']) || !isset($this->in['password'])) {
             $msg = $this->L['login_not_null'];
         }else{
@@ -378,6 +510,7 @@ if( !empty($headers) ){
             $member = new fileCache(CONFIG_PATH.'member.php');
             $user = $member->get($name);
             if ($user ===false){
+                $this->bladdnums($ip);
                 $msg = $this->L['user_not_exists'];
                 write_audit('信息','登录','失败','ip:'.get_client_ip().',登录用户不存在',$this->in['name']);
             }else if(md5($password)==$user['password']){
@@ -391,10 +524,27 @@ if( !empty($headers) ){
                 // if ($this->in['rember_password'] == '1') {
                 //     setcookie('secros_token',md5($user['password'].get_client_ip()),time()+3600*24*365);
                 // }
+                $edit = fopen('/etc/system/faillogin', 'w');
+                for($i=0;$i<count($txt);$i++)
+              {
+                  if(strpos($txt[$i],$ip) !== false){
+                      $res = explode(":",$txt[$i]);
+                      if($res[0] == $ip){
+                          //删除黑名单
+                      }else{
+                          fwrite($edit,$txt[$i]."\n");
+                      }
+                  }else{
+                      fwrite($edit,$txt[$i]."\n");
+                  }
+              }
+                  fclose($edit);
+
                 write_audit('信息','登录','成功','ip:'.get_client_ip());
                 header('location:./index.php');
                 return;
             }else{
+                $this->bladdnums($ip);
                 write_audit('信息','登录','失败','ip:'.get_client_ip(),$this->in['name']);
                 $msg = $this->L['password_error'];
             }
@@ -555,4 +705,44 @@ show_json('201');
     // public function getmd5(){
     //     show_json(md5_file('/tmp/Android-SDK@1.9.9.64803_20190614.zip'));
     // }
+
+    public function bladdnums($ttip){
+        $handle = fopen('/etc/system/faillogin', 'r');
+        $adntxt =array();
+        while(!feof($handle)){
+            $line = fgets($handle);
+            $line = str_replace("\n","",$line);
+            if($line != ""){
+            array_push($adntxt,$line);
+            }
+        }
+        fclose($handle);
+$ipfind = false;
+      $edit = fopen('/etc/system/faillogin', 'w');
+      for($i=0;$i<count($adntxt);$i++)
+    {
+    if(strpos($adntxt[$i],$ttip) !== false || $ipfind == false){
+        $res = explode(":",$adntxt[$i]);
+        if($res[0] == $ttip){
+            $num = intval($res[1])+ 1;
+            $wri = $res[0].":".$num.":".time();
+            fwrite($edit,$wri."\n");
+            $ipfind = true;
+        }else{
+            fwrite($edit,$adntxt[$i]."\n");
+        }
+      
+    }else{
+        fwrite($edit,$adntxt[$i]."\n");
+    }
+    }
+        fclose($edit);
+
+        if($ipfind == false){
+            $edit = fopen('/etc/system/faillogin', 'a');
+
+fwrite($edit,$ttip.":1"."\n" );
+fclose($edit);
+        }
+    }
 }
