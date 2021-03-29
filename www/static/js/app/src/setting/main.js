@@ -1958,7 +1958,7 @@ define("app/src/setting/member", [], function() {
         a = "";
         for (var o = n.length - 1; o >= 0; o--) {
             var r = i[n[o]];
-            if(r.role != 'audit'){
+            if(r.role != 'root' && r.role != 'audit'){
                 a += "<option value='" + r.role + "'>" + r.name + "</option>";
             }
         }
