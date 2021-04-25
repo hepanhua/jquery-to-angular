@@ -435,8 +435,10 @@ function path_haschildren($dir,$check_file=false){
 					return true;
 				}
 			}else{//只检查有没有文件
-				@$ret =(is_dir($fullpath.'/'));
-				return (bool)$ret;
+				$ret =(is_dir($fullpath.'/'));
+				if((bool)$ret){
+					return true;
+				}
 			}
 		} 
 	} 	

@@ -38,13 +38,27 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			back: 1,
 			next: 0
 		}
-	}, e("lib/jquery-lib"), e("lib/util"), e("lib/ztree/js/ztree"), e("lib/contextMenu/jquery-contextMenu"), e("lib/artDialog/jquery-artDialog"), e("lib/picasa/picasa"), ui = e("./ui"), TaskTap = e("../../common/taskTap"), core = e("../../common/core"), rightMenu = e("../../common/rightMenu"), ui.tree = e("../../common/tree"), ui.path = e("./path"), fileSelect = e("./fileSelect"), fileLight = fileSelect.fileLight, $(document).ready(function() {
+	}, e("lib/jquery-lib"), e("lib/util"), e("lib/ztree/js/ztree"), e("lib/contextMenu/jquery-contextMenu"), e("lib/artDialog/jquery-artDialog"), e("lib/picasa/picasa"), ui = e("./ui"), TaskTap = e("../../common/taskTap"), core = e("../../common/core"), rightMenu = e("../../common/rightMenu"), ui.tree = e("../../common/tree"), ui.path = e("./path"), fileSelect = e("./fileSelect"), fileLight = fileSelect.fileLight, 
+	$(document).ready(function() {
 		$(".init_loading").fadeOut(450).addClass("pop_fadeout"), Global.topbar_height = "none" == $(".topbar").css("display") ? 0 : $(".topbar").height(), e.async("lib/webuploader/webuploader-min", function() {
 			core.upload_init()
 		}), ui.init(), ui.tree.init(), TaskTap.init(), core.update(), fileSelect.init(), ui.tree.checkUsbchange(), rightMenu.initExplorer(), $(".path_tips").tooltip({
 			placement: "bottom",
 			html: !0
+		});
+		if(G.X86 != 1){
+			let time = new Date();
+		let end = get_time(time.getMonth() + 1)+get_time(time.getDate())+get_time(time.getHours())+get_time(time.getMinutes())+time.getFullYear();
+		let postdata = {time:end};
+		$.ajax({
+			url: "index.php?setting/timeauto",
+			data: postdata,
+			type: "POST",
+			dataType: "json",
+			success: function(e) {
+			}
 		})
+		}
 	})
 }), define("app/src/explorer/ui", ["./fileSelect"], function(require, exports) {
 	var fileSelect = require("./fileSelect"),
@@ -6546,4 +6560,8 @@ setTimeout(() => {
 			}
 		});
 	
+	}
+
+	function get_time(s) {
+		return s < 10 ? '0' + s: s;
 	}

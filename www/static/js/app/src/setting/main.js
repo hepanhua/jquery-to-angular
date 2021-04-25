@@ -1706,7 +1706,7 @@ pwdstrategy_save = function(){
     },
     bldel=function(){
         var  t = $(this).parent().parent();
-        i = $(t).attr("ip");
+        let  i = $(t).attr("ip");
         $.dialog({
             fixed: !0,
             icon: "question",
@@ -2507,6 +2507,96 @@ define("app/src/setting/system", [], function() {
             $("input[name='first_in']").removeAttr("checked"),
             $(this).attr("checked", "checked")
         }),
+        $(".system_timesetting .add_save").live("click", function() {
+            if(G.time_on != 1){
+                return;
+            }
+            let method = $("input[name='time_method']:checked").val();
+            if(!method){
+                tips("请设置一种类型","warning");
+                return;
+            }
+            let ntp_server = $("#ntp_server").val();
+            let ntp_server_ck = $("#ntp_server_ck").val();
+            let time = $("#time_value").val();
+            time = new Date(time);
+            let end = getaa(time.getMonth() + 1)+getaa(time.getDate())+getaa(time.getHours())+getaa(time.getMinutes())+time.getFullYear();
+            if(method == 2){
+                if(!ntp_server || !ntp_server_ck){
+                    tips("不能为空","warning");
+                    return;
+                }
+                if(parseInt(ntp_server_ck) < 100){
+                    tips("间隔时间需大于100秒","warning");
+                    return;
+                }
+            }else{
+                ntp_server = '';
+                ntp_server_ck = '';
+            }
+            
+            let postdata = {
+                time:end,
+                method:method,
+                ip:ntp_server,
+                ck:ntp_server_ck
+            };
+            $.ajax({
+                url: "index.php?setting/timeset",
+                data: postdata,
+                type: "POST",
+                dataType: "json",
+                success: function(e) {
+                    tips(e)
+                }
+            })
+        }),
+        $("#system_timesetting").live("click", function() {
+            if(G.time_on != 1){
+                return;
+            }
+            $.ajax({
+                url: "index.php?setting/timeget",
+                async: !1,
+                dataType: "json",
+                success: function(e) {
+                    let json = e.data;
+                    let method =  document.getElementsByName('time_method');
+                    if(json.method){
+                        method[json.method - 1].click(); //n-1
+                    }
+                    
+                    $("#now_time").text(json.now);
+                    $("#ntp_server").val(json.ip);
+                    $("#ntp_server_ck").val(json.ck);
+                }
+            });
+            nowtimepick("time_value");
+        }),
+        getaa=function(s) {
+            return s < 10 ? '0' + s: s;
+        },
+        nowtimepick=function(obj){
+            var datefff=document.getElementById(obj);
+            var myDate = new Date();
+            var time=myDate.toLocaleDateString(); 
+            var h=myDate.getHours();      
+            var m=myDate.getMinutes();    
+            var s=myDate.getSeconds(); 
+            
+            
+            var x=time.split('/');
+            if(x[1]<10){
+                x[1]='0'+x[1];
+            }
+            if(x[2]<10){
+                x[2]='0'+x[2];
+            }
+           time=x.join('-');
+          time=time + "T" +getaa(h)+':'+getaa(m)+":"+getaa(s);
+        
+        datefff.value=time;
+        },
         $(".system_save").live("click", function() {
             var e = {};
             $(".system_setting .box_line input").each(function() {

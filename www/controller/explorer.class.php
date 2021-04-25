@@ -175,6 +175,9 @@ class explorer extends Controller{
             $this->_tree_init($app);
         }
         if (isset($this->in['this_path'])){
+            if($this->in['this_path'] == '*usbox*'){
+                show_json([],true);
+            }
             $path=_DIR($this->in['this_path']);
         }else{
             $path=_DIR($this->in['path'].$this->in['name']);
@@ -266,6 +269,9 @@ class explorer extends Controller{
                     if (!file_exists('/tmp/secret/'.$public[$key]['name'])){
                         $folderlist_filter[] = $val;
                     }
+                }
+                if(count($public) == 1){
+                    $public_isparent = false;
                 }
             }else{//有密码
                 // exec("/usr/sbin/skfusb  USBN ".$_SESSION['USBPSD'],$arr,$out);
@@ -376,6 +382,7 @@ class explorer extends Controller{
                 show_json($this->L['remove_fali'],false);
             }else{
                 mkdir(USER_RECYCLE);
+                write_audit('信息','删除','成功','清空病毒隔离区');
                 show_json($this->L['recycle_clear_success'],true);
             }
             return;

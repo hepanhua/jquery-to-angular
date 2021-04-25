@@ -199,6 +199,7 @@ class user extends Controller
         //}
         $the_config = array(
             'lang'          => LANGUAGE_TYPE,
+            'time_on'       => TIME_ON,
             'is_root'       => $GLOBALS['is_root'],
             'user_name'     => $this->user['name'],
             'web_root'      => $GLOBALS['web_root'],

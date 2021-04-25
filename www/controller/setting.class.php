@@ -108,4 +108,47 @@ class setting extends Controller{
     		show_json($this->L["savecfg_failed"],false);
     	}
     }
+
+    
+    public function timeset(){
+        $method=$this->in['method'];
+        $ip=$this->in['ip'];
+        $ck=$this->in['ck'];
+        if($method == 1){
+            $time=$this->in['time'];
+            exec('date -s "'.$time.'"');
+        }
+        $time_file = CONFIG_PATH.'time.conf';
+        config_update($time_file,"method",$method);
+        config_update($time_file,"ip",$ip);
+        config_update($time_file,"ck",$ck);
+        system("/bin/setntp");
+        show_json($this->L['success']);
+    }
+
+    public function timeget(){
+        $ip = config_get_value_from_file(CONFIG_PATH.'time.conf','ip');
+        $ck = config_get_value_from_file(CONFIG_PATH.'time.conf','ck');
+        $method = config_get_value_from_file(CONFIG_PATH.'time.conf','method');
+        $now_time= time();
+        $now_date= date('Y-m-d H:i:s',$now_time);//2018-11-28 15:29:29
+        $s_data = array(
+            'method'      =>  $method,
+            'ip'  =>  $ip,
+            'ck'      =>  $ck,
+            'now'    => $now_date,
+        );
+        show_json($s_data);
+    }
+
+    public function timeauto(){
+        $now_time= date('Y');
+        $time=$this->in['time'];
+        if(!empty($time)){
+            if($now_time != substr($time,-4)){
+                exec('date -s "'.$time.'"');
+            }
+        }
+        show_json(true);
+    }
 }

@@ -4,6 +4,7 @@ $L= array(
 	"upload_setting"  			=>"设置",
 	"upload_tips"  				=>'采用分片上传,不再受php.ini限制;推荐chrome体验文件夹拖拽上传',
 	"upload_exist"  			=>"同名文件处理",
+	"system_timesetting"		=> "时间设置",
 	"upload_exist_rename"  		=>"重命名",
 	"upload_exist_replace"  	=>"覆盖",
 	"upload_exist_skip"  		=>"跳过",

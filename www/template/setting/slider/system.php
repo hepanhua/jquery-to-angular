@@ -1,7 +1,10 @@
 <div class='h1'><i class="font-icon icon-user"></i><?php echo $L['system_setting'];?></div>
 <div class="nav">
     <a href="javascript:;"  class="this" data-page="setting"><?php echo $L['system_setting'];?></a>
-    <div style="clear:both;"></div>
+	<?php if (TIME_ON == 1) {  ?>	
+		<a href="javascript:;" id="system_timesetting" data-page="system_timesetting"><?php echo $L['system_timesetting'];?></a>
+	<?php } ?>
+	<div style="clear:both;"></div>
 </div>
 
 <div class="section setting system_setting">
@@ -94,3 +97,51 @@
   </div>
   <div style="clear:both;"></div>
 </div>
+
+
+<!-- 时间设置 -->
+<?php if (TIME_ON == 1) {  ?>	
+<div class="section system_timesetting hidden">
+<div class="box_line">
+<div style="display:flex;flex-direction: column;">
+	<div style="display:flex;padding: 8px 0; font-size: 14px;">
+	<div>当前PC时间</div>
+	<div id="now_time" style="margin-left: 16px;"></div>
+	</div>
+	</div>
+</div>
+<div class="box_line">
+	<div style="display:flex;flex-direction: column;">
+	<div>
+	<input type="radio" name="time_method" value="1"> 时间设置
+	</div>
+	<div style="display:flex;">
+	<input type="datetime-local"  id="time_value">
+	</div>
+	</div>
+</div>
+<div class="box_line">
+<div style="display:flex;flex-direction: column;">
+	<div>
+	<input type="radio" name="time_method" value="2">  与NTP服务器同步
+	</div>
+	<div style="display:flex;align-items: center; margin-bottom: 8px;">
+<div  style="width:60px;">服务器</div>
+<input type="text" id="ntp_server" style="width:152px;font-weight: normal;">
+	</div>
+
+	<div style="display:flex;align-items: center;">
+<div style="width:60px;">同步间隔</div>
+<input type="number" id="ntp_server_ck" min="100">
+<span style="margin-left:8px;">(单位:秒)</span>
+	</div>
+
+	</div>
+</div>
+
+<div class="box_line">
+    <a href="javascript:void(0);" class="add_save button"><?php echo $L['button_save'];?></a>
+</div>
+  <div style="clear:both;"></div>
+</div>
+<?php } ?>
