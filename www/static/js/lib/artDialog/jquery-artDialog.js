@@ -117,8 +117,8 @@ artDialog.fn = artDialog.prototype = {
 			iconBg = icon && {'background-image': 'url(\'' + config.path + '/icons/' + icon + '.png\')','background-repeat':'no-repeat','background-position':'center'};
         that.closed = false;
 		that.config = config;
-		that.DOM = DOM = that.DOM || that._getDOM();
-
+		// that.DOM = DOM = that.DOM || that._getDOM();
+		that.DOM = DOM = that._getDOM();
 		//是否可以调节大小 对应样式处理
 		//可以调节窗口大小——那么对应可以最大最小化
 		if (config.resize && config.title != false) {
