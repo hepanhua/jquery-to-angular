@@ -28,20 +28,29 @@
 		$loginimage = STATIC_PATH.'images/secros-login.png';
 		$oem  = config_get_value_from_file('/etc/system/oem.conf','OEM');
 		if (isset($oem)){
+			if($oem === 'oem'){
+				echo '<div style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: #b8f2ff;"></div>';
+			}
 			$image = STATIC_PATH."images/wall_page/".$oem.".jpg";
 			$loginimage = STATIC_PATH."images/".$oem."-login.png";
 		}
 		echo '<img class="background" src="'.$image.'" />';
 	?>
-	<div class="loginbox" >
-		<div class="title">
-			<div class="logo">
-				<?php 
-					echo '<img src="'.$loginimage.'" />';
-				?>
-				</div>
-			<div class='info' <?php 
-			echo '';?> >——<?php echo $L['secros_name_desc'];?></div>
+	<?php
+	if($oem === 'oem'){
+		echo '<div class="loginbox" style="background: rgb(171,236,255,0.9);"><div class="title" style="justify-content: center;">';
+	}else{
+		echo '<div class="loginbox"><div class="title">';
+	}
+	?>
+			<?php
+			if($oem !== 'oem'){
+				echo '<div class="logo"><img src="'.$loginimage.'" /></div>';
+				echo '<div class="info">——'.$L["secros_name_desc"].'</div>';
+			}else{
+				echo '<div style="font-size: 32px; padding-top: 22px;">'.$L["secros_name_desc"].'</div>';
+			}
+			?>
 		</div>
 		<div class="form">
 			<div class="inputs">
