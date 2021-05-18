@@ -1087,7 +1087,10 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			return G.is_root ? !0 : AUTH.hasOwnProperty(e) ? AUTH[e] ? !0 : (void 0 == t && (t = LNG.no_permission), core.tips.tips(t, !1), !1) : !0
 		},
 		scanvirusCheck: function() {
-			if (G.av_status == 0){
+			if(G.quota_av == 0){
+				return 0;
+			}
+			if (G.av_status == 0 ){
 				if(G.X86 != 1){
 					return 0;
 				}else{
