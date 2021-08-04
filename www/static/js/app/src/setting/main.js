@@ -2273,6 +2273,14 @@ define("app/src/setting/antivirus", [], function() {
 
     },
     k=function(){
+        var avstatus = $(".av_offline_update").data('avstatus');
+        if(avstatus == 0){
+            tips('病毒授权许可证不存在，请联系设备供应商获取病毒授权许可证！',false);
+            return;
+        }else if(avstatus == 2){
+            tips('病毒授权许可证已过期，请联系设备供应商获取病毒授权许可证！',false);
+            return;
+        }
         $("#av_offline_update").click();
     },
     m = function() {

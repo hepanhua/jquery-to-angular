@@ -12,9 +12,6 @@ $antivirus_updatetime = config_get_value_from_file('/mnt/config/antivirus.conf',
 $antivirus_expiretime = config_get_value_from_file('/mnt/config/antivirus.conf','License_expiredate');
 $antivirus_file = config_get_value_from_file('/mnt/config/antivirus.conf','antivirus_file');
 $av_status = config_get_value_from_file('/dev/secros','av_status');
-if (isset($av_status) && ($av_status == 2)){
-	$avexpired = 1;
-}
 ?>
 <div class="section antivirus">
 	<div class="box_line">
@@ -33,7 +30,7 @@ if (isset($av_status) && ($av_status == 2)){
 		<span class='infotitle'><?php echo $L['antivirus_expire'];?>:</span><input type="text" id="expire" name="expire" 
     value="<?php echo $antivirus_expiretime;?>" disabled/>
     <?php
-    	if ($avexpired==1){?>
+    	if ($av_status==2){?>
     		<i><font color='red' size=3><?php echo $L['antivirus_licence_expired'];?></font></i>
     <?php
     	}
@@ -110,7 +107,7 @@ if (isset($av_status) && ($av_status == 2)){
   <div class="box_line">
 	<a href="javascript:void(0);" class="av_save button"><?php echo $L['button_save'];?></a>
 	<a href="javascript:void(0);" class="av_update button"><?php echo $L['button_update'];?></a>
-	<a href="javascript:void(0);" class="av_offline_update button"><?php echo $L['button_offline_update'];?></a>
+	<a href="javascript:void(0);" data-avstatus="<?php echo $av_status;?>" class="av_offline_update button"><?php echo $L['button_offline_update'];?></a>
 	<input type="file"  id="av_offline_update"  class="hidden">
   </div>
   <div style="clear:both;"></div>
