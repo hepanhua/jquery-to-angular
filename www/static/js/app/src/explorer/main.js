@@ -1940,7 +1940,9 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			}
 		},
 		_bindRecycle = function() {
-			$('<i class="menuRecycleBody"></i>').appendTo("#rightMenu"), $.contextMenu({
+			$('<i class="menuRecycleBody"></i>').appendTo("#rightMenu");
+			if(G.user_name == 'admin' || G.user_name == 'super'){
+			$.contextMenu({
 				zIndex: 9999,
 				selector: ".menuRecycleBody",
 				callback: function(e) {
@@ -1969,45 +1971,53 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 						accesskey: "i"
 					}
 				}
-			}), $('<i class="menuRecyclePath"></i>').appendTo("#rightMenu"), $.contextMenu({
-				zIndex: 9999,
-				selector: ".menuRecyclePath",
-				callback: function(e) {
-					_menuPath(e)
-				},
-				items: {
-					// cute: {
-					// 	name: LNG.cute + "<b>Ctrl+X</b>",
-					// 	className: "cute",
-					// 	icon: "cut",
-					// 	accesskey: "k"
-					// },
-					restore: {
-						name: LNG.recycle_restore,
-						className: "restore",
-						icon: "copy"
+			});
+		 }
+		  $('<i class="menuRecyclePath"></i>').appendTo("#rightMenu");
+			if(G.user_name == 'admin' || G.user_name == 'super'){
+				$.contextMenu({
+					zIndex: 9999,
+					selector: ".menuRecyclePath",
+					callback: function(e) {
+						_menuPath(e)
 					},
-					remove: {
-						name: LNG.recycle_remove + "<b>Del</b>",
-						className: "remove",
-						icon: "trash",
-						accesskey: "d"
-					},
-					sep2: "--------",
-					// down: {
-					// 	name: LNG.download,
-					// 	className: "down",
-					// 	icon: "download",
-					// 	accesskey: "x"
-					// },
-					info: {
-						name: LNG.info + "<b>Alt+I</b>",
-						className: "info",
-						icon: "info",
-						accesskey: "i"
+					items: {
+						restore: {
+							name: LNG.recycle_restore,
+							className: "restore",
+							icon: "copy"
+						},
+						remove: {
+							name: LNG.recycle_remove,
+							className: "remove",
+							icon: "trash"
+						},
+						sep2: "--------",
+						info: {
+							name: LNG.info,
+							className: "info",
+							icon: "info"
+						}
 					}
-				}
-			}), $('<i class="menuRecycleButton"></i>').appendTo("#rightMenu"), $.contextMenu({
+				});
+			}else{
+				$.contextMenu({
+					zIndex: 9999,
+					selector: ".menuRecyclePath",
+					callback: function(e) {
+						_menuPath(e)
+					},
+					items: {
+						info: {
+							name: LNG.info,
+							className: "info",
+							icon: "info"
+						}
+					}
+				});
+			}
+				 
+				$('<i class="menuRecycleButton"></i>').appendTo("#rightMenu"), $.contextMenu({
 				zIndex: 9999,
 				selector: ".menuRecycleButton",
 				callback: function(e) {

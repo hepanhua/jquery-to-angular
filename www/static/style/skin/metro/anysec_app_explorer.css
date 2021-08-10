@@ -1521,3 +1521,10 @@ animation: boo  4s  infinite;
 .fileList_icon .file .wma { background-image: url("./images/wma.png");}
 .fileList_icon .file .wmv { background-image: url("./images/wmv.png");}
 /* 12 24 end */
+.recycle_disabled{
+  pointer-events: none!important;
+  cursor: not-allowed!important;
+  opacity: .65!important;
+  -webkit-box-shadow: none!important;
+  box-shadow: none!important;
+}

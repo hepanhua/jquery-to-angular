@@ -599,7 +599,7 @@ $L= array(
 	"button_del"                 =>	"删除",
 	"button_save_edit"           =>	"确定",
 	"button_save_submit"         =>	"确定",
-	"button_select_all"          =>	"全选/反选",
+	"button_select_all"          =>	"反选",
 
 
 	//log

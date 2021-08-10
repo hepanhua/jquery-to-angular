@@ -132,15 +132,23 @@
 				<div class="tools">
 					<div class="tools-left">
 <!-- 回收站还原 -->
-					<div class="btn-group btn-group-sm secros_recycle_restore  hidden">
-							<button id='recycle_restore' class="btn btn-default" type="button">
+<div class="btn-group btn-group-sm secros_recycle_restore  hidden">
+<?php if ($_SESSION['secros_user']['name'] == 'admin' || $_SESSION['secros_user']['name'] == 'super'){?>
+	<button id='recycle_restore' class="btn btn-default" type="button">
+<?php }else{ ?>
+	<button class="btn btn-default recycle_disabled" type="button">
+<?php }?>
 					        	<i class="font-icon icon-folder-close-alt"></i><?php echo $L['recycle_restore'];?>
 					        </button>
 						</div>
 
 						<!-- 回收站tool -->
-						<div class="btn-group btn-group-sm secros_recycle_tool hidden">
-							<button id='recycle_clear' class="btn btn-default" type="button">
+<div class="btn-group btn-group-sm secros_recycle_tool hidden">
+<?php if ($_SESSION['secros_user']['name'] == 'admin' || $_SESSION['secros_user']['name'] == 'super'){?>
+	<button id='recycle_clear' class="btn btn-default" type="button">
+<?php }else{ ?>
+	<button class="btn btn-default recycle_disabled" type="button">
+<?php }?>
 					        	<i class="font-icon icon-folder-close-alt"></i><?php echo $L['recycle_clear'];?>
 					        </button>
 						</div>
