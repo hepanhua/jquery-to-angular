@@ -4202,6 +4202,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 								if(G.X86 === 0 ){
 									G['av_progress'] = data.destinationName;
 								}
+								ui.f5();
 							} else {
 								$('.canvasframe .loading_btn_frame').addClass('hidden');
 								$('.shutdown_loading').removeClass('hidden');
