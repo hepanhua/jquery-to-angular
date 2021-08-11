@@ -900,7 +900,11 @@ show_json('没有权限',false);
         //return;
         if ($save_path == '/mnt/usbox/') show_json($this->L['upload_error_rootdir'],false);
         if (!is_writeable($save_path)) show_json($this->L['no_permission_write'],false);
-
+        exec('df '.$save_path.' ', $out, $return_val);
+        if(count($out) == 1){
+            show_json('此目录禁止上传操作',false);
+        }
+        
         if ($save_path == '') show_json($this->L['upload_error_big'],false);
         if (strlen($this->in['fullPath']) > 1) {//folder drag upload
             $full_path = _DIR_CLEAR(rawurldecode($this->in['fullPath']));
