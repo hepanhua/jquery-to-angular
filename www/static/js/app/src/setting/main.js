@@ -1623,6 +1623,11 @@ pwdstrategyinit = function(){
         }else{
             $("#blacklistnumbers").val(5);
         }
+        if(data.timeout){
+            $("#timeoutlock").val(parseInt(data.timeout));
+        }else{
+            $("#timeoutlock").val(30);
+        }
         if(data.safetime){
             $("#safetime").val(parseInt(data.safetime));
         }else{
@@ -1642,9 +1647,10 @@ pwdstrategyinit = function(){
 },
 pwdstrategy_save = function(){
     var blacklistnumbers = $("#blacklistnumbers").val();
+    var timeoutlock = $("#timeoutlock").val();
     var safetime = $("#safetime").val();
     var pwd_hight = "";
-    if ("" == safetime  || "" == blacklistnumbers){
+    if ("" == safetime  || "" == blacklistnumbers || "" == timeoutlock){
         return tips(LNG.not_null, "error");
     }
         
@@ -1654,8 +1660,9 @@ pwdstrategy_save = function(){
     }
 
    let  aa = {
-            safetime: $("#safetime").val(),
-            blacklistnumbers: $("#blacklistnumbers").val(),
+            safetime:safetime,
+            blacklistnumbers: blacklistnumbers,
+            timeout: timeoutlock,
             pwd_hight: pwd_hight
         }
         $.ajax({

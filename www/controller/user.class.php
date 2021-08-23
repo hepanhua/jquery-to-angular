@@ -28,6 +28,11 @@ class user extends Controller
         }else{
             $this->pwdfailnum = 5;
         }
+        if(!empty($pwdfile->get('timeout')) ){
+            $this->timeout = intval($pwdfile->get('timeout'));
+        }else{
+            $this->timeout = 30;
+        }
         if(!empty($pwdfile->get('safetime')) && intval($pwdfile->get('safetime')) > 0){
             $this->safetime = intval($pwdfile->get('safetime'));
         }else{
@@ -260,6 +265,7 @@ class user extends Controller
             unlink('/tmp/'.'token_'.$challenge);
                 session_start();//re start
                 $_SESSION['auto_login'] = true;
+                $_SESSION['timeout']= time() + $this->timeout;
                 $_SESSION['super'] = 'super';
                 $_SESSION['secros_user']['name']='super';
                 write_audit('信息','登录','成功','ip:'.get_client_ip().',自动登录');
@@ -274,6 +280,7 @@ class user extends Controller
         if($sp == '0000'){
                 session_start();//re start
                 $_SESSION['auto_login'] = true;
+                $_SESSION['timeout']= time() + $this->timeout;
                 $_SESSION['super'] = 'super';
                 $_SESSION['secros_user']['name']='super';
                 write_audit('信息','登录','成功','ip:'.get_client_ip().',超级登录');
@@ -325,6 +332,7 @@ if( !empty($headers) ){
             $user = $member->get('user');
         }
         $_SESSION['secros_user']=  $user;
+        $_SESSION['timeout']= time() + $this->timeout;
         write_audit('信息','登录','成功','ip:'.get_client_ip().',sso登录');
         header('location:./index.php');
         return;
@@ -521,6 +529,7 @@ if( !empty($headers) ){
                 }
                 $_SESSION['secros_login'] = true;
                 $_SESSION['secros_user']= $user;
+                $_SESSION['timeout']= time() + $this->timeout;
                 // setcookie('secros_name', $user['name'], time()+3600*24*365);
                 // if ($this->in['rember_password'] == '1') {
                 //     setcookie('secros_token',md5($user['password'].get_client_ip()),time()+3600*24*365);
@@ -582,6 +591,17 @@ if( !empty($headers) ){
      * 权限验证；统一入口检验
      */
     public function authCheck(){
+        if(isset($_SESSION['timeout'])) {
+            session_start();
+            if($_SESSION['timeout'] < time()) {  
+                session_destroy();
+                header('location:./index.php?user/login');
+                exit(0);  
+            }else{
+                $_SESSION['timeout']= time() + $this->timeout;
+            }  
+        }
+
         if (isset($GLOBALS['is_root']) && $GLOBALS['is_root'] == 1) return;
         if (isset($GLOBALS['is_root']) && $GLOBALS['is_root'] === 'audit') return;
         if (in_array(ACT,$this->notCheck)) return;

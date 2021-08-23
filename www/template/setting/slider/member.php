@@ -183,6 +183,10 @@
 		<span class='infotitle'><?php echo $L['safetime'];?></span><input type="text" id="safetime"/>
 		<span class="text"><?php echo $L['time_value'];?></span>
 	</div>
+    <div class="box_line" style="display: flex; align-items: center;">
+		<span class='infotitle'><?php echo $L['timeoutlock'];?></span><input type="text" id="timeoutlock"/>
+		<span class="text"><?php echo $L['second'];?></span>
+	</div>
 	<div class="box_line" style="display: flex; align-items: center;">
 		<span class='infotitle'><?php echo $L['pwd_hight'];?></span><input type="checkbox" id='pwd_hight' style="margin:0;"/>
         <span class="text" style="margin-left:8px;"><?php echo $L['pwd_hight_tips'];?></span>
