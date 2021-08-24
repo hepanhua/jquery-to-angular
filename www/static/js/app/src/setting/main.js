@@ -1629,7 +1629,7 @@ pwdstrategyinit = function(){
         if(data.timeout){
             $("#timeoutlock").val(parseInt(data.timeout));
         }else{
-            $("#timeoutlock").val(30);
+            $("#timeoutlock").val(0);
         }
         if(data.safetime){
             $("#safetime").val(parseInt(data.safetime));

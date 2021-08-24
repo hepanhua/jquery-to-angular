@@ -31,7 +31,7 @@ class user extends Controller
         if(!empty($pwdfile->get('timeout')) ){
             $this->timeout = intval($pwdfile->get('timeout'));
         }else{
-            $this->timeout = 30;
+            $this->timeout = 0;
         }
         if(!empty($pwdfile->get('safetime')) && intval($pwdfile->get('safetime')) > 0){
             $this->safetime = intval($pwdfile->get('safetime'));
@@ -592,7 +592,7 @@ if( !empty($headers) ){
      */
     public function authCheck(){
   
-        if(isset($_SESSION['timeout'])) {
+        if(isset($_SESSION['timeout']) && $this->timeout != 0) {
             session_start();
             if($_SESSION['timeout'] < time()) {
                 if(ST.'/'.ACT == 'setting/slider' || ST.'/'.ACT == 'explorer/cksessiontimeout'){
