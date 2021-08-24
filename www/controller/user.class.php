@@ -591,9 +591,13 @@ if( !empty($headers) ){
      * 权限验证；统一入口检验
      */
     public function authCheck(){
+  
         if(isset($_SESSION['timeout'])) {
             session_start();
-            if($_SESSION['timeout'] < time()) {  
+            if($_SESSION['timeout'] < time()) {
+                if(ST.'/'.ACT == 'setting/slider' || ST.'/'.ACT == 'explorer/cksessiontimeout'){
+                    show_json('./index.php?user/login',302);
+                }
                 session_destroy();
                 header('location:./index.php?user/login');
                 exit(0);  

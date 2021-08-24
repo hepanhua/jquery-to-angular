@@ -1138,6 +1138,15 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 		},
 		setting: function(e) {
 			!e && (e = G.is_root ? "system" : "user");
+            $.ajax({
+                url: "index.php?explorer/cksessiontimeout",
+                dataType: "json",
+                success: function(res) {
+					if(res.code == 302){
+						window.top.location = res.data;
+					}
+				}
+            });
 			window.frames['Opensetting_mode'] ? 
 			($.dialog.list.setting_mode.display(!0), FrameCall.top("Opensetting_mode", "Setting.setGoto", '"' + e + '"')) :
 			$.dialog.open("./index.php?setting#" + e, {

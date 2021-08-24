@@ -784,6 +784,9 @@ define("app/src/setting/setting", [], function() {
                 $(".main").html("<img src='./static/images/loading.gif'/>")
             },
             success: function(a) {
+                if(a.code == 302){
+                    window.top.location = a.data;
+                }
                 $(".main").css("display", "none"),
                 $(".main").html(a),
                 $(".main").fadeIn("fast"),

@@ -29,7 +29,7 @@ class pwdstrategy extends Controller{
 
         if($timeout < 30){
             write_audit('信息','设置','失败','设置'.$this->L['pwdstrategy']);
-            show_json($this->L['error'],false);
+            show_json($this->L['error'].',超时锁定不得小于30秒',false);
         }
         
         $pwdfile = new fileCache(CONFIG_PATH.'pwdstrategy.php');
