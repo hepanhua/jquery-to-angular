@@ -27,6 +27,11 @@ class pwdstrategy extends Controller{
         $pwd_hight =  $this->in['pwd_hight'];
         $blacklistnumbers =  $this->in['blacklistnumbers'];
 
+        if(!is_numeric($timeout)){
+            write_audit('信息','设置','失败','设置'.$this->L['pwdstrategy']);
+            show_json($this->L['error'],false);
+        }
+        
         if($timeout != 0 && $timeout < 30){
             write_audit('信息','设置','失败','设置'.$this->L['pwdstrategy']);
             show_json($this->L['error'].',超时锁定不得小于30秒',false);
