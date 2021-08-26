@@ -173,7 +173,7 @@
 
 
 
-<!-- 密码策略 -->
+<!-- 登录策略 -->
 <div class="section group_pwdstrategy hidden">
 <div class="box_line" style="display: flex; align-items: center;">
 		<span class='infotitle'><?php echo $L['blacklistsetting'];?></span><input type="text" id="blacklistnumbers"/>
