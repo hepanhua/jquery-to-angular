@@ -519,9 +519,9 @@ if( !empty($headers) ){
             $member = new fileCache(CONFIG_PATH.'member.php');
             $user = $member->get($name);
             if ($user ===false){
-                $this->bladdnums($ip);
+                $res_str = $this->bladdnums($ip);
                 $msg = $this->L['user_not_exists'];
-                write_audit('信息','登录','失败','ip:'.get_client_ip().',登录用户不存在',$this->in['name']);
+                write_audit('信息','登录','失败','登录用户不存在,ip:'.get_client_ip().$res_str,$this->in['name']);
             }else if(md5($password)==$user['password']){
                 if($user['status'] == 0){//初始化app
                     $app = init_controller('app');
@@ -554,8 +554,8 @@ if( !empty($headers) ){
                 header('location:./index.php');
                 return;
             }else{
-                $this->bladdnums($ip);
-                write_audit('信息','登录','失败','ip:'.get_client_ip(),$this->in['name']);
+                $res_str = $this->bladdnums($ip);
+                write_audit('信息','登录','失败','ip:'.get_client_ip().$res_str,$this->in['name']);
                 $msg = $this->L['password_error'];
             }
             $_SESSION['code_error_time'] = intval($_SESSION['code_error_time']) + 1;
@@ -732,6 +732,7 @@ show_json('201');
     // }
 
     public function bladdnums($ttip){
+        $res_str = '';
         $handle = fopen('/etc/system/faillogin', 'r');
         $adntxt =array();
         while(!feof($handle)){
@@ -750,6 +751,9 @@ $ipfind = false;
         $res = explode(":",$adntxt[$i]);
         if($res[0] == $ttip){
             $num = intval($res[1])+ 1;
+            if($num == $this->pwdfailnum){
+                $res_str = '已锁定';
+            }
             $wri = $res[0].":".$num.":".time();
             fwrite($edit,$wri."\n");
             $ipfind = true;
@@ -769,5 +773,6 @@ $ipfind = false;
 fwrite($edit,$ttip.":1"."\n" );
 fclose($edit);
         }
+        return $res_str;
     }
 }
