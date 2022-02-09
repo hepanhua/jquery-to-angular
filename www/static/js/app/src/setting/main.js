@@ -39,9 +39,9 @@ define("app/common/core", [], function(require, exports) {
         },
         ico: function(e) {
             var t = G.static_path + "images/file_16/"
-              , 
+              ,
             a = ["folder", "file", "edit", "search", "up", "setting", "appStore", "error", "info", "mp3", "flv", "pdf", "doc", "xls", "ppt", "html", "swf"]
-              , 
+              ,
             i = $.inArray(e, a);
             return -1 == i ? t + "file.png" : t + e + ".png"
         },
@@ -55,7 +55,7 @@ define("app/common/core", [], function(require, exports) {
         pathThis: function(e) {
             e = e.replace(/\\/g, "/");
             var t = e.split("/")
-              , 
+              ,
             a = t[t.length - 1];
             if ("" == a && (a = t[t.length - 2]),
             0 == a.search("fileProxy")) {
@@ -98,9 +98,9 @@ define("app/common/core", [], function(require, exports) {
         ajaxError: function(e) {
             core.tips.close(LNG.system_error, !1);
             var t = e.responseText
-              , 
+              ,
             a = '<div class="ajaxError">' + t + "</div>"
-              , 
+              ,
             i = $.dialog.list.ajaxErrorDialog;
             return "<!--user login-->" == t.substr(0, 17) ? (FrameCall.goRefresh(),
             void 0) : (i ? i.content(a) : $.dialog({
@@ -147,9 +147,9 @@ define("app/common/core", [], function(require, exports) {
         },
         copyright: function() {
             var e = require("../tpl/copyright.html")
-              , 
+              ,
             t = template.compile(e)
-              , 
+              ,
             a = t({
                 LNG: LNG,
                 G: G
@@ -297,8 +297,8 @@ define("app/common/core", [], function(require, exports) {
             return i
         },
         search: function(e, t) {
-            var a, i, n = require("../tpl/search.html"), 
-            o = require("../tpl/search_list.html"), 
+            var a, i, n = require("../tpl/search.html"),
+            o = require("../tpl/search_list.html"),
             s = function() {
                 var o = template.compile(n);
                 0 == $(".dialog_do_search").length ? (l(),
@@ -336,7 +336,7 @@ define("app/common/core", [], function(require, exports) {
                 r(),
                 $.dialog.list.dialog_do_search.display(!0))
             }
-            , 
+            ,
             r = function() {
                 i = {
                     search: $("#search_value").val(),
@@ -347,7 +347,7 @@ define("app/common/core", [], function(require, exports) {
                 },
                 c(i)
             }
-            , 
+            ,
             l = function() {
                 $("#search_value").die("keyup").live("keyup", function() {
                     ui.path.setSearchByStr($(this).val())
@@ -356,7 +356,7 @@ define("app/common/core", [], function(require, exports) {
                 $(".search_header a.button").die("click").live("click", r),
                 $(".search_result .list .name").die("click").live("click", function() {
                     var e = $(this).find("a").html()
-                      , 
+                      ,
                     t = $(this).parent().find(".path a").html() + e;
                     $(this).parent().hasClass("file") ? ui.pathOpen.open(t) : "explorer" == Config.pageApp ? ui.path.list(t + "/", "tips") : core.explorer(t + "/")
                 }),
@@ -365,7 +365,7 @@ define("app/common/core", [], function(require, exports) {
                     "explorer" == Config.pageApp ? ui.path.list(e, "tips") : core.explorer(e)
                 })
             }
-            , 
+            ,
             c = function(e) {
                 var t = 150;
                 $("#search_value").focus(),
@@ -408,21 +408,21 @@ define("app/common/core", [], function(require, exports) {
         server_dwonload: function(e) {
             core.upload_check("explorer:serverDownload");
             var t = $(".download_box")
-              , 
+              ,
             a = t.find("#download_list")
-              , 
+              ,
             i = t.find("input").val();
             if (t.find("input").val(""),
             !i || "http" != i.substr(0, 4))
                 return core.tips.tips("url false!", !1),
                 void 0;
             var n = UUID()
-              , 
+              ,
             o = '<div id="' + n + '" class="item">' + '<div class="info"><span class="title" tytle="' + i + '">' + core.pathThis(i) + "</span>" + '<span class="size">0b</span>' + '<span class="state">' + LNG.upload_ready + "</span>" + '<a class="remove font-icon icon-remove" href="javascript:void(0)"></a>' + '<div style="clear:both"></div></div></div>';
             a.find(".item").length > 0 ? $(o).insertBefore(a.find(".item:eq(0)")) : a.append(o);
-            var s, r, l, c = 0, 
-            d = $("#" + n), 
-            p = $("#" + n + " .state").text(LNG.download_ready), 
+            var s, r, l, c = 0,
+            d = $("#" + n),
+            p = $("#" + n + " .state").text(LNG.download_ready),
             u = $('<div class="progress progress-striped active"><div class="progress-bar" role="progressbar" style="width: 0%;text-align:right;"></div></div>').appendTo("#" + n).find(".progress-bar");
             $("#" + n + " .remove").bind("click", function() {
                 clearInterval(s),
@@ -466,7 +466,7 @@ define("app/common/core", [], function(require, exports) {
                     dataType: "json",
                     success: function(e) {
                         var t = ""
-                          , 
+                          ,
                         a = e.data;
                         if (s) {
                             if (!e.code)
@@ -537,9 +537,9 @@ define("app/common/core", [], function(require, exports) {
                 return $.dialog.list.dialog_file_upload.display(!0),
                 void 0;
             var t = require("../tpl/upload.html")
-              , 
+              ,
             a = template.compile(t)
-              , 
+              ,
             i = WebUploader.Base.formatSize(G.upload_max);
             $.dialog({
                 padding: 5,
@@ -583,7 +583,7 @@ define("app/common/core", [], function(require, exports) {
         },
         upload_init: function() {
             var e = "#thelist"
-              , 
+              ,
             t = !0;
             $.browser.msie && (t = !1);
             var a = 10485760;
@@ -631,30 +631,30 @@ define("app/common/core", [], function(require, exports) {
                 stopPP(e)
             });
             var i = 0
-              , 
+              ,
             n = 0
-              , 
+              ,
             o = "0B/s"
-              , 
+              ,
             s = function(e, t) {
                 var a = e.size * t
-                  , 
+                  ,
                 i = 5;
                 e.speed === void 0 ? e.speed = [
-                [time() - 500, 0], 
+                [time() - 500, 0],
                 [time(), a]
                 ] : i >= e.speed.length ? e.speed.push([time(), a]) : (e.speed = e.speed.slice(1, i),
                 e.speed.push([time(), a]));
                 var n = e.speed[e.speed.length - 1]
-                  , 
+                  ,
                 s = e.speed[0]
-                  , 
+                  ,
                 r = (n[1] - s[1]) / ((n[0] - s[0]) / 1e3);
                 return r = core.file_size(r) + "/s",
                 o = r,
                 r
             }
-              , 
+              ,
             r = [];
             uploader.on("uploadBeforeSend", function(e, t) {
                 var a = urlEncode(e.file.fullPath);
@@ -665,7 +665,7 @@ define("app/common/core", [], function(require, exports) {
                     return uploader.skipFile(t),
                     uploader.removeFile(t),
                     void 0;
-                var a, n = $(e), 
+                var a, n = $(e),
                 a = t.fullPath;
                 t.finished = !1,
                 (void 0 == a || "undefined" == a) && (a = t.name),
@@ -677,9 +677,9 @@ define("app/common/core", [], function(require, exports) {
             }).on("uploadProgress", function(e, t) {
                 $(".dialog_file_upload .aui_title").text(LNG.uploading + ": " + n + "/" + i + " (" + o + ")");
                 var a = s(e, t)
-                  , 
+                  ,
                 r = $("#" + e.id)
-                  , 
+                  ,
                 l = r.find(".progress .progress-bar");
                 l.length || (l = $('<div class="progress progress-striped active"><div class="progress-bar" role="progressbar" style="width: 0%"></div></div>').appendTo(r).find(".progress-bar")),
                 r.find(".state").text(parseInt(100 * t) + "%(" + a + ")"),
@@ -766,11 +766,11 @@ define("app/src/setting/setting", [], function() {
         core.setSkin(e, "app_setting.css"),
         FrameCall.father("ui.setTheme", '"' + e + '"')
     }
-    , 
+    ,
     a = function(e) {
         core.setSkin(e, "app_setting.css")
     }
-    , 
+    ,
     i = function(t) {
         ("" == t || void 0 == t) && (t = "user"),
         e = t,
@@ -800,7 +800,7 @@ define("app/src/setting/setting", [], function() {
             }
         })
     }
-    , 
+    ,
     n = function() {
         G.is_root ? $("ul.setting #system").show() : $("ul.setting #system").hide(),
         G.is_root ? $("ul.setting #antivirus").show() : $("ul.setting #antivirus").hide(),
@@ -825,7 +825,7 @@ define("app/src/setting/setting", [], function() {
             $(this).toggleClass("listhover")
         }).live("click", function() {
             var e = $(this)
-              , 
+              ,
             a = e.parent();
             switch (type = a.attr("data-type"),
             value = e.attr("data-value"),
@@ -857,13 +857,13 @@ define("app/src/setting/setting", [], function() {
             })
         })
     }
-    , 
+    ,
     o = function() {
         var e = $(".selected").attr("id");
         switch (e) {
         case "user":
             var t = $("#password_now").val()
-              , 
+              ,
             a = $("#password_new").val()
             ,b = $("#password_renew").val();
             if ("" == a || "" == t || "" == b) {
@@ -892,7 +892,7 @@ define("app/src/setting/setting", [], function() {
                 }else{
                     pwd_hight_on = 0;
                 }
-    
+
                 }
             });
 
@@ -915,7 +915,7 @@ define("app/src/setting/setting", [], function() {
             break;
         case "net":
             var ip = $("#net_ip").val()
-              , 
+              ,
             mask = $("#net_mask").val();
             gateway = $("#net_gateway").val();
             if ("" == ip) {
@@ -965,7 +965,7 @@ define("app/src/setting/setting", [], function() {
 }),
 define("app/src/setting/fav", [], function() {
     var e = "index.php?fav/"
-      , 
+      ,
     t = function(t) {
         var a;
         $.ajax({
@@ -987,29 +987,29 @@ define("app/src/setting/fav", [], function() {
         if ($("table#list").html(i),
         "fav&" == t.substring(0, 4)) {
             var o = t.split("&")[1].split("=")[1]
-              , 
+              ,
             s = t.split("&")[2].split("=")[1]
-              , 
+              ,
             r = "<tr class='favlist' name='' path=''>   <td class='name'><input type='text' id='sname' value='" + urlDecode(o) + "' /></td>" + "   <td class='path'><input type='text' id='spath' value='" + urlDecode(s) + "' /></td>" + "   <td class='action'>" + "       <a href='javascript:void(0)' class='button addsave'>" + LNG.button_save + "</a>" + "       <a href='javascript:void(0)' class='button addexit'>" + LNG.button_cancel + "</a>" + "   </td>" + "</tr>";
             $(r).insertAfter("table#list tr:last")
         }
     }
-      , 
+      ,
     a = function() {
         var e = "<tr class='favlist' name='' path=''>   <td class='name'><input type='text' id='sname' value='' /></td>   <td class='path'><input type='text' id='spath' value='' /></td>   <td class='action'>       <a href='javascript:void(0)' class='button addsave'>" + LNG.button_save + "</a>" + "       <a href='javascript:void(0)' class='button addexit'>" + LNG.button_cancel + "</a>" + "   </td>" + "</tr>";
         $(e).insertAfter("table#list tr:last")
     }
-      , 
+      ,
     i = function() {
         var e = $(this).parent().parent();
         $(e).detach()
     }
-      , 
+      ,
     n = function() {
         var t = $(this).parent().parent()
-          , 
+          ,
         a = $(t).find("#sname").val()
-          , 
+          ,
         i = $(t).find("#spath").val();
         return "" == a || "" == i ? (tips(LNG.not_null, "error"),
         !1) : ($.ajax({
@@ -1028,14 +1028,14 @@ define("app/src/setting/fav", [], function() {
         }),
         void 0)
     }
-      , 
+      ,
     o = function() {
         var t = $(this).parent().parent()
-          , 
+          ,
         a = $(t).attr("name")
-          , 
+          ,
         i = $(t).find("#sname").val()
-          , 
+          ,
         n = $(t).find("#spath").val();
         return "" == i || "" == n ? (tips(LNG.not_null, "error"),
         !1) : ($.ajax({
@@ -1049,10 +1049,10 @@ define("app/src/setting/fav", [], function() {
         }),
         void 0)
     }
-      , 
+      ,
     s = function() {
         var t = $(this).parent().parent()
-          , 
+          ,
         a = $(t).attr("name");
         $.ajax({
             url: e + "del&name=" + a,
@@ -1065,7 +1065,7 @@ define("app/src/setting/fav", [], function() {
             }
         })
     }
-      , 
+      ,
     r = function() {
         $(".fav a.add").live("click", a),
         $(".fav a.addexit").live("click", i),
@@ -1081,9 +1081,9 @@ define("app/src/setting/fav", [], function() {
 }),
 define("app/src/setting/file", [], function() {
 		var e = "index.php?file/"
-		 , 
+		 ,
     t = {}
-      , 
+      ,
     a = function() {
         $.ajax({
             url: e + "get",
@@ -1109,7 +1109,7 @@ define("app/src/setting/file", [], function() {
         $(".file_editor #ext_allow").val(a.ext_allow),
         $(".file_editor .tag").each(function() {
             var e = $(this)
-              , 
+              ,
             t = e.attr("data-role");
             t = t.split(";"),
             t = t[0],
@@ -1120,7 +1120,7 @@ define("app/src/setting/file", [], function() {
         	$(".file_editor #file_deepcheck").attr("checked", !0);
         }
     }
-    , 
+    ,
     l = function(e) {
         $(".nav .this").removeClass("this"),
         e.addClass("this");
@@ -1140,8 +1140,8 @@ define("app/src/setting/file", [], function() {
                 o = arr.join(",");
             }
         },
-        s = {}, 
-        r = "", 
+        s = {},
+        r = "",
         l = "add";
         cg();
         if ($(".file_editor #file_deepcheck").attr("checked")) {
@@ -1194,7 +1194,7 @@ define("app/src/setting/file", [], function() {
             document.getElementById("upload").submit();
             var obj = document.getElementById("ai_tip");
                         obj.innerHTML='<img src=\"/static/images/lazy.gif\" />';*/
-                
+
 if(($('#upload #uploadfile')[0].files[0].size / 1024 /1024).toFixed(0)>200){
     alert(LNG.group_upload_tips); //智能学习文件不超过200m
     return false;
@@ -1202,7 +1202,7 @@ if(($('#upload #uploadfile')[0].files[0].size / 1024 /1024).toFixed(0)>200){
 let stydy_name = $('#upload #uploadfile')[0].files[0].name;
 						var formData = new FormData($('#upload')[0]);
 			     //如果上传的文件不为空
-			     if($("input[type='file']").val() != ""){  
+			     if($("input[type='file']").val() != ""){
 			        var obj = document.getElementById("ai_tip");
 							obj.innerHTML='<img src=\"/static/images/study.gif\" />'
 			        //ajax上传数据
@@ -1261,8 +1261,8 @@ let stydy_name = $('#upload #uploadfile')[0].files[0].name;
     }
 }),
 define("app/src/setting/usblist", [], function() {
-    var e = "index.php?usbwhitelist/", 
-t = {}, 
+    var e = "index.php?usbwhitelist/",
+t = {},
 a = function() {
     $.ajax({
         url: e + "get",
@@ -1310,7 +1310,7 @@ o = function(data){
 var t = "<tr><td>U盘SID</td><td width='20%'>使用人</td><td width='20%'>备注</td><td width='20%'>" + LNG.action + "</td></tr>";
 if(data){
 for(let k in data){
-   t +=  "<tr><td class='usb_name'>"+data[k].name+"</td><td width='20%' class='usb_user'>"+data[k].user+"</td><td width='20%' class='usb_desc'>"+data[k].desc+"</td><td width='20%'>"+ 
+   t +=  "<tr><td class='usb_name'>"+data[k].name+"</td><td width='20%' class='usb_user'>"+data[k].user+"</td><td width='20%' class='usb_desc'>"+data[k].desc+"</td><td width='20%'>"+
    "<a href='javascript:void(0)' class='button edit' >" + "编辑" + "</a><a href='javascript:void(0)' class='button delete'>" + "删除" + "</a></td></tr>";
 }
 }
@@ -1321,7 +1321,7 @@ edit = function(){
     let user= $(this).parent().parent().find('.usb_user').text();
     let desc = $(this).parent().parent().find('.usb_desc').text();
     let t =  "<td class='usb_name'>"+name+"</td><td width='20%'><input type='text' class='usb_user'  value='"+user+"' data-old='"+user+"'/></td><td width='20%'>"+
-    "<input type='text' class='usb_desc' value='"+desc+"' data-old='"+desc+"'/></td><td width='20%'>"+ 
+    "<input type='text' class='usb_desc' value='"+desc+"' data-old='"+desc+"'/></td><td width='20%'>"+
     "<a href='javascript:void(0)' class='button editsave' >" + "确认编辑" + "</a><a href='javascript:void(0)' class='button editcancle'>" + "取消" + "</a></td>";
     $(this).parent().parent().html(t);
 },
@@ -1427,7 +1427,7 @@ editcancle = function(){
     let name = $(this).parent().parent().find('.usb_name').text();
     let user= $(this).parent().parent().find('.usb_user').data('old');
     let desc = $(this).parent().parent().find('.usb_desc').data('old');
-    let t =  "<td class='usb_name'>"+name+"</td><td width='20%' class='usb_user'>"+user+"</td><td width='20%' class='usb_desc'>"+desc+"</td><td width='20%'>"+ 
+    let t =  "<td class='usb_name'>"+name+"</td><td width='20%' class='usb_user'>"+user+"</td><td width='20%' class='usb_desc'>"+desc+"</td><td width='20%'>"+
     "<a href='javascript:void(0)' class='button edit' >" + "编辑" + "</a><a href='javascript:void(0)' class='button delete'>" + "删除" + "</a></td>";
     $(this).parent().parent().html(t);
 },
@@ -1476,9 +1476,9 @@ return {
 }),
 define("app/src/setting/group", [], function() {
     var e = "index.php?group/"
-      , 
+      ,
     t = {}
-      , 
+      ,
     a = function() {
         $.ajax({
             url: e + "get",
@@ -1514,7 +1514,7 @@ define("app/src/setting/group", [], function() {
             }
         })
     }
-      , 
+      ,
     i = function() {
         var e = "<tr class='title'><td width='20%'>" + LNG.group + "</td>" + "<td width=''>" + LNG.name + "</td>" + "<td width='35%'>" + LNG.action + "</td>" + "</tr>";
         for (var a in t) {
@@ -1526,7 +1526,7 @@ define("app/src/setting/group", [], function() {
         }
         $(".group table#list").html(e)
     }
-      , 
+      ,
       towa = function(){
         let n = {
             b1: "add_save'>" + LNG.button_add,
@@ -1656,8 +1656,8 @@ pwdstrategy_save = function(){
     if ("" == safetime  || "" == blacklistnumbers || "" == timeoutlock){
         return tips(LNG.not_null, "error");
     }
-        
-  
+
+
     if ($("#pwd_hight").attr("checked")) {
         pwd_hight = "enabled";
     }
@@ -1749,7 +1749,7 @@ pwdstrategy_save = function(){
         $(".group_editor .add_save").removeClass("hidden"),
         $(".nav .group_status").html(LNG.setting_group_add)
     }
-      , 
+      ,
     o = function(e) {
         var a;
         a = t[e],
@@ -1765,7 +1765,7 @@ pwdstrategy_save = function(){
         $(".group_editor #ext_not_allow").val(a.ext_not_allow),
         $(".group_editor .tag").each(function() {
             var e = $(this)
-              , 
+              ,
             t = e.attr("data-role");
             t = t.split(";"),
             t = t[0],
@@ -1773,18 +1773,18 @@ pwdstrategy_save = function(){
             e.find("input").attr("checked", !0))
         })
     }
-      , 
+      ,
     s = function() {
         var t = $(".group_editor #role").val()
-          , 
+          ,
         i = $(".group_editor #name").val()
-          , 
+          ,
         o = $(".group_editor #ext_not_allow").val()
-          , 
+          ,
         s = {}
-          , 
+          ,
         r = ""
-          , 
+          ,
         l = "add";
         if (void 0 == o && (o = ""),
         "" == t || "" == i)
@@ -1815,10 +1815,10 @@ pwdstrategy_save = function(){
             }
         })
     }
-      , 
+      ,
     r = function() {
         var t = $(this).parent().parent()
-          , 
+          ,
         i = $(t).attr("role");
         $.dialog({
             fixed: !0,
@@ -1842,7 +1842,7 @@ pwdstrategy_save = function(){
             cancel: !0
         })
     }
-      , 
+      ,
     l = function(e) {
         $(".nav .this").removeClass("this"),
         e.addClass("this");
@@ -1850,7 +1850,7 @@ pwdstrategy_save = function(){
         $(".section").addClass("hidden"),
         $("." + t).removeClass("hidden")
     }
-      , 
+      ,
       tchange = function(){
         let type = $("#type_whitelist").val();
         if(type == 1){
@@ -1909,7 +1909,7 @@ pwdstrategy_save = function(){
             }
         })
     }
-      , 
+      ,
     d = function() {
         return t
     }
@@ -1922,10 +1922,10 @@ pwdstrategy_save = function(){
     }
 }),
 define("app/src/setting/member", [], function() {
-    var e, t = "index.php?member/", 
-    a = "", 
+    var e, t = "index.php?member/",
+    a = "",
     pwd_hight_on = "",
-    i = {}, 
+    i = {},
     n = function() {
         i = Group.getData(),
         $.ajax({
@@ -1960,10 +1960,10 @@ define("app/src/setting/member", [], function() {
             }
         });
     }
-    , 
+    ,
     o = function() {
         var t = "<tr class='title'><td width=''>" + LNG.username + "</td>" + "<td width='20%'>" + LNG.group_name + "</td>" + "<td width='35%'>" + LNG.action + "</td>" + "</tr>"
-          , 
+          ,
         n = objectKeys(i);
         a = "";
         for (var o = n.length - 1; o >= 0; o--) {
@@ -1976,7 +1976,7 @@ define("app/src/setting/member", [], function() {
             t += s(e[o].name, e[o].role);
         $(".member table#list").html(t)
     }
-    , 
+    ,
     s = function(e, t) {
         void 0 == e && (e = ""),
         void 0 == t && (t = "");
@@ -1990,7 +1990,7 @@ define("app/src/setting/member", [], function() {
         var o = "<tr name='" + urlDecode(e) + "' role='" + t + "'>" + "   <td>" + e + "</td>" + "   <td><a href='javascript:void(0)' class='edit_role'>" + a + "</a></td>" + "   <td>" + n + "</td>" + "</tr>";
         return o
     }
-    , 
+    ,
     r = function(e, t, i) {
         void 0 == t && (t = ""),
         void 0 == i && (i = "");
@@ -2005,25 +2005,25 @@ define("app/src/setting/member", [], function() {
         var o = "<tr name='" + t + "' role='" + i + "'>" + "   <td class='member'>" + LNG.username + ":<input type='text' id='name' value='" + t + "'/>" + "       <span>" + LNG.password + ":</span><input type='text' id='password'/></td>" + "   <td><select id='role' value='" + i + "'>" + a + "</select></td>" + "   <td>" + "       <a href='javascript:void(0)' class='button " + n.b1 + "</a>" + "       <a href='javascript:void(0)' class='button " + n.b2 + "</a>" + "   </td>" + "</tr>";
         return o
     }
-    , 
+    ,
     l = function() {
         var e = r("add");
         $(e).insertAfter(".member table#list tr:last")
-    }, 
+    },
     c = function() {
         var e = $(this).parent().parent();
         $(e).detach()
     }
-    , 
+    ,
     d = function() {
         var e = $(this).parent().parent()
-          , 
+          ,
         a = urlEncode($(e).find("#name").val())
-          , 
+          ,
         i = urlEncode($(e).find("#password").val())
-          , 
+          ,
         n = $(e).find("#role").val();
-     
+
         if(!a || !i || !n){
             tips(LNG.not_null, "warning");
         }else{
@@ -2053,10 +2053,10 @@ define("app/src/setting/member", [], function() {
         });
     }
     }
-    , 
+    ,
     p = function() {
         var e = $(this).parent().parent()
-          , 
+          ,
         t = r("edit", $(e).attr("name"), $(e).attr("role"));
         $(".info").html(LNG.password_null_not_update).fadeIn(100),
         $(t).insertAfter(e);
@@ -2064,25 +2064,25 @@ define("app/src/setting/member", [], function() {
         $(e).next().find("option[value=" + a + "]").attr("selected", "true"),
         $(e).detach()
     }
-    , 
+    ,
     u = function() {
         var e = $(this).parent().parent()
-          , 
+          ,
         t = s($(e).attr("name"), $(e).attr("role"));
         $(t).insertAfter(e),
         $(e).detach(),
         $(".info").fadeOut(100)
     }
-    , 
+    ,
     h = function() {
         var e = $(this).parent().parent()
-          , 
+          ,
         a = urlEncode($(e).attr("name"))
-          , 
+          ,
         i = urlEncode($(e).find("#name").val())
-          , 
+          ,
         n = $(e).find("#role").val()
-          , 
+          ,
         o = urlEncode($(e).find("#password").val());
         if ("" == i || "" == n)
             return tips(LNG.not_null, "error"),
@@ -2116,10 +2116,10 @@ define("app/src/setting/member", [], function() {
             }
         })
     }
-    , 
+    ,
     f = function() {
         var e = $(this).parent().parent()
-          , 
+          ,
         a = $(e).attr("name");
         $.dialog({
             fixed: !0,
@@ -2141,7 +2141,7 @@ define("app/src/setting/member", [], function() {
             cancel: !0
         })
     }
-    , 
+    ,
     m = function() {
         $(".member a.add").live("click", l),
         $(".member a.add_exit").live("click", c),
@@ -2168,7 +2168,7 @@ define("app/src/setting/member", [], function() {
     }
 }),
 define("app/src/setting/antivirus", [], function() {
-    var e, a, t = "/cgi-bin/avverify.cgi", 
+    var e, a, t = "/cgi-bin/avverify.cgi",
     d = function() {
         var key = $("#key").val();
         var dealmethod = $("input[name='deal']:checked").val();
@@ -2188,7 +2188,7 @@ define("app/src/setting/antivirus", [], function() {
         if(!zipdealmethod){
             return tips(LNG.antivirus_zipdeal_not_null, "error");
         }
-        
+
 				$.ajax({
             url: t + "?key=" + key + "&antivirus_file=" + a + "&antivirus_policy=" + dealmethod + "&antivirus_compress=" + zipdealmethod,
             dataType: "json",
@@ -2202,7 +2202,7 @@ define("app/src/setting/antivirus", [], function() {
                 else{
                     tips(LNG.antivirus_invalid_key,"error");
                 }
-                
+
             }
         })
     },
@@ -2221,7 +2221,7 @@ define("app/src/setting/antivirus", [], function() {
         });
     },
     offline_update=function(){
-        var file = $('#av_offline_update')[0].files[0];//文件对象 
+        var file = $('#av_offline_update')[0].files[0];//文件对象
         if(!file){
             return false;
         }
@@ -2235,7 +2235,7 @@ define("app/src/setting/antivirus", [], function() {
     $('.updatedom', window.parent.document).removeClass('hidden');
 
      var xhr = new XMLHttpRequest();
-     xhr.open('POST', 'index.php?user/offlinefile'); 
+     xhr.open('POST', 'index.php?user/offlinefile');
      xhr.onreadystatechange = function() {
          if (xhr.status === 200) {
           if (xhr.readyState == 4){
@@ -2319,7 +2319,7 @@ define("app/src/setting/remotelog", [], function() {
             let remotelogserver = document.getElementById('remotelogserver');
             if(a.remotelog == "enabled"){
                 $("#remotelogstatus").prop("checked",true);
-                remotelogserver.disabled=false; 
+                remotelogserver.disabled=false;
                 $("#remotelogserver").val(a.remotelogserver);
             }else{
                 $("#remotelogstatus").prop("checked",false);
@@ -2360,7 +2360,7 @@ define("app/src/setting/remotelog", [], function() {
    cc = function(){
     let remotelogserver = document.getElementById('remotelogserver');
     if($("#remotelogstatus").attr("checked")){
-        remotelogserver.disabled=false; 
+        remotelogserver.disabled=false;
         remotelogserver.placeholder="远程日志服务器IP";
     }
     else{
@@ -2428,7 +2428,7 @@ define("app/src/setting/ssoset", [], function() {
      }
  }),
 define("app/src/setting/platform", [], function() {
-    var  url = "/cgi-bin/setnoc.cgi", 
+    var  url = "/cgi-bin/setnoc.cgi",
     d = function() {
         let authmode = $("input[name='authmode']:checked").val();
         let serverip = $("#serverip").val();
@@ -2552,7 +2552,7 @@ define("app/src/setting/system", [], function() {
                 ntp_server = '';
                 ntp_server_ck = '';
             }
-            
+
             let postdata = {
                 time:end,
                 method:method,
@@ -2583,7 +2583,7 @@ define("app/src/setting/system", [], function() {
                     if(json.method){
                         method[json.method - 1].click(); //n-1
                     }
-                    
+
                     $("#now_time").text(json.now);
                     $("#ntp_server").val(json.ip);
                     $("#ntp_server_ck").val(json.ck);
@@ -2597,12 +2597,12 @@ define("app/src/setting/system", [], function() {
         nowtimepick=function(obj){
             var datefff=document.getElementById(obj);
             var myDate = new Date();
-            var time=myDate.toLocaleDateString(); 
-            var h=myDate.getHours();      
-            var m=myDate.getMinutes();    
-            var s=myDate.getSeconds(); 
-            
-            
+            var time=myDate.toLocaleDateString();
+            var h=myDate.getHours();
+            var m=myDate.getMinutes();
+            var s=myDate.getSeconds();
+
+
             var x=time.split('/');
             if(x[1]<10){
                 x[1]='0'+x[1];
@@ -2612,9 +2612,151 @@ define("app/src/setting/system", [], function() {
             }
            time=x.join('-');
           time=time + "T" +getaa(h)+':'+getaa(m)+":"+getaa(s);
-        
+
         datefff.value=time;
         },
+        //恢复出厂配置
+        $('#factoryreset').live("click",function(e){
+            $.dialog({
+                fixed: !0,
+                icon: "question",
+                drag: !0,
+                title: LNG.warning,
+                content: "确定要恢复出厂配置吗?",
+                ok: function() {
+                    $.ajax({
+                        url: "/cgi-bin/factoryreset.cgi",
+                        async: !1,
+                        dataType: "json",
+                        success: function(e) {
+                            if(e.code == 0){
+                                sendlog(1,'factoryreset');
+                                tips(e.info);
+                            }else{
+                                sendlog(0,'factoryreset');
+                                tips(e.info,"warning");
+                            }
+
+                        }
+                    })
+                },
+                cancel: !0
+            });
+        }),
+        sendlog = function(e,n){
+            $.ajax({
+                url: "/index.php?group/sendlog&a="+e+'&b='+n,
+                dataType: "json",
+                success: function(e) {}
+            });
+        },
+        $('#download_backup').live("click",function(e){
+var url = '/cgi-bin/backupcfg.cgi';
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url, true);
+  xhr.responseType = "blob";
+  xhr.onload = function () {
+    // 请求完成
+    if (this.status === 200) {
+      var blob = this.response;
+      var reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onload = function (e) {
+        sendlog(1,'backupcfg');
+        var a = document.createElement('a');
+        a.download = xhr.getResponseHeader('Content-disposition').split('filename=')[1];
+        a.href = e.target.result;
+        $("body").append(a);
+        a.click();
+        $(a).remove();
+      }
+    }
+  };
+  // 发送ajax请求
+  xhr.send();
+
+        }),
+        // 备份/恢复
+$('#backup_btn').live("click",function(e){
+	document.getElementById("backupfile_id").click();
+}),
+$('#backupfile_id').live("change",function(e){
+	let ls = e.currentTarget.files[0].name;
+	if(ls){
+		$('#backup_btn_post').removeClass('hidden');
+		$('.select_file_nametext').text(e.currentTarget.files[0].name);
+	}else{
+		$('#backup_btn_post').addClass('hidden');
+		$('.select_file_nametext').text('');
+	}
+}),
+$('#backup_btn_post').live("click",function(e){
+let ck = $('.select_file_nametext').text();
+if(!ck){
+	return;
+}
+
+			// $('#update_text', window.parent.document).text("正在升级中，请勿切断电源");
+			// $('.updateframe', window.parent.document).removeClass('hidden');
+
+var formData = new FormData();
+formData.append("uploadfile",$('#backupfile_id')[0].files[0]);
+	$.ajax({
+        url:'/cgi-bin/restorecfg.cgi',
+        dataType:'json',
+        type:'POST',
+		data: formData,
+		contentType: false,
+        processData: false,
+    //     xhr: function() {
+	//       var xhr = $.ajaxSettings.xhr();
+	//       if (xhr.upload) {
+	//           xhr.upload.onprogress = function(e) {
+	//               if (e.lengthComputable) {
+	//                  let progresswidth = Math.floor( e.loaded / e.total * 100);
+
+    //                   if (progresswidth < 100) {
+    //                             progresswidth += 1;
+    //                             $('#update_progress_bar', window.parent.document).css('width', progresswidth + '%');
+    //                             $('#update_progress_value', window.parent.document).text(progresswidth + '%');
+    // }
+
+	//               }
+	//           };
+	//       }
+	//       return xhr;
+	//   },
+        success: function(res){
+            if(res.info){
+                if(res.code == 0){
+                    sendlog(1,'restorecfg');
+                    tips(res.info);
+                }else{
+                    sendlog(0,'restorecfg');
+                    tips(res.info,"warning");
+                }
+
+            }
+
+                //        if(res.code == 200){
+                //         $('#update_progress_bar', window.parent.document).css('width', '100%');
+                //                 $('#update_progress_value', window.parent.document).text('100%');
+                //  alert('升级成功,请重启设备后生效');
+                //  $('.updateframe',window.parent.document).addClass('hidden');
+                //  $('.aui_close',window.parent.document)[0].click();
+                //                     }
+                //                   if (res.code == 400) {
+                //         alert(res.msg);
+                //         $('.updateframe', window.parent.document).addClass('hidden');
+                //     }
+        },
+        error:function(response){
+			// $('.updateframe', window.parent.document).addClass('hidden');
+            console.log(response);
+        }
+    });
+}),
+        //end
         $(".system_save").live("click", function() {
             var e = {};
             $(".system_setting .box_line input").each(function() {
@@ -2660,7 +2802,7 @@ define("app/src/setting/system", [], function() {
 				$('.rebootdom #rebootdom_progress_bar', window.parent.document).css('width', progresswidth + '%');
                 $('.rebootdom #rebootdom_progress_value', window.parent.document).text(progresswidth + '%');
                 }
-                
+
                 $.ajax({
                     url: "cgi-bin/ready.cgi",
                     dataType:'json',
@@ -2678,9 +2820,9 @@ define("app/src/setting/system", [], function() {
                                      $('.rebootdom',window.parent.document).addClass('hidden');
                                     //  $('.aui_close',window.parent.document)[0].click();
                                     window.parent.location.reload();
-                                    }, 1000); 
+                                    }, 1000);
                             }
-                                    
+
                                           if (t.code == 400) {
                                             alert(t.msg);
                                             $('.rebootdom', window.parent.document).addClass('hidden');
@@ -2688,8 +2830,8 @@ define("app/src/setting/system", [], function() {
                     }
                     });
 			},2000);
-		  
-                        
+
+
                     }
                 });
             },
@@ -2726,7 +2868,7 @@ define("app/src/setting/system", [], function() {
             })
         })
     }
-      , 
+      ,
     t = function() {
         $('.setting_menu .menu_list input[name="target"]').live("click", function() {
             "_blank" == $(this).val() ? ($(this).val("_self"),
@@ -2758,7 +2900,7 @@ define("app/src/setting/system", [], function() {
         $(".system_menu_save").live("click", function() {
             var e = [];
             $(".setting_menu .menu_list").each(function() {
-                var t = $(this), 
+                var t = $(this),
                 a = {};
                 t.hasClass("menu_default") || (t.find("input").each(function() {
                     a[$(this).attr("name")] = urlEncode($(this).attr("value"))
@@ -2774,7 +2916,7 @@ define("app/src/setting/system", [], function() {
             })
         })
     }
-      , 
+      ,
     a = function(e) {
         $.ajax({
             url: "index.php?setting/system_setting",

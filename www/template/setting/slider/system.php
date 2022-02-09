@@ -1,7 +1,8 @@
 <div class='h1'><i class="font-icon icon-user"></i><?php echo $L['system_setting'];?></div>
 <div class="nav">
     <a href="javascript:;"  class="this" data-page="setting"><?php echo $L['system_setting'];?></a>
-	<?php if (TIME_ON == 1) {  ?>	
+	<a href="javascript:;" data-page="system_config"><?php echo $L['system_config_title'];?></a>
+	<?php if (TIME_ON == 1) {  ?>
 		<a href="javascript:;" id="system_timesetting" data-page="system_timesetting"><?php echo $L['system_timesetting'];?></a>
 	<?php } ?>
 	<div style="clear:both;"></div>
@@ -98,9 +99,26 @@
   <div style="clear:both;"></div>
 </div>
 
+<div class="section system_config hidden">
+<div style="border: 1px solid #dde;border-bottom:none;line-height:48px;font-size:16px;display:flex;align-items: center;">
+<input id="backupfile_id"   type="file" size="32" style="display:none">
+    <div style="display:flex;align-items: center;flex-wrap:wrap;">
+    <a class="button" style="width:90px;margin-left:22px"  id="backup_btn">恢复配置</a>
+    <div><p class="select_file_nametext" style="margin:0;white-space: nowrap; text-overflow: ellipsis; overflow: hidden;text-indent: 16px;"></p> </div>
+	<a class="button hidden" style="width:90px;margin-left:22px"  id="backup_btn_post">确定</a>
+</div>
+
+</div>
+<div style="border: 1px solid #dde;border-bottom:none;height:48px;font-size:16px;display:flex;align-items: center;">
+  <a class="button" style="width:90px;margin-left:22px"  id="download_backup">备份配置</a>
+</div>
+<div style="border: 1px solid #dde;height:48px;font-size:16px;display:flex;align-items: center;">
+  <a class="button" style="width:90px;margin-left:22px"  id="factoryreset">还原出厂配置</a>
+</div>
+</div>
 
 <!-- 时间设置 -->
-<?php if (TIME_ON == 1) {  ?>	
+<?php if (TIME_ON == 1) {  ?>
 <div class="section system_timesetting hidden">
 <div class="box_line">
 <div style="display:flex;flex-direction: column;">

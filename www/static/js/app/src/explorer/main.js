@@ -38,7 +38,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			back: 1,
 			next: 0
 		}
-	}, e("lib/jquery-lib"), e("lib/util"), e("lib/ztree/js/ztree"), e("lib/contextMenu/jquery-contextMenu"), e("lib/artDialog/jquery-artDialog"), e("lib/picasa/picasa"), ui = e("./ui"), TaskTap = e("../../common/taskTap"), core = e("../../common/core"), rightMenu = e("../../common/rightMenu"), ui.tree = e("../../common/tree"), ui.path = e("./path"), fileSelect = e("./fileSelect"), fileLight = fileSelect.fileLight, 
+	}, e("lib/jquery-lib"), e("lib/util"), e("lib/ztree/js/ztree"), e("lib/contextMenu/jquery-contextMenu"), e("lib/artDialog/jquery-artDialog"), e("lib/picasa/picasa"), ui = e("./ui"), TaskTap = e("../../common/taskTap"), core = e("../../common/core"), rightMenu = e("../../common/rightMenu"), ui.tree = e("../../common/tree"), ui.path = e("./path"), fileSelect = e("./fileSelect"), fileLight = fileSelect.fileLight,
 	$(document).ready(function() {
 		$(".init_loading").fadeOut(450).addClass("pop_fadeout"), Global.topbar_height = "none" == $(".topbar").css("display") ? 0 : $(".topbar").height(), e.async("lib/webuploader/webuploader-min", function() {
 			core.upload_init()
@@ -300,8 +300,8 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				o = "index.php?explorer/image&path=" + urlEncode(G.this_path + e.name);
 			}
 			"*share*/" == G.this_path && (s = "index.php?share/fileProxy&user=" + G.user_name + "&sid=" + e.path, o = s),
-			 t += "<div class='file fileBox menufile' " + _hover_title(e) + ">", 
-			 t += "<div picasa='" + s + "' thumb='" + o + "' title='" + e.name + "' class='picasaImage picture ico' filetype='" + 
+			 t += "<div class='file fileBox menufile' " + _hover_title(e) + ">",
+			 t += "<div picasa='" + s + "' thumb='" + o + "' title='" + e.name + "' class='picasaImage picture ico' filetype='" +
 			 e.ext + "' style='margin:3px 0 0 8px;background:#fff url(\"" + o + "\") no-repeat center center;'></div>",
 			  t += "<div id='" + e.name + "' class='titleBox'><span class='title' title='" + LNG.double_click_rename + "'>" + a + "</span></div></div>"
 		} else {
@@ -334,7 +334,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				a = $(".html5_drag_upload_box");
 			"*recycle*/" == G.this_path ? (a.removeClass(e).addClass("menuRecycleBody"),$(".tools-left>.btn-group").addClass("hidden").parent().find(".secros_recycle_tool").removeClass("hidden"),
 			$(".secros_recycle_restore").removeClass("hidden"),
-			$(".fileContiner .file").removeClass(t).addClass("menuRecyclePath")) : "*share*/" == G.this_path ? (a.removeClass(e).addClass("menuShareBody"), 
+			$(".fileContiner .file").removeClass(t).addClass("menuRecyclePath")) : "*share*/" == G.this_path ? (a.removeClass(e).addClass("menuShareBody"),
 			$(".tools-left>.btn-group").addClass("hidden").parent().find(".secros_share_tool").removeClass("hidden"),
 			$(".fileContiner .file").removeClass(t).addClass("menuSharePath")) : (a.removeClass(e).addClass("menuBodyMain"),
 			$(".tools-left>.btn-group").addClass("hidden").parent().find(".secros_path_tool").removeClass("hidden"))
@@ -404,7 +404,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			switch (e) {
 			case "recycle_restore":
 				ui.path.recycle_restore();
-				break;	
+				break;
 			case "recycle_clear":
 				ui.path.recycle_clear();
 				break;
@@ -1147,7 +1147,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					}
 				}
             });
-			window.frames['Opensetting_mode'] ? 
+			window.frames['Opensetting_mode'] ?
 			($.dialog.list.setting_mode.display(!0), FrameCall.top("Opensetting_mode", "Setting.setGoto", '"' + e + '"')) :
 			$.dialog.open("./index.php?setting#" + e, {
 				id: "setting_mode",
@@ -1217,7 +1217,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
             height: "80%"
         })
 		},
-		saveAll:function(e) {				
+		saveAll:function(e) {
 		var url="/index.php?setting/savecfg";
 		var sss=this;
 			$.ajax({
@@ -1492,13 +1492,13 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 		upload: function() {
 			G.upload_path = G.this_path;
 			var e = urlDecode(G.upload_path);
-			
-			if (uploader.option("server","index.php?explorer/fileUpload&path=" + urlEncode(G.upload_path)), 
+
+			if (uploader.option("server","index.php?explorer/fileUpload&path=" + urlEncode(G.upload_path)),
 			30 >= e.length ? e : "..." + e.substr(e.length - 30), //名字超过30字省略号 ...xxx
 			 0 != $(".dialog_file_upload").length){//弹窗存在
 				console.log($.dialog.list.dialog_file_upload);
 				return $.dialog.list.dialog_file_upload.display(!0), void 0;
-			} 
+			}
 			if (uploaderfol.option("server","index.php?explorer/fileUpload&path=" + urlEncode(G.upload_path)), 30 >= e.length ? e : "..." + e.substr(e.length - 30), 0 != $(".dialog_file_upload").length) return $.dialog.list.dialog_file_upload.display(!0), void 0;
 			var t = require("../tpl/upload.html"),
 				a = template.compile(t),
@@ -1528,7 +1528,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 						if(!t.serverData){
 							delarr.push({filename:t.name,path:urlEncode(G.upload_path)});
 						}
-						
+
 					});
 					$.each(uploaderfol.getFiles(), function(e, t) {
 						uploaderfol.skipFile(t);
@@ -1562,17 +1562,17 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			}), $(".file_upload .tips").tooltip({
 				placement: "bottom"
 			}), $(".file_upload .top_nav a.menu").unbind("click").bind("click", function() {
-				$(this).hasClass("tab_upload") ? ($(".file_upload .tab_upload").addClass("this"), 
-				$(".file_upload .tab_download").removeClass("this"), 
-				$(".file_upload .upload_box").removeClass("hidden"), 
+				$(this).hasClass("tab_upload") ? ($(".file_upload .tab_upload").addClass("this"),
+				$(".file_upload .tab_download").removeClass("this"),
+				$(".file_upload .upload_box").removeClass("hidden"),
 				$(".file_upload .download_box").addClass("hidden")) : ($(".file_upload .tab_upload").removeClass("this"),
-				$(".file_upload .tab_download").addClass("this"), 
+				$(".file_upload .tab_download").addClass("this"),
 				$(".file_upload .upload_box").addClass("hidden"),
 				$(".file_upload .download_box").removeClass("hidden"))
 			}),
 			//  $(".file_upload .download_box button").unbind("click").bind("click", function() {
 			// 	core.server_dwonload(G.upload_path)
-			// }), 
+			// }),
 			uploader.addButton({
 				id: "#picker"
 			}),uploaderfol.addButton({
@@ -1659,7 +1659,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			// if(G.X86 != 1){
 			// 	a = 1024*1024*2;
 			// }
-			// 		let chunks = Math.ceil(rm_file.size/a); 
+			// 		let chunks = Math.ceil(rm_file.size/a);
 					uploader.skipFile(t);
 					uploader.removeFile(t, !0);
 					setTimeout(() => {
@@ -1736,10 +1736,10 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					var t = 36 * $("#" + e.id).index(".item");
 					$("#uploader").scrollTop(t), n++;
 					var a = e.serverData;
-					if (a.code ? ($("#" + e.id).addClass("success"), 
-					$("#" + e.id).find(".state").text(a.data), 
-					$("#" + e.id).find(".remove").removeClass("icon-remove").addClass("icon-ok").addClass("open").removeClass("remove")) : ($("#" + e.id).addClass("error").find(".state").addClass("error"), 
-					$("#" + e.id).find(".state").text(a.data).attr("title", a.data)), 
+					if (a.code ? ($("#" + e.id).addClass("success"),
+					$("#" + e.id).find(".state").text(a.data),
+					$("#" + e.id).find(".remove").removeClass("icon-remove").addClass("icon-ok").addClass("open").removeClass("remove")) : ($("#" + e.id).addClass("error").find(".state").addClass("error"),
+					$("#" + e.id).find(".state").text(a.data).attr("title", a.data)),
 					uploaderfol.removeFile(e), $("#" + e.id).find(".progress").fadeOut(),
 					!e.fullPath) {
 						var i = r;
@@ -1784,10 +1784,10 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				var t = 36 * $("#" + e.id).index(".item");
 				$("#uploader").scrollTop(t), n++;
 				var a = e.serverData;
-				if (a.code ? ($("#" + e.id).addClass("success"), 
-				$("#" + e.id).find(".state").text(a.data), 
-				$("#" + e.id).find(".remove").removeClass("icon-remove").addClass("icon-ok").addClass("open").removeClass("remove")) : ($("#" + e.id).addClass("error").find(".state").addClass("error"), 
-				$("#" + e.id).find(".state").text(a.data).attr("title", a.data)), 
+				if (a.code ? ($("#" + e.id).addClass("success"),
+				$("#" + e.id).find(".state").text(a.data),
+				$("#" + e.id).find(".remove").removeClass("icon-remove").addClass("icon-ok").addClass("open").removeClass("remove")) : ($("#" + e.id).addClass("error").find(".state").addClass("error"),
+				$("#" + e.id).find(".state").text(a.data).attr("title", a.data)),
 				uploader.removeFile(e), $("#" + e.id).find(".progress").fadeOut(),
 				!e.fullPath) {
 					var i = r;
@@ -2025,7 +2025,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					}
 				});
 			}
-				 
+
 				$('<i class="menuRecycleButton"></i>').appendTo("#rightMenu"), $.contextMenu({
 				zIndex: 9999,
 				selector: ".menuRecycleButton",
@@ -3046,7 +3046,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					}
 				});
 			}
-			
+
 			$('<i class="' + selectTreeSelectorFolder.substr(1) + '"></i>').appendTo("#rightMenu");
 			if(core.scanvirusCheck()){
 				$.contextMenu({
@@ -3228,7 +3228,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					}
 				})
 			}
-			
+
 		},
 		_bindTreeFolderEditor = function() {
 			$('<i class="' + selectTreeSelectorFolder.substr(1) + '"></i>').appendTo("#rightMenu"), $.contextMenu({
@@ -3825,7 +3825,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			},
 			callback: {
 				onClick: function(e, t, a) {
-					return s.selectNode(a), s.expandNode(a), 
+					return s.selectNode(a), s.expandNode(a),
 					"folder" != a.type || "editor" != Config.pageApp ? 0 == a.level ? ("explorer" == Config.pageApp && void 0 != a.this_path && ui.path.list(a.this_path + "/"), !1) : ("editor" == Config.pageApp ? ui.tree.openEditor() : "explorer" == Config.pageApp && ui.tree.open(), void 0) : void 0
 				},
 				beforeRightClick: function(e, t) {
@@ -3962,7 +3962,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 			//连接成功事件
 			function onConnect() {
 				// console.log("连接成功！");
-				mqttclient.subscribe("sample-values/USBOX/usbevent/#"); 
+				mqttclient.subscribe("sample-values/USBOX/usbevent/#");
 				mqttclient.subscribe("sample-values/USBOX/avscan/#");
 				mqttclient.subscribe("sample-values/USBOX/virus/#");
 				mqttclient.subscribe("sample-values/USBOX/avupdate/progress");
@@ -4186,7 +4186,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 								$('.loading_btn_details').addClass('hidden');
 							}
 
-							
+
 							let pen = json.value.progress + '%';
 							$('#reboot_progress_bar').css('width', pen);
 							$('#reboot_progress_value').text(pen);
@@ -4279,7 +4279,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 						$('.rebootdom #rebootdom_progress_bar', window.parent.document).css('width', progresswidth + '%');
 						$('.rebootdom #rebootdom_progress_value', window.parent.document).text(progresswidth + '%');
 						}
-						
+
 						$.ajax({
 							url: "cgi-bin/ready.cgi",
 							dataType:'json',
@@ -4296,9 +4296,9 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 											setTimeout(() => {
 											 $('.rebootdom',window.parent.document).addClass('hidden');
 											window.parent.location.reload();
-											}, 1000); 
+											}, 1000);
 									}
-											
+
 												  if (t.code == 400) {
 													alert(t.msg);
 													$('.rebootdom', window.parent.document).addClass('hidden');
@@ -4344,7 +4344,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 									'"><img src="'+G.static_path+'images/settings.png"></a>'+
 									'</div>';
 									}
-								
+
 								$('.noc_a').prepend(html);
 								}
 							}
@@ -4516,6 +4516,8 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				var t = "index.php?explorer/scanvirus&path=" + urlEncode2(e);
 				G.share_page !== void 0 && (t = "index.php?share/scanvirus&user=" + G.user + "&sid=" + G.sid + "&path=" + urlEncode2(e));
 				let av_status = $('#noc_status').text().split(': ') == '已连接'?'病毒扫描已入队':LNG.scanvirus_ready;
+				if (G.av_expired == 1)
+					av_status = '防病毒许可已过期';
 				var a = '<iframe src="' + t + '" style="width:0px;height:0px;border:0;" frameborder=0></iframe>' + av_status + "...",
 					i = $.dialog({
 						icon: "succeed",
@@ -4661,7 +4663,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				var	i = LNG.remove_title,
 					s = aa + "<br/><br/>" + LNG.remove_info,
 					o = "index.php?explorer/pathDelete";
-				"*recycle*/" == G.this_path && (s = LNG.recycle_remove + ",确认删除后无法恢复?", o = "index.php?explorer/pathDeleteRecycle", i = LNG.recycle_remove), "share" == e[0].type && (s = LNG.share_remove_tips, o = "index.php?userShare/del", i = LNG.share_remove), e.length > 1 && (s += ' ... <span class="badge">' + e.length + "</span>"), 
+				"*recycle*/" == G.this_path && (s = LNG.recycle_remove + ",确认删除后无法恢复?", o = "index.php?explorer/pathDeleteRecycle", i = LNG.recycle_remove), "share" == e[0].type && (s = LNG.share_remove_tips, o = "index.php?userShare/del", i = LNG.share_remove), e.length > 1 && (s += ' ... <span class="badge">' + e.length + "</span>"),
 				$.dialog({
 					id: "dialog_path_remove",
 					fixed: !0,
@@ -5502,7 +5504,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					});
 				i.DOM.wrap.find(".aui_loading").remove()
 					}else if(res.data == 'no_pass'){
-						
+
 						tips(basename(e)+'没有通过深度检测',false);
 					}
 					}
@@ -5517,7 +5519,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				// 		time: 1.5,
 				// 		content: a
 				// 	});
-				
+
 				// var url = t;
 				// 	const link = document.createElement('a');
 				// 	link.setAttribute('href', url);
@@ -5542,6 +5544,8 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				var t = "index.php?explorer/scanvirus&path=" + urlEncode2(e);
 				G.share_page !== void 0 && (t = "index.php?share/scanvirus&user=" + G.user + "&sid=" + G.sid + "&path=" + urlEncode2(e));
 				let av_status = $('#noc_status').text().split(': ') == '已连接'?'病毒扫描已入队':LNG.scanvirus_ready;
+				if (G.av_expired == 1)
+					av_status = '防病毒许可已过期';
 				var a = '<iframe src="' + t + '" style="width:0px;height:0px;border:0;" frameborder=0></iframe>' + av_status + "...",
 					i = $.dialog({
 						icon: "succeed",
@@ -5796,8 +5800,8 @@ define("app/src/explorer/path", ["../../common/pathOperate", "../../tpl/fileinfo
 			if (void 0 != e) {
 				if ("explorer" != Config.pageApp) return core.explorer(e), void 0;
 				if (e == G.this_path) return void 0 != t && "" != t && core.tips.tips(LNG.path_is_current, "info"), void 0;
-				if (G.this_path = e.replace(/\\/g, "/"), 
-				G.this_path = e.replace(/\/+/g, "/"), 
+				if (G.this_path = e.replace(/\\/g, "/"),
+				G.this_path = e.replace(/\/+/g, "/"),
 				"/" != G.this_path.substr(G.this_path.length - 1) && (G.this_path += "/"),
 				 $(".dialog_file_upload").length > 0) {
 					var i = "hidden" == $(".dialog_file_upload").css("visibility");
@@ -6134,7 +6138,7 @@ define("app/src/explorer/path", ["../../common/pathOperate", "../../tpl/fileinfo
 									setTimeout(() => {
 										//检查是否在高危列表中
 										a.download(arr[k].path+arr[k].name);
-									}, k*timez); 
+									}, k*timez);
 								}
 							},
 							error: function(e, t, a) {
@@ -6142,7 +6146,7 @@ define("app/src/explorer/path", ["../../common/pathOperate", "../../tpl/fileinfo
 							}
 						});
 					}
-				
+
 				}
 			}else{
 				core.tips.tips("请选择单个文件或文件夹!", "warning");
@@ -6336,7 +6340,7 @@ $(document).on('click', '.loading_btn_ok', function () {
 			}
 		});
 	}
-	
+
 
 });
 
@@ -6437,13 +6441,13 @@ $(document).on('click', '.ant_update_small', function () {
 
 
 
-function stopPropagation(e) {  
-	e = e || window.event;  
-	if(e.stopPropagation) { //W3C阻止冒泡方法  
-		e.stopPropagation();  
-	} else {  
-		e.cancelBubble = true; //IE阻止冒泡方法  
-	}  
+function stopPropagation(e) {
+	e = e || window.event;
+	if(e.stopPropagation) { //W3C阻止冒泡方法
+		e.stopPropagation();
+	} else {
+		e.cancelBubble = true; //IE阻止冒泡方法
+	}
 }
 
 
@@ -6496,7 +6500,7 @@ $(document).on('click', '.secretframe_cancle', function () {
 	G.secretusb.shift();
 	addSecretUsbFrame();
 	});
-	
+
 	$(document).on('click', '.secretframe_ok', function () {
 		let password = $('.secret_password').val();
 		let usbid = G.secretusb[0];
@@ -6523,10 +6527,10 @@ $(document).on('click', '.secretframe_cancle', function () {
 				}
 			}
 		});
-	
-		
+
+
 	});
-	
+
 	function addSecretUsbFrame(){
 		if(G.secretusb[0]){
 			$('.getsecretusb_frame').removeClass('hidden');
@@ -6538,7 +6542,7 @@ $(document).on('click', '.secretframe_cancle', function () {
 			$('.getsecretusb_frame').addClass('hidden');
 		}
 	}
-	
+
 
 
 	function getdiskusages(){
@@ -6582,7 +6586,7 @@ setTimeout(() => {
 }, 2000);
 			}
 		});
-	
+
 	}
 
 	function get_time(s) {

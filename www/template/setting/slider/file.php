@@ -46,8 +46,8 @@
             <a class="tag" href="javascript:;" data-role='video:avi'>
                 <input type="checkbox" class="checkbox"><span>avi</span>
             </a>
-            <a class="tag" href="javascript:;" data-role='video:flv'>
-                <input type="checkbox" class="checkbox"><span>flv</span>
+            <a class="tag" href="javascript:;" data-role='video:ts'>
+                <input type="checkbox" class="checkbox"><span>ts</span>
             </a>
             <a class="tag" href="javascript:;" data-role='video:mpe'>
                 <input type="checkbox" class="checkbox"><span>mpe</span>
@@ -85,8 +85,8 @@
         <a class="tag" href="javascript:;" data-role='audio:m4a'>
             <input type="checkbox" class="checkbox"><span>m4a</span>
         </a>
-         <a class="tag" href="javascript:;" data-role='audio:bwf'>
-            <input type="checkbox" class="checkbox"><span>bwf</span>
+         <a class="tag" href="javascript:;" data-role='audio:s48'>
+            <input type="checkbox" class="checkbox"><span>s48</span>
         </a>
          <a class="tag" href="javascript:;" data-role='audio:wma'>
             <input type="checkbox" class="checkbox"><span>wma</span>
@@ -97,7 +97,7 @@
         <a class="tag" href="javascript:;" data-role='audio:w64'>
             <input type="checkbox" class="checkbox"><span>w64</span>
         </a>
-        <div style="clear:both;"></div>   
+        <div style="clear:both;"></div>
     </div>
 
     <div class="together">
@@ -126,8 +126,8 @@
         <a class="tag" href="javascript:;" data-role='pic:ico'>
             <input type="checkbox" class="checkbox"><span>ico</span>
         </a>
-        <a class="tag" href="javascript:;" data-role='pic:ief'>
-            <input type="checkbox" class="checkbox"><span>ief</span>
+        <a class="tag" href="javascript:;" data-role='pic:tga'>
+            <input type="checkbox" class="checkbox"><span>tga</span>
         </a>
         <div style="clear:both;"></div>
     </div>
@@ -161,8 +161,8 @@
          <a class="tag" href="javascript:;" data-role='other:pptx'>
             <input type="checkbox" class="checkbox"><span>pptx</span>
         </a>
-        <div style="clear:both;"></div> 
-    </div> 
+        <div style="clear:both;"></div>
+    </div>
     <div class="together input">
         <div class="title"><i><?php echo $L['file_ext'];?></i></div>
         <input type="text" id='ext_allow' default='' value=""/>
@@ -176,11 +176,11 @@
         <input type="checkbox" id='file_deepcheck' name="file_deepcheck" style="margin: 0;"/>
 		  <span class="text"><?php echo $L['file_deepcheck_tips'];?></span>
         </div>
-        
+
       <div style="clear:both;"></div>
 	</div>
     <a href="javascript:;" class="edit_save button"><?php echo $L['button_save'];?></a>
-    <a href="javascript:;" class="revert"><?php echo $L['button_select_all'];?></a>   
+    <a href="javascript:;" class="revert"><?php echo $L['button_select_all'];?></a>
 </div>
 
 <!--

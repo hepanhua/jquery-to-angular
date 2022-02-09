@@ -10,6 +10,7 @@ $L= array(
 	"upload_exist_skip"  		=>"跳过",
 	"more"  			  		=>"更多",
 	'system_setting'  			=>"系统设置",
+	"system_config_title" 		=> "配置维护",
 	"openProject"  			  	=>"编辑器打开项目",
 	"url_download"  			=>"下载地址",
 	"url_link"  			  	=>"外链地址",

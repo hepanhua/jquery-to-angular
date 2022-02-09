@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 //配置数据,可在setting_user.php中更改覆盖
 $config['settings'] = array(
@@ -69,8 +69,8 @@ $config['role_setting'] = array(
 );
 
 $config['filetype_setting'] = array(
-	'video' => array('mpeg','mpg','rm','mpa','3gp','mp2','m4v','asf','asx','mp4','swf','wmv','mov','avi','flv','mpe','lsf','mxf'),
-	'audio' => array('mp3','wav','bwf','wma','ac3','w64','mid','m4a','aac'),
-	'pic' => array('bmp','gif','jpeg','jpg','png','tif','ppm','ico','ief'),
+	'video' => array('mpeg','mpg','rm','mpa','3gp','mp2','m4v','asf','asx','mp4','swf','wmv','mov','avi','ts','mpe','lsf','mxf'),
+	'audio' => array('mp3','wav','s48','wma','ac3','w64','mid','m4a','aac'),
+	'pic' => array('bmp','gif','jpeg','jpg','png','tif','ppm','ico','tga'),
 	'other' => array('txt','html','pdf','swf','doc','docx','dot','ppt','pptx')
 );
