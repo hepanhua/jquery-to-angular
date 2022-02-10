@@ -72,5 +72,5 @@ $config['filetype_setting'] = array(
 	'video' => array('mpeg','mpg','rm','mpa','3gp','mp2','m4v','asf','asx','mp4','swf','wmv','mov','avi','ts','mpe','lsf','mxf'),
 	'audio' => array('mp3','wav','s48','wma','ac3','w64','mid','m4a','aac'),
 	'pic' => array('bmp','gif','jpeg','jpg','png','tif','ppm','ico','tga'),
-	'other' => array('txt','html','pdf','swf','doc','docx','dot','ppt','pptx')
+	'other' => array('txt','html','pdf','swf','doc','docx','ppt','pptx','md5')
 );

@@ -152,14 +152,14 @@
         <a class="tag" href="javascript:;" data-role='other:docx'>
             <input type="checkbox" class="checkbox"><span>docx</span>
         </a>
-        <a class="tag" href="javascript:;" data-role='other:dot'>
-            <input type="checkbox" class="checkbox"><span>dot</span>
-        </a>
          <a class="tag" href="javascript:;" data-role='other:ppt'>
             <input type="checkbox" class="checkbox"><span>ppt</span>
         </a>
          <a class="tag" href="javascript:;" data-role='other:pptx'>
             <input type="checkbox" class="checkbox"><span>pptx</span>
+        </a>
+        <a class="tag" href="javascript:;" data-role='other:md5'>
+            <input type="checkbox" class="checkbox"><span>md5</span>
         </a>
         <div style="clear:both;"></div>
     </div>
@@ -179,7 +179,7 @@
 
       <div style="clear:both;"></div>
 	</div>
-    <a href="javascript:;" class="edit_save button"><?php echo $L['button_save'];?></a>
+    <a href="javascript:;" class="edit_save button"  style="width: 80px;"><?php echo $L['button_save'];?></a>
     <a href="javascript:;" class="revert"><?php echo $L['button_select_all'];?></a>
 </div>
 
