@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class usbwhitelist extends Controller{
     private $sql;
@@ -11,32 +11,41 @@ class usbwhitelist extends Controller{
         show_json($this->sql->get());
     }
     public function add(){
-		if (!$this->in['name'] || 
-		!$this->in['user'] || 
-		!$this->in['desc']) show_json($this->L["data_not_full"],false);
+		if (!$this->in['name'] ||
+        !$this->in['permission'] ||
+		!$this->in['user'] ||
+		!$this->in['desc']
+       ) show_json($this->L["data_not_full"],false);
 
         $usblist = array(
             'name'      =>  rawurldecode($this->in['name']),
+            'permission'      =>  rawurldecode($this->in['permission']),
             'user'      =>  rawurldecode($this->in['user']),
-            'desc'      =>  rawurldecode($this->in['desc'])
+            'desc'      =>  rawurldecode($this->in['desc']),
+            'bind'      =>  rawurldecode($this->in['bind']) 
+
         );
         if ($this->sql->add($this->in['name'],$usblist)) {
             write_audit('信息','设置','成功',$this->L["setting_usblist"].':添加'.$this->in['name']);
             show_json($this->L['success']);
         }
         write_audit('警告','设置','失败',$this->L["setting_usblist"].':添加'.$this->in['name'].$this->L['error_repeat']);
-        show_json($this->L['error_repeat'],false);
+        show_json($this->L['error_usbsid_repeat'],false);
 	}
-	
+
     public function edit() {
-        if (!$this->in['name'] || 
-            !$this->in['user'] || 
-            !$this->in['desc']) show_json($this->L["data_not_full"],false);
-    
+        if (!$this->in['name'] ||
+            !$this->in['permission'] ||
+            !$this->in['user'] ||
+            !$this->in['desc'] 
+            ) show_json($this->L["data_not_full"],false);
+
         $usblist = $this->sql->get($this->in['name']);
         $usblist['name'] = rawurldecode($this->in['name']);
+        $usblist['permission'] = rawurldecode($this->in['permission']);
         $usblist['user'] = rawurldecode($this->in['user']);
         $usblist['desc'] = rawurldecode($this->in['desc']);
+        $usblist['bind'] = rawurldecode($this->in['bind']);
 
         if($this->sql->replace_update($this->in['name'],$usblist['name'],$usblist)){
                 write_audit('信息','设置','成功',$this->L["setting_usblist"].':编辑'.$this->in['name']);
@@ -45,7 +54,7 @@ class usbwhitelist extends Controller{
         write_audit('警告','设置','失败',$this->L["setting_usblist"].':编辑'.$this->in['name'].$this->L['error_repeat']);
         show_json($this->L['error_repeat'],false);
 	}
-	
+
 
     public function del() {
         $name = $this->in['name'];
@@ -57,7 +66,7 @@ class usbwhitelist extends Controller{
         show_json($this->L['error'],false);
 	}
 
-    
+
     // public function get() {
 	// 		$db = new SQLite3('/var/spool/antivirus/log.db');
 	// 		if ($db)
@@ -68,8 +77,8 @@ class usbwhitelist extends Controller{
 	// 		{
 	// 			show_json($L['data_error'],false);
 	// 		}
-		
-		
+
+
 	// $results1= $db->query("select * from httplog");  //正序
 	// $data= array();
 	// 	while ($res= $results1->fetchArray(1))
@@ -78,7 +87,7 @@ class usbwhitelist extends Controller{
 	// 	}
 	// 		show_json($data,true);
 //   }
-    
 
-    
+
+
 }

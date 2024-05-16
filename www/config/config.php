@@ -64,7 +64,7 @@ define('USER_PATH',     CONFIG_PATH .'User/');        //用户目录
 //define('PUBLIC_PATH',   DATA_PATH .'public/');     //公共目录
 //公共共享目录,读写权限跟随用户目录的读写权限 再修改配置，例如：
 define('PUBLIC_PATH','/mnt/usbox/');
-
+define('SHARE_PATH','/mnt/shared/');
 /*
  * office服务器配置；默认调用的微软的接口，程序需要部署到外网。
  * 本地部署weboffice 引号内填写office解析服务器地址 形如:  http://---/view.aspx?src=
@@ -96,6 +96,8 @@ $xmodel_v =$xm_vb;
 }
 define('xmodel_v',$xmodel_v);     
 
+$shared = config_get_unsign_int_from_file('/etc/system/quota.conf','shared');
+define('shared',$shared); 
 //数据地址定义。
 $config['pic_thumb']	= BASIC_PATH.'data/thumb/';		// 缩略图生成存放地址
 $config['cache_dir']	= BASIC_PATH.'data/cache/';		// 缓存文件地址

@@ -1,7 +1,5 @@
-/*changed by warlee 
+/*
 * @link http://www.secros.com/
-* @author warlee | e-mail:secros@qq.com
-* @copyright warlee 2014.(Shanghai)Co.,Ltd
 * @license http://secros.com/tools/licenses/license.txt
 */
 
@@ -14,6 +12,44 @@
 * 调用例子：Frame.doFunction('main','goUrl','"'+url+'"');该frame调用id为main的兄弟frame的goUrl方法，参数为后面的
 * 参数为字符串时需要加引号，否则传过去会被理解成一个未定义变量
 */
+
+function get_time(s) {
+    return s < 10 ? '0' + s: s;
+}
+
+function isValidIP(ip) {
+    var parts = ip.split(".");
+    if (parts.length !== 4) {
+        return false;
+    }
+    for (var i = 0; i < parts.length; i++) {
+        if (isNaN(parts[i]) || parts[i] < 0 || parts[i] > 255 || parts[i].length > 3) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function isValidSubnetMask(mask) {
+    obj = mask;
+    var exp = /^(254|252|248|240|224|192|128|0)\.0\.0\.0|255\.(254|252|248|240|224|192|128|0)\.0\.0|255\.255\.(254|252|248|240|224|192|128|0)\.0|255\.255\.255\.(254|252|248|240|224|192|128|0)$/;
+    var reg = obj.match(exp);
+    if(reg == null) {
+        return false; //"非法"
+    }
+    var tempArr = obj.split('.')
+    if(tempArr.length > 4) {
+        return false;
+    }
+    if(tempArr[2] == 0) {
+        var isNum = /^[0-9]*$/;
+        if(!isNum.test(tempArr[3])) {
+            return false;
+        }
+    }
+    return true;
+}
+
 var FrameCall = (function(){
 	var idName 		= "FrameCall";
 	var idNameAll	= "#"+idName;
@@ -27,11 +63,11 @@ var FrameCall = (function(){
 		api:function(){
 			var action = $(idNameAll).attr('action');
 			var value=$(idNameAll).attr('value');
-			
+
 			if (action == 'get') {//获取变量
 				share.data('create_app_path',eval(value));
 				return;
-			}			
+			}
 			var fun=action+'('+value+');';//拼装执行语句，字符串转换到代码
 			try{
 				eval(fun);
@@ -43,7 +79,7 @@ var FrameCall = (function(){
 			//var obj = window.top.frames[iframe].document;
 			var obj = window.parent.frames[iframe].document;
             if(!obj) return;
-			obj=obj.getElementById(idName);		
+			obj=obj.getElementById(idName);
 			$(obj).attr("action",action);
 			$(obj).attr("value",value);
 			obj.click();
@@ -61,22 +97,36 @@ var FrameCall = (function(){
 		//该窗口调用父窗口的api
 		father:function(action,value){
 			var obj=window.parent.document;
-			obj=obj.getElementById(idName);	
+			obj=obj.getElementById(idName);
 			$(obj).attr("action",action);
 			$(obj).attr("value",value);
-			obj.click();	
+			obj.click();
 		},
 		//___自定义通用方法，可在页面定义更多提供给接口使用的api。
 		goUrl:function(url){
 			window.location.href=url;
 		},
 		goRefresh:function(){
-			window.location.reload(); 
-		}
+			window.location.reload();
+		},
+        synctime:function(){
+            let time = new Date().toGMTString;
+            let end = get_time(time.getMonth() + 1)+get_time(time.getDate())+get_time(time.getHours())+get_time(time.getMinutes())+time.getFullYear();
+            let postdata = {time:end};
+            $.ajax({
+                url: "api/synctime.cgi",
+                data: postdata,
+                type: "POST",
+                dataType: "json",
+                success: function(e) {
+                }
+            })
+        }
 	}
 })();
 
 $(document).ready(function() {
+    //FrameCall.synctime();
 	FrameCall.apiOpen();
 });
 
@@ -127,21 +177,21 @@ var Cookie = (function(){
 	var get = function(key){//没有key代表获取所有
 		_init();
 		if (key == undefined) return cookie;
-		return cookie[key];		
+		return cookie[key];
 	};
 	var set = function(key,value,timeout){
 		var str = escape(key)+"="+escape(value);//不设置时间代表跟随页面生命周期
 		if (timeout == undefined){//时间以小时计
 			timeout = 365;
 		}
-		var expDate=new Date(); 
+		var expDate=new Date();
 		expDate.setTime(expDate.getTime() + timeout*3600*24*1000);
         str += "; expires="+expDate.toGMTString();
         document.cookie = str;
 	};
 	var del = function(key){
 		document.cookie = key+"=;expires="+(new Date(0)).toGMTString();
-	};	
+	};
 	var clear = function(){
 		_init();
 		for(var key in cookie){
@@ -176,13 +226,13 @@ var stopPP = function(e){//防止事件冒泡
 	}
 
 	e.cancelBubble = true;
-	e.keyCode = 0;  
-    e.returnValue = false;  
+	e.keyCode = 0;
+    e.returnValue = false;
 }
 
 //通用提示信息框
 var tips = function(msg,code){
-    console.log(msg);
+    //console.log(msg);
 	Tips.tips(msg,code);
 }
 var Tips =  (function(){
@@ -224,7 +274,7 @@ var Tips =  (function(){
 		}
 		if (color != '') {
 			self.css({'background':color,'color':'#fff'});
-			self.find('i').removeClass().addClass(icon);		
+			self.find('i').removeClass().addClass(icon);
 		}
 		if (msg != undefined) self.find('span').html(msg);
         $(tipsID).show().css({'left':($(window).width() - $(tipsID).innerWidth())/2});
@@ -264,7 +314,7 @@ var Tips =  (function(){
                 code=msg.code;msg = msg.data;
             }catch(e){
                 code=0;msg ='';
-            };			
+            };
 		}
 		if (offset_top == undefined) offset_top = 0;
 		var self = _init(msg,code);
@@ -405,7 +455,7 @@ var MaskView =  (function(){
 	var imageSize = function(){
 		var $dom = $(maskContent).find('.image');
 		if ($dom.length == 0) return;
-		var image=new Image(); 
+		var image=new Image();
 		image.src = $dom.attr('src');
 		var percent = 0.7,
 			w_width = $(window).width(),
@@ -477,7 +527,7 @@ var MaskView =  (function(){
 	$.fn.extend({
 		//dom绑定enter事件  用于input
 		keyEnter:function(callback){
-			$(this).die('keydown').live('keydown',function(e){      
+			$(this).die('keydown').live('keydown',function(e){
 				if (e.keyCode == 13 && callback){
 					callback();
 				}
@@ -498,7 +548,7 @@ var MaskView =  (function(){
 	        this.stop().each(function(){
 			    var Obj = $(this);
 			    var marginLeft = parseInt(Obj.css('margin-left'));
-			    var delay = delay > 50 ? delay : 50; 
+			    var delay = delay > 50 ? delay : 50;
 			    Obj.animate({'margin-left':marginLeft+offset},delay,function(){
 		        	Obj.animate({'margin-left':marginLeft},delay,function(){
 			            times = times - 1;
@@ -541,7 +591,7 @@ var MaskView =  (function(){
             settings.delay = +settings.delay;
 
             if (typeof settings.content === 'function') {
-                base.readify(); 
+                base.readify();
             }
 
             if (settings.showEvent === settings.hideEvent && settings.showEvent === 'click') {
@@ -720,7 +770,7 @@ var MaskView =  (function(){
 
 
 
-var date = function(format, timestamp){ 
+var date = function(format, timestamp){
 	timestamp = parseInt(timestamp);
     var a, jsdate=((timestamp) ? new Date(timestamp*1000) : new Date());
     var pad = function(n, c){
@@ -732,7 +782,7 @@ var date = function(format, timestamp){
     };
     var txt_weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     var txt_ordin = {1:"st", 2:"nd", 3:"rd", 21:"st", 22:"nd", 23:"rd", 31:"st"};
-    var txt_months = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]; 
+    var txt_months = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     var f = {
         // Day
         d: function(){return pad(f.j(), 2)},
@@ -743,7 +793,7 @@ var date = function(format, timestamp){
         S: function(){return txt_ordin[f.j()] ? txt_ordin[f.j()] : 'th'},
         w: function(){return jsdate.getDay()},
         z: function(){return (jsdate - new Date(jsdate.getFullYear() + "/1/1")) / 864e5 >> 0},
-       
+
         // Week
         W: function(){
             var a = f.z(), b = 364 + f.L() - a;
@@ -759,7 +809,7 @@ var date = function(format, timestamp){
                 }
             }
         },
-       
+
         // Month
         F: function(){return txt_months[f.n()]},
         m: function(){return pad(f.n(), 2)},
@@ -777,12 +827,12 @@ var date = function(format, timestamp){
                 }
             }
         },
-       
+
         // Year
         L: function(){var y = f.Y();return (!(y & 3) && (y % 1e2 || !(y % 4e2))) ? 1 : 0},
         Y: function(){return jsdate.getFullYear()},
         y: function(){return (jsdate.getFullYear() + "").slice(2)},
-       
+
         // Time
         a: function(){return jsdate.getHours() > 11 ? "pm" : "am"},
         A: function(){return f.a().toUpperCase()},
@@ -826,100 +876,100 @@ var date = function(format, timestamp){
 
 
 var Base64 =  (function(){
-    var _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";  
-    var encode = function (input) {  
-        var output = "";  
-        var chr1, chr2, chr3, enc1, enc2, enc3, enc4;  
-        var i = 0;  
-        input = _utf8_encode(input);  
-        while (i < input.length) {  
-            chr1 = input.charCodeAt(i++);  
-            chr2 = input.charCodeAt(i++);  
-            chr3 = input.charCodeAt(i++);  
-            enc1 = chr1 >> 2;  
-            enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);  
-            enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);  
-            enc4 = chr3 & 63;  
-            if (isNaN(chr2)) {  
-                enc3 = enc4 = 64;  
-            } else if (isNaN(chr3)) {  
-                enc4 = 64;  
-            }  
-            output = output +  
-            _keyStr.charAt(enc1) + _keyStr.charAt(enc2) +  
-            _keyStr.charAt(enc3) + _keyStr.charAt(enc4);  
-        }  
-        return output;  
-    }  
-    // public method for decoding  
-    var decode = function (input) {  
-        var output = "";  
-        var chr1, chr2, chr3;  
-        var enc1, enc2, enc3, enc4;  
-        var i = 0;  
-        input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");  
-        while (i < input.length) {  
-            enc1 = _keyStr.indexOf(input.charAt(i++));  
-            enc2 = _keyStr.indexOf(input.charAt(i++));  
-            enc3 = _keyStr.indexOf(input.charAt(i++));  
-            enc4 = _keyStr.indexOf(input.charAt(i++));  
-            chr1 = (enc1 << 2) | (enc2 >> 4);  
-            chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);  
-            chr3 = ((enc3 & 3) << 6) | enc4;  
-            output = output + String.fromCharCode(chr1);  
-            if (enc3 != 64) {  
-                output = output + String.fromCharCode(chr2);  
-            }  
-            if (enc4 != 64) {  
-                output = output + String.fromCharCode(chr3);  
-            }  
-        }  
-        output = _utf8_decode(output);  
-        return output;  
+    var _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+    var encode = function (input) {
+        var output = "";
+        var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+        var i = 0;
+        input = _utf8_encode(input);
+        while (i < input.length) {
+            chr1 = input.charCodeAt(i++);
+            chr2 = input.charCodeAt(i++);
+            chr3 = input.charCodeAt(i++);
+            enc1 = chr1 >> 2;
+            enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+            enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+            enc4 = chr3 & 63;
+            if (isNaN(chr2)) {
+                enc3 = enc4 = 64;
+            } else if (isNaN(chr3)) {
+                enc4 = 64;
+            }
+            output = output +
+            _keyStr.charAt(enc1) + _keyStr.charAt(enc2) +
+            _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
+        }
+        return output;
     }
-    // private method for UTF-8 encoding  
-    _utf8_encode = function (string) {  
-        string = string.replace(/\r\n/g,"\n");  
-        var utftext = "";  
-        for (var n = 0; n < string.length; n++) {  
-            var c = string.charCodeAt(n);  
-            if (c < 128) {  
-                utftext += String.fromCharCode(c);  
-            } else if((c > 127) && (c < 2048)) {  
-                utftext += String.fromCharCode((c >> 6) | 192);  
-                utftext += String.fromCharCode((c & 63) | 128);  
-            } else {  
-                utftext += String.fromCharCode((c >> 12) | 224);  
-                utftext += String.fromCharCode(((c >> 6) & 63) | 128);  
-                utftext += String.fromCharCode((c & 63) | 128);  
-            }  
-   
-        }  
-        return utftext;  
-    }  
-   
-    // private method for UTF-8 decoding  
-    _utf8_decode = function (utftext) {  
-        var string = "";  
-        var i = 0;  
-        var c = c1 = c2 = 0;  
-        while ( i < utftext.length ) {  
-            c = utftext.charCodeAt(i);  
-            if (c < 128) {  
-                string += String.fromCharCode(c);  
-                i++;  
-            } else if((c > 191) && (c < 224)) {  
-                c2 = utftext.charCodeAt(i+1);  
-                string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));  
-                i += 2;  
-            } else {  
-                c2 = utftext.charCodeAt(i+1);  
-                c3 = utftext.charCodeAt(i+2);  
-                string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));  
-                i += 3;  
-            }  
-        }  
-        return string;  
+    // public method for decoding
+    var decode = function (input) {
+        var output = "";
+        var chr1, chr2, chr3;
+        var enc1, enc2, enc3, enc4;
+        var i = 0;
+        input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+        while (i < input.length) {
+            enc1 = _keyStr.indexOf(input.charAt(i++));
+            enc2 = _keyStr.indexOf(input.charAt(i++));
+            enc3 = _keyStr.indexOf(input.charAt(i++));
+            enc4 = _keyStr.indexOf(input.charAt(i++));
+            chr1 = (enc1 << 2) | (enc2 >> 4);
+            chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+            chr3 = ((enc3 & 3) << 6) | enc4;
+            output = output + String.fromCharCode(chr1);
+            if (enc3 != 64) {
+                output = output + String.fromCharCode(chr2);
+            }
+            if (enc4 != 64) {
+                output = output + String.fromCharCode(chr3);
+            }
+        }
+        output = _utf8_decode(output);
+        return output;
+    }
+    // private method for UTF-8 encoding
+    _utf8_encode = function (string) {
+        string = string.replace(/\r\n/g,"\n");
+        var utftext = "";
+        for (var n = 0; n < string.length; n++) {
+            var c = string.charCodeAt(n);
+            if (c < 128) {
+                utftext += String.fromCharCode(c);
+            } else if((c > 127) && (c < 2048)) {
+                utftext += String.fromCharCode((c >> 6) | 192);
+                utftext += String.fromCharCode((c & 63) | 128);
+            } else {
+                utftext += String.fromCharCode((c >> 12) | 224);
+                utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                utftext += String.fromCharCode((c & 63) | 128);
+            }
+
+        }
+        return utftext;
+    }
+
+    // private method for UTF-8 decoding
+    _utf8_decode = function (utftext) {
+        var string = "";
+        var i = 0;
+        var c = c1 = c2 = 0;
+        while ( i < utftext.length ) {
+            c = utftext.charCodeAt(i);
+            if (c < 128) {
+                string += String.fromCharCode(c);
+                i++;
+            } else if((c > 191) && (c < 224)) {
+                c2 = utftext.charCodeAt(i+1);
+                string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+                i += 2;
+            } else {
+                c2 = utftext.charCodeAt(i+1);
+                c3 = utftext.charCodeAt(i+2);
+                string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+                i += 3;
+            }
+        }
+        return string;
     };
     return {
         encode:encode,

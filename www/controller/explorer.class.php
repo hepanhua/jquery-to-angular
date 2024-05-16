@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 
 class explorer extends Controller{
@@ -26,18 +26,18 @@ class explorer extends Controller{
             $this->display('index_wap.php');
         }else{
             $this->display('index.php');
-        }        
+        }
     }
     public function pathInfo(){
         $info_list = json_decode($this->in['list'],true);
-        foreach ($info_list as &$val) {          
+        foreach ($info_list as &$val) {
             $val['path'] = _DIR($val['path']);
         }
         $data = path_info_muti($info_list,$this->L['time_type_info']);
 
         //属性查看，单个文件则生成临时下载地址。
-        if (count($info_list)==1 && 
-            $info_list[0]['type']=='file') {            
+        if (count($info_list)==1 &&
+            $info_list[0]['type']=='file') {
             $data['download_path'] = $this->_make_file_proxy($info_list[0]['path']);
         }
         _DIR_OUT($data['path']);
@@ -102,7 +102,7 @@ class explorer extends Controller{
             if ($user_path==""){
                 $user_path=$hi->getFirst();
             }else {
-                $hi->add($user_path); 
+                $hi->add($user_path);
                 $_SESSION['history']=$hi->getHistory();
             }
         }else {
@@ -113,9 +113,12 @@ class explorer extends Controller{
         }
 
         //回收站不记录前进后退
-        if($this->in['path'] != '*recycle*/' && 
+        if($this->in['path'] != '*recycle*/' &&
             (!isset($this->in['type']) || $this->in['type'] !=='desktop')){
             $_SESSION['this_path']=$user_path;
+        }
+        if($_SESSION['secros_user']['name']){
+            $username=$_SESSION['secros_user']['name'];
         }
         $list=$this->path($this->path);
         $patharr = explode("/",$user_path);
@@ -141,9 +144,27 @@ class explorer extends Controller{
                 //     }
                 // }
             }
-            $list['folderlist'] = $folderlist_filter;
+            if ($username != 'super'){
+                  $folderlist_filter1 = array();
+                  foreach($folderlist_filter as $key => $val) {
+                      $usb_file = '/tmp/usb/'.$folderlist_filter[$key]['name'];
+                      if (file_exists($usb_file)) {
+                          $setting['usb_info'] = config_read($usb_file);
+                          if ($setting['usb_info']['bind']==1 ){
+                              if($username==$setting['usb_info']['user']){
+                                  $folderlist_filter1[] = $val;
+                              }
+                          }else{
+                              $folderlist_filter1[] = $val;
+                          }
+                      }
+                  }
+                  $list['folderlist'] = $folderlist_filter1;
+              }else{
+                  $list['folderlist'] = $folderlist_filter;
+              }
         }
-        
+
         }
         $list['history_status']= array('back'=>$hi->isback(),'next'=>$hi->isnext());
         show_json($list);
@@ -224,7 +245,7 @@ class explorer extends Controller{
         if ($app == 'editor' && isset($this->in['project'])) {
             $list_project = $this->path(_DIR($this->in['project']),true,true);
             $project = array_merge($list_project['folderlist'],$list_project['filelist']);
-            $tree_data = array(           
+            $tree_data = array(
                 array('name'=> get_path_this($this->in['project']),
                     'children'=>$project,
                     'iconSkin'  => "my",
@@ -251,45 +272,64 @@ class explorer extends Controller{
         //     );
         // }
 
-        $list_root  = $this->path(_DIR(MYHOME),$check_file,true);
+        //$list_root  = $this->path(_DIR(MYHOME),$check_file,true);
         $list_public = $this->path(PUBLIC_PATH,$check_file,true);
         if ($check_file) {//编辑器
-            $root = array_merge($list_root['folderlist'],$list_root['filelist']);
+            //$root = array_merge($list_root['folderlist'],$list_root['filelist']);
             $public = array_merge($list_public['folderlist'],$list_public['filelist']);
         }else{//文件管理器
-            $root  = $list_root['folderlist'];
+           // $root  = $list_root['folderlist'];
             $public = $list_public['folderlist'];
         }
-        $root_isparent = count($root)>0?true:false;
+       // $root_isparent = count($root)>0?true:false;
         $public_isparent = count($public)>0?true:false;
-        if($public_isparent){
-            $folderlist_filter = array();
-            if(!isset($_SESSION['USBPSD'])){ //无加密区密码
-                foreach ($public as $key => $val) {
-                    if (!file_exists('/tmp/secret/'.$public[$key]['name'])){
-                        $folderlist_filter[] = $val;
-                    }
-                }
-                if(count($public) == 1){
-                    $public_isparent = false;
-                }
-            }else{//有密码
-                // exec("/usr/sbin/skfusb  USBN ".$_SESSION['USBPSD'],$arr,$out);
-                // if($out === 0){
-                    $folderlist_filter = $public;
-                // }else{
-                //     foreach ($public as $key => $val) {
-                //         if (!file_exists('/tmp/secret/'.$public[$key]['name'])){
-                //             $folderlist_filter[] = $val;
-                //         }
-                //     }
-                // }
-            }
-            $public = $folderlist_filter;
+        if($_SESSION['secros_user']['name']){
+            $username=$_SESSION['secros_user']['name'];
         }
+        if ($username != 'super'){
+            if($public_isparent){
+                $folderlist_filter = array();
+                if(!isset($_SESSION['USBPSD'])){ //无加密区密码
+                    foreach ($public as $key => $val) {
+                        if (!file_exists('/tmp/secret/'.$public[$key]['name'])){
+                            $folderlist_filter[] = $val;
+                        }
+                    }
+                }else{//有密码
+                    // exec("/usr/sbin/skfusb  USBN ".$_SESSION['USBPSD'],$arr,$out);
+                    // if($out === 0){
+                        $folderlist_filter = $public;
+                    // }else{
+                    //     foreach ($public as $key => $val) {
+                    //         if (!file_exists('/tmp/secret/'.$public[$key]['name'])){
+                    //             $folderlist_filter[] = $val;
+                    //         }
+                    //     }
+                    // }
+                }
+
+                $folderlist_filter1 = array();
+                foreach($folderlist_filter as $key => $val) {
+                    $usb_file = '/tmp/usb/'.$folderlist_filter[$key]['name'];
+                    if (file_exists($usb_file)) {
+                        $setting['usb_info'] = config_read($usb_file);
+                        if ($setting['usb_info']['bind']==1 ){
+                            if($username==$setting['usb_info']['user']){
+                                        $folderlist_filter1[] = $val;
+                            }
+                        }else{
+                                $folderlist_filter1[] = $val;
+                        }
+                    }
+
+                }
+                $public = $folderlist_filter1;
+            }
+        }
+        $public_isparent = count($public)>0?true:false;
         $tree_data = array(
             /*array('name'=>$this->L['fav'],'iconSkin'=>"fav",
-                'menuType'  => "menuTreeFavRoot",'open'=>true,'children'=>$fav),                
+                'menuType'  => "menuTreeFavRoot",'open'=>true,'children'=>$fav),
             array('name'=>$this->L['root_path'],'children'=>$root,'menuType'=>"menuTreeRoot",
                 'iconSkin'=>"my",'open'=>true,'this_path'=> MYHOME,'isParent'=>$root_isparent),*/
             array('name'=>$this->L['secros_name_desc'],'children'=>$public,'menuType'=>"menuTreeRoot",
@@ -304,7 +344,7 @@ class explorer extends Controller{
         $session=$_SESSION['history'];
         if (is_array($session)){
             $hi=new history($session);
-            $path=$hi->goback();            
+            $path=$hi->goback();
             $_SESSION['history']=$hi->getHistory();
             $folderlist=$this->path(_DIR($path));
             $_SESSION['this_path']=$path;
@@ -321,7 +361,7 @@ class explorer extends Controller{
         $session=$_SESSION['history'];
         if (is_array($session)){
             $hi=new history($session);
-            $path=$hi->gonext();            
+            $path=$hi->gonext();
             $_SESSION['history']=$hi->getHistory();
             $folderlist=$this->path(_DIR($path));
             $_SESSION['this_path']=$path;
@@ -368,7 +408,7 @@ class explorer extends Controller{
         }else{
             write_audit('警告','删除','失败','删除'.$where.'中的文件,'.$info);
         }
-        
+
         show_json($info,$state);
     }else{
         show_json('没有权限',false);
@@ -406,7 +446,7 @@ class explorer extends Controller{
             $code = $error==0?true:false;
             write_audit('信息','删除','成功','隔离区删除'.$success.'个文件');
             show_json($this->L['remove_success'].$success.'success,'.$error.'error',$code);
-        }       
+        }
     }
 
     public function mkfile(){
@@ -439,10 +479,10 @@ class explorer extends Controller{
         session_start();//re start
         $copy_list = json_decode($this->in['list'],true);
         $list_num = count($copy_list);
-        for ($i=0; $i < $list_num; $i++) { 
+        for ($i=0; $i < $list_num; $i++) {
             $copy_list[$i]['path'] =$copy_list[$i]['path'];
         }
-        $_SESSION['path_copy']= json_encode($copy_list);            
+        $_SESSION['path_copy']= json_encode($copy_list);
         $_SESSION['path_copy_type']='copy';
         show_json($this->L['copy_success']);
     }
@@ -450,7 +490,7 @@ class explorer extends Controller{
         session_start();//re start
         $cute_list = json_decode($this->in['list'],true);
         $list_num = count($cute_list);
-        for ($i=0; $i < $list_num; $i++) { 
+        for ($i=0; $i < $list_num; $i++) {
             $cute_list[$i]['path'] = $cute_list[$i]['path'];
         }
         $_SESSION['path_copy']= json_encode($cute_list);
@@ -510,7 +550,7 @@ class explorer extends Controller{
                 $val['path'] = rawurldecode($val['path']);
                 $path=(strlen($val['path'])<$len)?$val['path']:'...'.substr($val['path'],-$len);
                 $msg.= '<br/>'.$val['type'].' :  '.$path;
-            }            
+            }
             $msg.="</div>";
         }
         show_json($msg);
@@ -527,13 +567,13 @@ class explorer extends Controller{
         $copy_type = $_SESSION['path_copy_type'];
         $path_past=$this->path;
         if (!is_writable($path_past)) show_json($this->L['no_permission_write'],false,$data);
-        
+
         $list_num = count($clipboard);
         if ($list_num == 0) {
             show_json($this->L['clipboard_null'],false,$data);
         }
         for ($i=0; $i < $list_num; $i++) {
-            $path_copy = _DIR($clipboard[$i]['path']);  
+            $path_copy = _DIR($clipboard[$i]['path']);
             $filename  = get_path_this($path_copy);
             $filename_out  = iconv_app($filename);
 
@@ -545,7 +585,7 @@ class explorer extends Controller{
                     continue;
                 }
             }
-            
+
             if ($clipboard[$i]['type'] == 'folder'){
                 if ($path_copy == substr($path_past,0,strlen($path_copy))){
                     $error .="<em style='color:#fff;'>{$filename_out}".$this->L['current_has_parent']."</em>";
@@ -569,7 +609,7 @@ class explorer extends Controller{
                     exec("cp -r '".$path_copy."'  '".$auto_path."'" . ' >>/dev/null &');
                     // show_json("cp -r '".$path_copy."'  '".$auto_path."'");
                     // copy($path_copy,$auto_path);
-                }                
+                }
             }else{//剪切
                 // rename($path_copy,$auto_path);
                 if(!is_dir($auto_path)){ //不存在目录
@@ -590,9 +630,9 @@ class explorer extends Controller{
         $state = ($error ==''?true:false);
         show_json($msg,$state,$data);
     }
-    
 
-    
+
+
     public function fileDownloadCheck(){
         if($GLOBALS['is_root'] == 1){
             show_json(true);
@@ -651,7 +691,7 @@ show_json('没有权限',false);
             $list = path_list(USER_TEMP,true,false);
             $max_time = 3600*24;
             if ($list['filelist']>=1) {
-                for ($i=0; $i < count($list['filelist']); $i++) { 
+                for ($i=0; $i < count($list['filelist']); $i++) {
                     $create_time = $list['filelist'][$i]['mtime'];//最后修改时间
                     if(time() - $create_time >$max_time){
                         del_file($list['filelist'][$i]['path'].$list['filelist'][$i]['name']);
@@ -667,13 +707,13 @@ show_json('没有权限',false);
         ini_set('memory_limit', '2028M');//2G;
         $zip_list = json_decode($this->in['list'],true);
         $list_num = count($zip_list);
-        for ($i=0; $i < $list_num; $i++) { 
+        for ($i=0; $i < $list_num; $i++) {
             $zip_list[$i]['path'] = rtrim(_DIR($zip_list[$i]['path']),'/');
         }
         //指定目录
         $basic_path = $zip_path;
         if ($zip_path==''){
-            $basic_path =get_path_father($zip_list[0]['path']);    
+            $basic_path =get_path_father($zip_list[0]['path']);
         }
         if ($list_num == 1){
             $path_this_name=get_path_this($zip_list[0]['path']);
@@ -706,7 +746,7 @@ show_json('没有权限',false);
     public function unzip(){
         load_class('pclzip');
         ini_set('memory_limit', '2028M');//2G;
-        $path=$this->path; 
+        $path=$this->path;
         $name = get_path_this($path);
         $name = substr($name,0,strrpos($name,'.'));
         $unzip_to=get_path_father($path).$name;
@@ -744,7 +784,7 @@ show_json('没有权限',false);
         if (strlen($image_md5)<5) {
             $image_md5 = md5($image);
         }
-        
+
         $image_thum = DATA_THUMB.$image_md5.'.png';
         if (!is_dir(DATA_THUMB)){
             mkdir(DATA_THUMB,"0777");
@@ -791,7 +831,7 @@ show_json('没有权限',false);
         //下载
         $save_path = _DIR($this->in['save_path']);
         if (!is_writeable($save_path)){
-           show_json($this->L['no_permission_write'],false); 
+           show_json($this->L['no_permission_write'],false);
         }
 
         $url = rawurldecode($this->in['url']);
@@ -881,13 +921,13 @@ show_json('没有权限',false);
         show_json('success',true);
     }
 
-    
+
     //代理输出
     public function fileProxy(){
         file_put_out($this->path);
     }
 
-    
+
     /**
      * 上传,html5拖拽  flash 多文件
      */
@@ -904,7 +944,7 @@ show_json('没有权限',false);
         if(count($out) == 1){
             show_json('此目录禁止上传操作',false);
         }
-        
+
         if ($save_path == '') show_json($this->L['upload_error_big'],false);
         if (strlen($this->in['fullPath']) > 1) {//folder drag upload
             $full_path = _DIR_CLEAR(rawurldecode($this->in['fullPath']));
@@ -923,8 +963,8 @@ show_json('没有权限',false);
         }else{
     show_json('没有权限',false);
         }
-        
-        
+
+
     }
 
     // 删除切片
@@ -940,7 +980,7 @@ show_json('没有权限',false);
         show_json(true);
     }
 
-    
+
      // 删除
      public function delarrChunks(){
          sleep(3);
@@ -1010,7 +1050,7 @@ show_json('没有权限',false);
             }else if($val['ext'] && in_array($val['ext'],$ex_name)){
                 $filelist_new[] = $val;
             }
-            
+
         }
         foreach ($list['folderlist'] as $key => $val) {
             //if (in_array($val['name'],$ex_name)) continue;
@@ -1035,7 +1075,7 @@ show_json('没有权限',false);
    public function pathToSelectUsb(){
     $copy_list = json_decode($this->in['list'],true);
     $list_num = count($copy_list);
-    for ($i=0; $i < $list_num; $i++) { 
+    for ($i=0; $i < $list_num; $i++) {
         $copy_list[$i]['path'] =$copy_list[$i]['path'];
     }
 
@@ -1046,13 +1086,13 @@ show_json('没有权限',false);
     $path_past= $this->in['usbPath'];
     $path_past= _DIR($path_past); //解码
     if (!is_writable($path_past)) show_json($this->L['no_permission_write'],false,$data);
-    
+
     $list_num = count($clipboard);
     if ($list_num == 0) {
         show_json($this->L['clipboard_null'],false,$data);
     }
     for ($i=0; $i < $list_num; $i++) {
-        $path_copy = _DIR($clipboard[$i]['path']);  
+        $path_copy = _DIR($clipboard[$i]['path']);
         $filename  = get_path_this($path_copy);
         $filename_out  = iconv_app($filename);
 
@@ -1074,9 +1114,9 @@ show_json('没有权限',false);
                 copy_dir($path_copy,$path_past);
             }else{
                 copy($path_copy,$auto_path);
-            }                
+            }
         }else{
-            rename($path_copy,$auto_path);           
+            rename($path_copy,$auto_path);
         }
         $data[] = iconv_app($filename);
     }
@@ -1135,10 +1175,10 @@ public function cksecret(){
             }else{
                 show_json(false);
             }
-        
+
         show_json(true);
     }
-  
+
     show_json(false);
 }
 

@@ -1,4 +1,4 @@
-define("app/src/setting/main", ["lib/jquery-lib", "lib/util", "lib/artDialog/jquery-artDialog", "../../common/core", "../../tpl/copyright.html", "../../tpl/search.html", "../../tpl/search_list.html", "../../tpl/upload.html", "./setting", "./fav", "./group", "./member", "./antivirus","./platform", "./file","./system","./usblist","./remotelog","./ssoset"], function(e) {
+define("app/src/setting/main", ["lib/jquery-lib", "lib/echarts.min.js", "lib/util", "lib/artDialog/jquery-artDialog", "../../common/core", "../../tpl/copyright.html", "../../tpl/search.html", "../../tpl/search_list.html", "../../tpl/upload.html", "./setting", "./fav", "./group", "./member", "./antivirus","./platform", "./file","./system","./usblist","./remotelog","./ssoset"], function(e) {
     e("lib/jquery-lib"),
     e("lib/util"),
     e("lib/artDialog/jquery-artDialog"),
@@ -926,6 +926,20 @@ define("app/src/setting/setting", [], function() {
                 tips(LNG.mask_not_null, "error");
                 break
             }
+            if (isValidIP(ip) == false){
+                tips(LNG.ip_notvalid, "error");
+                break
+            }
+            if (isValidSubnetMask(mask) == false){
+                tips(LNG.mask_notvalid, "error");
+                break
+            }
+            if ("" != gateway) {
+                if (isValidIP(gateway) == false){
+                    tips(LNG.gateway_notvalid, "error");
+                    break
+                }
+            }
             $.ajax({
                 url: "index.php?net/changeNet&net_ip=" + ip + "&net_mask=" + mask + "&net_gateway=" + gateway,
                 dataType: "json",
@@ -1307,21 +1321,43 @@ a = function() {
     });
 },
 o = function(data){
-var t = "<tr><td>U盘SID</td><td width='20%'>使用人</td><td width='20%'>备注</td><td width='20%'>" + LNG.action + "</td></tr>";
-if(data){
-for(let k in data){
-   t +=  "<tr><td class='usb_name'>"+data[k].name+"</td><td width='20%' class='usb_user'>"+data[k].user+"</td><td width='20%' class='usb_desc'>"+data[k].desc+"</td><td width='20%'>"+
-   "<a href='javascript:void(0)' class='button edit' >" + "编辑" + "</a><a href='javascript:void(0)' class='button delete'>" + "删除" + "</a></td></tr>";
-}
+    var t = "<tr class='title'><td width='20%'>U盘SID</td><td width='10%'>权限</td><td width='15%'>用户</td><td width='20%'>备注</td><td width='10%'style='padding-left:0;text-align:center'>用户绑定</td><td width='25%'>" + LNG.action + "</td></tr>";
+    if(data){
+    for(let k in data){
+    if (!data[k].permission)
+        data[k].permission = '读写';
+    else if (data[k].permission == 'read-write')
+        data[k].permission = '读写';
+    else
+        data[k].permission = '只读';
+        if(!data[k].bind)
+                    data[k].bind = '否';
+                else if(data[k].bind =="1")
+                    data[k].bind = '是';
+                else
+                    data[k].bind = '否';
+    t +=  "<tr><td width='20%' class='usb_name'>"+data[k].name+"</td><td width='10%' class='usb_permission'>"+data[k].permission+"</td><td width='15%' class='usb_user' >"+data[k].user+"</td><td width='20%' class='usb_desc' >"+data[k].desc+"</td><td width='10%' class='usb_bind'>"+data[k].bind+"</td><td width='25%' >"+
+                "<a href='javascript:void(0)' class='button edit' >" + "编辑" + "</a><a href='javascript:void(0)' class='button delete'>" + "删除" + "</a></td></tr>";
+    }
 }
   $(".setting_usblist_whitelist table#list").html(t);
 },
 edit = function(){
     let name = $(this).parent().parent().find('.usb_name').text();
+    let perm = $(this).parent().parent().find('.usb_permission').text();
     let user= $(this).parent().parent().find('.usb_user').text();
     let desc = $(this).parent().parent().find('.usb_desc').text();
-    let t =  "<td class='usb_name'>"+name+"</td><td width='20%'><input type='text' class='usb_user'  value='"+user+"' data-old='"+user+"'/></td><td width='20%'>"+
-    "<input type='text' class='usb_desc' value='"+desc+"' data-old='"+desc+"'/></td><td width='20%'>"+
+    let bind = $(this).parent().parent().find('.usb_bind').text();
+    let aa ="<td width='10%' ><select class='usb_permission'   data-old="+perm+"> <option value='read-write' selected>读写</option> <option value='read-only' >只读</option></select></td>"
+    let bb ="<select class='usb_bind'  data-old='"+bind+"'> <option value='1' >是</option> <option value='0' selected>否</option></select></td><td width='25%'>"
+    if (perm == '只读'){
+        aa =   "<td width='10%' ><select class='usb_permission'   data-old="+perm+"> <option value='read-write' >读写</option> <option value='read-only' selected>只读</option></select></td>"
+    }
+    if(bind =='是'){
+        bb ="<select class='usb_bind'  data-old='"+bind+"'> <option value='1' selected>是</option> <option value='0' >否</option></select></td><td width='25%'>"
+    }
+    let t =  "<td class='usb_name'>"+name+"</td>"+aa+"<td width='15%' ><input type='text' class='usb_user'  value='"+user+"' data-old='"+user+"'/></td><td width='20%' >"+
+    "<input type='text' class='usb_desc' value='"+desc+"' data-old='"+desc+"'/></td><td width='10%'>"+bb+
     "<a href='javascript:void(0)' class='button editsave' >" + "确认编辑" + "</a><a href='javascript:void(0)' class='button editcancle'>" + "取消" + "</a></td>";
     $(this).parent().parent().html(t);
 },
@@ -1355,16 +1391,18 @@ getusbsid = function(){
 },
 add = function(usb) {
     var e = "<tr><td><div class='usb_name'>"+usb+"</div></td>"+
-    "<td><input type='text' class='usb_user'  value=''/></td><td><input type='text' class='usb_desc' value=''/></td>"+
+    "<td><select class='usb_permission'  value='read-write' > <option value='read-write'>读写</option> <option value='read-only'>只读</option></select></td><td ><input type='text' class='usb_user'  value=''/></td><td ><input type='text' class='usb_desc' value=''/></td><td><select class='usb_bind' value='1'> <option value='1'>是</option> <option value='0'>否</option></select></td>"+
     "<td> <a href='javascript:void(0)' class='button addsave' >" + "确认添加" + "</a><a href='javascript:void(0)' class='button addcancle'>" + "取消" + "</a></td></tr>";
     $(e).insertAfter(".setting_usblist_whitelist table#list tr:last");
 },
 editsave = function(){
     let name = $(this).parent().parent().find(".usb_name").text();
+    let perm = $(this).parent().parent().find('.usb_permission').val();
     let user = $(this).parent().parent().find(".usb_user").val();
     let desc = $(this).parent().parent().find(".usb_desc").val();
+    let bind = $(this).parent().parent().find(".usb_bind").val();
     $.ajax({
-        url: e + "edit&name="+ name + "&user=" + user + "&desc=" + desc,
+        url: e + "edit&name="+ name + "&permission=" + perm + "&user=" + user + "&desc=" + desc+ "&bind=" + bind,
         dataType: "json",
         async: !1,
         success: function(e) {
@@ -1382,10 +1420,13 @@ editsave = function(){
 },
 addsave = function(){
     let name = $(this).parent().parent().find(".usb_name").text();
+    let perm = $(this).parent().parent().find('.usb_permission').val();
     let user = $(this).parent().parent().find(".usb_user").val();
     let desc = $(this).parent().parent().find(".usb_desc").val();
+    let bind = $(this).parent().parent().find(".usb_bind").val();
+
     $.ajax({
-        url: e + "add&name="+ name + "&user=" + user + "&desc=" + desc,
+        url: e + "add&name="+ name + "&permission=" + perm + "&user=" + user + "&desc=" + desc+ "&bind=" + bind,
         dataType: "json",
         async: !1,
         success: function(e) {
@@ -1406,28 +1447,57 @@ addcancle = function(){
 },
 listdelete = function(){
     let name = $(this).parent().parent().find('.usb_name').text();
-    $.ajax({
-        url: e + "del&name="+ name,
-        dataType: "json",
-        async: !1,
-        success: function(e) {
-            if(e.code){
-                a();
-                tips(e.data);
-            }else{
-                tips(e.data,false);
-            }
-        },
-        error: function() {
-            return !1
-        }
-    });
+    // $.ajax({
+    //     url: e + "del&name="+ name,
+    //     dataType: "json",
+    //     async: !1,
+    //     success: function(e) {
+    //         if(e.code){
+    //             a();
+    //             tips(e.data);
+    //         }else{
+    //             tips(e.data,false);
+    //         }
+    //     },
+    //     error: function() {
+    //         return !1
+    //     }
+    // });
+    var t = $(this).parent().parent()
+  $.dialog({
+      fixed: !0,
+      icon: "question",
+      drag: !0,
+      title: LNG.warning,
+      content: LNG.if_remove + name + "?<br/>" ,
+      ok: function() {
+          $.ajax({
+              url: e + "del&name=" + name,
+              async: !1,
+              dataType: "json",
+              success: function(e) {
+                if(e.code){
+                    tips(e),
+                    e.code && ($(t).detach(),
+                    a(),
+                    l($(".nav a:eq(0)")))
+                             }else{
+                                tips(e.data,false);
+                             }
+
+              }
+          })
+      },
+      cancel: !0
+  })
 },
 editcancle = function(){
     let name = $(this).parent().parent().find('.usb_name').text();
+    let perm = $(this).parent().parent().find('.usb_permission').data('old');
     let user= $(this).parent().parent().find('.usb_user').data('old');
     let desc = $(this).parent().parent().find('.usb_desc').data('old');
-    let t =  "<td class='usb_name'>"+name+"</td><td width='20%' class='usb_user'>"+user+"</td><td width='20%' class='usb_desc'>"+desc+"</td><td width='20%'>"+
+    let bind = $(this).parent().parent().find('.usb_bind').data('old');
+    let t =  "<td width='20%' class='usb_name'>"+name+"</td>"+"<td width='10%' class='usb_permission'>"+perm+"</td><td width='15%' class='usb_user'>"+user+"</td><td width='20%' class='usb_desc'>"+desc+"</td><td width='10%' class='usb_bind'>"+bind+"</td><td width='25%'>"+
     "<a href='javascript:void(0)' class='button edit' >" + "编辑" + "</a><a href='javascript:void(0)' class='button delete'>" + "删除" + "</a></td>";
     $(this).parent().parent().html(t);
 },
@@ -1438,6 +1508,13 @@ getusbsidok = function(){
   let name = $(".getusbsid_frame .frame_context_value .usb_sid",parent.document).text();
   add(name);
   $('.getusbsid_frame',parent.document).remove();
+},
+l = function(e) {
+    $(".nav .this").removeClass("this"),
+    e.addClass("this");
+    var t = e.attr("data-page");
+    $(".section").addClass("hidden"),
+    $("." + t).removeClass("hidden")
 },
 c = function() {
     $(".setting_usblist_whitelist a.add").live("click",getusbsid);
@@ -2343,6 +2420,11 @@ define("app/src/setting/remotelog", [], function() {
     if(!remotelogserver && remotelog == "enabled" ){
         return tips(LNG.not_null, "error");
     }
+    if (remotelogserver != ""){
+        if (isValidIP(remotelogserver)==false){
+            return tips(LNG.remoteserver_invalid, "error");
+        }
+    }
     var aa = {
         remotelogserver:remotelogserver,
         remotelog:remotelog
@@ -2436,11 +2518,37 @@ define("app/src/setting/platform", [], function() {
         let id = $("#id").val();
         let password = $("#password").val();
 
+        if (!serverip){
+            tips('平台IP地址不能为空',false);
+            return;
+        }
+        if (serverip != ""){
+            if (isValidIP(serverip)==false){
+                tips('平台IP地址无效',false);
+                return;
+            }
+        }
+        if (!monitoringUnitId){
+            tips('设备名不能为空',false);
+            return;
+        }
+        if(!authmode){
+            tips('请选择认证方式',false);
+            return;
+        }
         var formData = new FormData();
         formData.append("authmode",authmode);
         formData.append("serverip",serverip);
         formData.append("monitoringUnitId",monitoringUnitId);
         if(authmode == '1'){
+            if (!id){
+                tips('认证ID不能为空',false);
+                return;
+            }
+            if (!password){
+                tips('认证密码不能为空',false);
+                return;
+            }
             formData.append("id",id);
             formData.append("password",password);
         }else{
@@ -2614,6 +2722,216 @@ define("app/src/setting/system", [], function() {
           time=time + "T" +getaa(h)+':'+getaa(m)+":"+getaa(s);
 
         datefff.value=time;
+        },
+        timeTicket = null,
+        $("#system_resource").live("click", function() {
+            echartsinit()
+        }),
+        //资源
+        echartsinit = function(){
+            var gg = document.getElementById('graph');
+            myChart = echarts.init(gg);
+            let option = {
+                tooltip : {
+                    formatter: "{a} <br/>{c} {b}"
+                },
+                series : [
+                    {
+                        name: 'CPU',
+                        type: 'gauge',
+                        z: 3,
+                        min: 0,
+                        max: 100,
+                        splitNumber: 10,
+                        radius: '50%',
+                        axisLine: {            // 坐标轴线
+                            lineStyle: {       // 属性lineStyle控制线条样式
+                                width: 10
+                            }
+                        },
+                        axisTick: {            // 坐标轴小标记
+                            length: 15,        // 属性length控制线长
+                            lineStyle: {       // 属性lineStyle控制线条样式
+                                color: 'auto'
+                            }
+                        },
+                        splitLine: {           // 分隔线
+                            length: 20,         // 属性length控制线长
+                            lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                                color: 'auto'
+                            }
+                        },
+                        title : {
+                            textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                                fontWeight: 'bolder',
+                                fontSize: 20,
+                                fontStyle: 'italic'
+                            }
+                        },
+                        detail : {
+                            textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                                fontWeight: 'bolder'
+                            }
+                        },
+                        data:[{value: 0, name: 'CPU'}]
+                    },
+                    {
+                        name: '内存',
+                        type: 'gauge',
+                        center: ['20%', '55%'],    // 默认全局居中
+                        radius: '50%',
+                        min:0,
+                        max:100,
+                        endAngle:45,
+                        splitNumber:10,
+                        axisLine: {            // 坐标轴线
+                            lineStyle: {       // 属性lineStyle控制线条样式
+                                width: 8
+                            }
+                        },
+                        axisTick: {            // 坐标轴小标记
+                            length:12,        // 属性length控制线长
+                            lineStyle: {       // 属性lineStyle控制线条样式
+                                color: 'auto'
+                            }
+                        },
+                        splitLine: {           // 分隔线
+                            length:20,         // 属性length控制线长
+                            lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                                color: 'auto'
+                            }
+                        },
+                        pointer: {
+                            width:5
+                        },
+                        title: {
+                            offsetCenter: [0, '-30%'],       // x, y，单位px
+                        },
+                        detail: {
+                            textStyle: {       // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+                                fontWeight: 'bolder'
+                            }
+                        },
+                        data:[{value: 0, name: '内存'}]
+                    },
+                    {
+                        name: '磁盘',
+                        type: 'gauge',
+                        center: ['77%', '50%'],    // 默认全局居中
+                        radius: '40%',
+                        min: 0,
+                        max: 100,
+                        startAngle: 135,
+                        endAngle: 45,
+                        splitNumber: 10,
+                        axisLine: {            // 坐标轴线
+                            lineStyle: {       // 属性lineStyle控制线条样式
+                                width: 8
+                            }
+                        },
+                        axisTick: {            // 坐标轴小标记
+                            splitNumber: 5,
+                            length: 10,        // 属性length控制线长
+                            lineStyle: {       // 属性lineStyle控制线条样式
+                                color: 'auto'
+                            }
+                        },
+                        axisLabel: {
+                            formatter:function(v){
+                                switch (v + '') {
+                                    case '0' : return 'E';
+                                    case '50' : return '磁盘';
+                                    case '100' : return 'F';
+                                }
+                            }
+                        },
+                        splitLine: {           // 分隔线
+                            length: 15,         // 属性length控制线长
+                            lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                                color: 'auto'
+                            }
+                        },
+                        pointer: {
+                            width:2
+                        },
+                        title : {
+                            show: false
+                        },
+                        detail : {
+                            show: false
+                        },
+                        data:[{value: 0, name: '磁盘'}]
+                    },
+                    {
+                        name: '会话',
+                        type: 'gauge',
+                        center : ['77%', '50%'],    // 默认全局居中
+                        radius : '40%',
+                        min: 0,
+                        max: 100,
+                        startAngle: 315,
+                        endAngle: 225,
+                        splitNumber: 10,
+                        axisLine: {            // 坐标轴线
+                            lineStyle: {       // 属性lineStyle控制线条样式
+                                width: 8
+                            }
+                        },
+                        axisTick: {            // 坐标轴小标记
+                            show: false
+                        },
+                        axisLabel: {
+                            formatter:function(v){
+                                switch (v + '') {
+                                    case '0' : return 'E';
+                                    case '50' : return '会话';
+                                    case '100' : return 'F';
+                                }
+                            }
+                        },
+                        splitLine: {           // 分隔线
+                            length: 15,         // 属性length控制线长
+                            lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                                color: 'auto'
+                            }
+                        },
+                        pointer: {
+                            width:2
+                        },
+                        title: {
+                            show: false
+                        },
+                        detail: {
+                            show: false
+                        },
+                        data:[{value: 0, name: '会话'}]
+                    }
+                ]
+            };
+            option.series[0].data[0].value = 0.00;
+        option.series[1].data[0].value = 0.00;
+        option.series[2].data[0].value = 0.00;
+        option.series[3].data[0].value = 0.00;
+          myChart.setOption(option,true);
+          if(!timeTicket){
+            timeTicket = setInterval(function (){
+                $.ajax({
+             type : "get",
+             async : true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+             url : "/cgi-bin/resource.cgi",    //resource.cgi
+             data : {},
+             dataType : "json",        //返回数据形式为json
+             success : function(result) {
+               option.series[0].data[0].value = result.cpu;
+               option.series[1].data[0].value = result.ram;
+               option.series[2].data[0].value = result.disk;
+               option.series[3].data[0].value = result.session;
+                     myChart.setOption(option,true);
+                      }
+                 });
+                },5000);
+          }
+
         },
         //恢复出厂配置
         $('#factoryreset').live("click",function(e){

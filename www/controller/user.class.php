@@ -5,7 +5,7 @@ class user extends Controller
     private $auth;  //用户所属组权限
     private $notCheck;
     function __construct(){
-        header('Access-Control-Allow-Origin:*'); 
+        header('Access-Control-Allow-Origin:*');
         parent::__construct();
         $this->tpl  = TEMPLATE  . 'user/';
         if(!isset($_SESSION)){//避免session不可写导致循环跳转
@@ -39,7 +39,7 @@ class user extends Controller
             $this->safetime = 30;
         }
     }
-    
+
     /**
      * 登录状态检测;并初始化数据状态 logincheck-> logout -> login
      */
@@ -58,7 +58,7 @@ class user extends Controller
             define('HOME',PUBLIC_PATH);
             $GLOBALS['web_root'] = str_replace(WEB_ROOT,'',HOME);//从服务器开始到用户目录
             $GLOBALS['is_root'] = 1;
-       
+
             $this->config['user'] = $this->config['setting_default'];
             $theme = config_get_value_from_file('/etc/system/oem.conf','THEME');
             if (isset($theme)){
@@ -66,7 +66,7 @@ class user extends Controller
           	}
             return;
         }
-        
+
         if(SSO_ON == 1){ //单点登录
             // show_json($_SESSION['sso_login']);
             if($_SESSION['sso_login']===true){
@@ -93,7 +93,7 @@ class user extends Controller
                  $GLOBALS['web_root'] = str_replace(WEB_ROOT,'',HOME);//从服务器开始到用户目录
                  $GLOBALS['is_root'] = 0;
              }
-   
+
              $this->config['user_share_file']   = USER.'data/share.php';    // 收藏夹文件存放地址.
              $this->config['user_fav_file']     = USER.'data/fav.php';    // 收藏夹文件存放地址.
              $this->config['user_seting_file']  = USER.'data/config.php'; //用户配置文件
@@ -106,7 +106,7 @@ class user extends Controller
              return;
             }
             if($this->url){
-             header('location:'. $this->url);    
+             header('location:'. $this->url);
              return;
             }
          }
@@ -142,7 +142,7 @@ class user extends Controller
                 $GLOBALS['web_root'] = str_replace(WEB_ROOT,'',HOME);//从服务器开始到用户目录
                 $GLOBALS['is_root'] = 0;
             }
-           
+
             $this->config['user_share_file']   = USER.'data/share.php';    // 收藏夹文件存放地址.
             $this->config['user_fav_file']     = USER.'data/fav.php';    // 收藏夹文件存放地址.
             $this->config['user_seting_file']  = USER.'data/config.php'; //用户配置文件
@@ -165,7 +165,7 @@ class user extends Controller
                 session_start();//re start
                 $_SESSION['secros_login'] = true;
                 $_SESSION['secros_user']= $user;
-                setcookie('secros_name', $_COOKIE['secros_name'], time()+3600*24*365); 
+                setcookie('secros_name', $_COOKIE['secros_name'], time()+3600*24*365);
                 setcookie('secros_token',$_COOKIE['secros_token'],time()+3600*24*365); //密码的MD5值再次md5
                 header('location:'.get_url());
                 exit;
@@ -217,11 +217,11 @@ class user extends Controller
             'upload_max'    => $this->config['settings']['upload_chunk_size'],
             'version'       => SECROS_VERSION,
             'version_desc'  => $this->config['settings']['version_desc'],
-
+            'share_area'      =>  shared,
             'json_data'     => "",
             'theme'         => $this->config['user']['theme'], //列表排序依照的字段
             'list_type'     => $this->config['user']['list_type'], //列表排序依照的字段
-            'sort_field'    => $this->config['user']['list_sort_field'], //列表排序依照的字段  
+            'sort_field'    => $this->config['user']['list_sort_field'], //列表排序依照的字段
             'sort_order'    => $this->config['user']['list_sort_order'], //列表排序升序or降序
             'musictheme'    => $this->config['user']['musictheme'],
             'movietheme'    => $this->config['user']['movietheme'],
@@ -253,7 +253,7 @@ class user extends Controller
      * 登录view
      */
     public function login($msg = ''){
-        
+
         if (!file_exists(USER_SYSTEM.'install.lock')) {
             $this->display('install.html');exit;
         }
@@ -299,7 +299,7 @@ class user extends Controller
                 // curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);//不验证证书
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);//不验证证书
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($ch, CURLOPT_POST, true);
 $accessToken = "V1NCREBDUlNDLkNPTTpGR04kSXBIMXI1aUZhUndq";
 $headers[]  =  "Content-Type: application/x-www-form-urlencoded";
@@ -309,12 +309,12 @@ if( !empty($headers) ){
 }
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-       
+
         $res= curl_exec($ch);
         // if(!empty(curl_error($ch))){
-        //     show_json('erro'.curl_error($ch),false);  
+        //     show_json('erro'.curl_error($ch),false);
         // }
-        // show_json($res);  
+        // show_json($res);
         $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);    // 获取http请求后返回的状态码
         curl_close($ch);
         if ($http_status == 200) {
@@ -344,12 +344,12 @@ if( !empty($headers) ){
            //no seesiondata
             header('location:'. $this->url);//https://10.1.2.152/passport/authn?remoteAppId=OA@CRSC.COM&spUrl=http://'
         }
-       
+
         if (is_wap()) {
             $this->display('login_wap.html');
         }else{
             $this->display('login.html');
-        } 
+        }
         exit;
     }
 
@@ -365,18 +365,30 @@ if( !empty($headers) ){
         }
         exit;
     }
+    /*
+    双因子认证
+    */
+    public function tfauth($username, $password, $checkcode){
+        $tfa  = config_get_value_from_file('/mnt/config/usbpolicy.conf','tfa');
+        $noc_status  = config_get_value_from_file('/var/run/roswan','noc_connected');
+        if($noc_status == '1' && $tfa == '1'){
+            system('/usr/sbin/auth2fa ' .$username .' '.$password . ' '.$checkcode, $retval);
+            return $retval;
+        }
+        return 0;
+    }
     /**
      * 退出处理
      */
     public function logout(){
-        
+
         if($_SESSION['secros_user']['name']){
             write_audit('信息','退出','成功','用户退出');
         }
         session_start();
         user_logout();
     }
-    
+
     /**
      * 登录数据提交处理
      */
@@ -398,8 +410,12 @@ if( !empty($headers) ){
         } else {
             $ip = '0.0.0.0';
         }
-        
 
+        if(empty($this->in['name']) || empty($this->in['password'])) {
+            $msg = $this->L['login_not_null'];
+            $this->login($msg);
+            exit;
+        }
         if(!file_exists("/mnt/config/whitelist")){
             $newfile = fopen("/mnt/config/whitelist", "w");
             fclose($newfile);
@@ -416,7 +432,7 @@ if( !empty($headers) ){
     }
     fclose($wlfile);
     $checkwl = false;
- 
+
         if(count($wltxt)>0){
             for($i=0;$i<count($wltxt);$i++)
             {
@@ -437,13 +453,13 @@ if( !empty($headers) ){
         }else{ //没设置白名单
             $checkwl = true;
         }
-        
-    
+
+
     if($checkwl == false){
         $this->login('此IP不在白名单中,请联系管理员');
         return false;
     }
-    
+
         // 获取黑名单
         $dop = fopen('/etc/system/faillogin', 'r');
         $txt =array();
@@ -472,12 +488,12 @@ if( !empty($headers) ){
                 }else{
                     fwrite($delblack,$txt[$i]."\n");
                 }
-                
+
             }
         fclose($delblack);
          }
-        
-         
+
+
 
             $bldata = fopen('/etc/system/faillogin', 'r');
         while(!feof($bldata)){
@@ -496,7 +512,7 @@ if( !empty($headers) ){
                             exit;
                         }
                     }
-                    
+
                 }
             }
         }
@@ -505,13 +521,19 @@ if( !empty($headers) ){
         if(!isset($this->in['name']) || !isset($this->in['password'])) {
             $msg = $this->L['login_not_null'];
         }else{
-            //错误三次输入验证码            
+            //错误三次输入验证码
             $name = rawurldecode($this->in['name']);
             $password = rawurldecode($this->in['password']);
-            
+            $checkcode = rawurldecode($this->in['check_code']);
+            if ($this->tfauth($name,$password,$checkcode)){
+                $msg = $this->L['code_error'];
+                write_audit('信息','登录','失败','验证码错误,ip:'.get_client_ip(),$this->in['name']);
+                $this->login($msg);
+                return false;
+            }
             session_start();//re start 有新的修改后调用
-            /*if(isset($_SESSION['code_error_time'])  && 
-               intval($_SESSION['code_error_time']) >=3 && 
+            /*if(isset($_SESSION['code_error_time'])  &&
+               intval($_SESSION['code_error_time']) >=3 &&
                $_SESSION['check_code'] !== strtolower($this->in['check_code'])){
                 // pr($_SESSION['check_code'].'--'.strtolower($this->in['check_code']));exit;
                 $this->login($this->L['code_error']);
@@ -591,7 +613,7 @@ if( !empty($headers) ){
      * 权限验证；统一入口检验
      */
     public function authCheck(){
-  
+
         if(isset($_SESSION['timeout']) && $this->timeout != 0) {
             session_start();
             if($_SESSION['timeout'] < time()) {
@@ -600,10 +622,10 @@ if( !empty($headers) ){
                 }
                 session_destroy();
                 header('location:./index.php?user/login');
-                exit(0);  
+                exit(0);
             }else{
                 $_SESSION['timeout']= time() + $this->timeout;
-            }  
+            }
         }
 
         if (isset($GLOBALS['is_root']) && $GLOBALS['is_root'] == 1) return;
@@ -617,7 +639,7 @@ if( !empty($headers) ){
         $key = ST.':'.ACT;
         $group  = new fileCache(CONFIG_PATH.'group.php');
         $auth= $group->get($this->user['role']);
-        
+
         //向下版本兼容处理
         //未定义；新版本首次使用默认开放的功能
         if(!isset($auth['userShare:set'])){
@@ -626,14 +648,14 @@ if( !empty($headers) ){
         if(!isset($auth['explorer:fileDownload'])){
             $auth['explorer:fileDownload'] = 1;
         }
-        
+
         $auth['explorer:fileDownloadCheck'] = 1;
         //默认扩展功能 等价权限
         $auth['user:common_js'] = 1;//权限数据配置后输出到前端
         $auth['explorer:pathChmod']         = $auth['explorer:pathRname'];
         $auth['explorer:pathDeleteRecycle'] = $auth['explorer:pathDelete'];
         $auth['explorer:pathCopyDrag']      = $auth['explorer:pathCuteDrag'];
-        
+
         $auth['explorer:fileDownloadRemove']= $auth['explorer:fileDownload'];
         $auth['explorer:zipDownload']       = $auth['explorer:fileDownload'];
         $auth['explorer:fileProxy']         = $auth['explorer:fileDownload'];
@@ -672,20 +694,20 @@ if( !empty($headers) ){
         if ($_FILES["upgradefile"]["error"] > 0) {
             show_json('400',false);
         }else{
-            $filename = '/tmp/'.$_POST['filename'];//确定上传的文件名 
-//第一次上传时没有文件，就创建文件，此后上传只需要把数据追加到此文件中 
-if(!file_exists($filename) || $_POST['first']==true){ 
- move_uploaded_file($_FILES['upgradefile']['tmp_name'],$filename); 
-}else{ 
- file_put_contents($filename,file_get_contents($_FILES['upgradefile']['tmp_name']),FILE_APPEND); 
-} 
+            $filename = '/tmp/'.$_POST['filename'];//确定上传的文件名
+//第一次上传时没有文件，就创建文件，此后上传只需要把数据追加到此文件中
+if(!file_exists($filename) || $_POST['first']==true){
+ move_uploaded_file($_FILES['upgradefile']['tmp_name'],$filename);
+}else{
+ file_put_contents($filename,file_get_contents($_FILES['upgradefile']['tmp_name']),FILE_APPEND);
+}
 
 if($_POST['end']==true){
     show_json('200');
-} 
+}
 show_json('201');
         }
-     
+
     }
 
 
@@ -698,7 +720,7 @@ show_json('201');
         }
         $out = fopen($save_path, "wb");
             if(flock($out, LOCK_EX)) {
-           
+
                     if (!$in = fopen($_FILES['upgradefile']['tmp_name'],"rb")) break;
                     while ($buff = fread($in, $wbspeed)) {
                         fwrite($out, $buff);
@@ -760,7 +782,7 @@ $ipfind = false;
         }else{
             fwrite($edit,$adntxt[$i]."\n");
         }
-      
+
     }else{
         fwrite($edit,$adntxt[$i]."\n");
     }

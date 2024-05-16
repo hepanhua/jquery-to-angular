@@ -22,6 +22,9 @@ function _DIR($path){
     if (substr($path,0,strlen('*usbox*/')) == '*usbox*/') {
         return PUBLIC_PATH.str_replace('*usbox*/','',$path);
     }
+    if (substr($path,0,strlen('*shared*/')) == '*shared*/') {
+        return SHARE_PATH.str_replace('*shared*/','',$path);
+    }
     if (substr($path,0,strlen('*share*/')) == '*share*/') {
         return "*share*/";
     }

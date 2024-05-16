@@ -22,6 +22,8 @@ class member extends Controller{
             !$this->in['password'] ||
             !$this->in['role'] ) show_json($this->L["data_not_full"],false);
 
+		if ($this->in['name'] == 'super') show_json($this->L['default_user_can_not_do'],false);
+		
         $this->in['name'] = rawurldecode($this->in['name']);
         $this->in['password'] = rawurldecode($this->in['password']);
         $user = array(
@@ -35,8 +37,10 @@ class member extends Controller{
             system('/usr/sbin/setusboxftpd');
             system('smbpasswd -a ' . $this->in['name'] . ' -P ' . $this->in['password'] . '>>/dev/null &');
             system('/usr/sbin/setusboxsmbd');
+            write_audit('信息','设置','成功',$this->L["setting_member"].':添加'.$user['name']);
             show_json($this->L['success']);
         }
+        write_audit('警告','设置','失败',$this->L["setting_member"].':添加'.$this->in['name'].$this->L['error_repeat']);
         show_json($this->L['error_repeat'],false);
     }
 
@@ -68,8 +72,10 @@ class member extends Controller{
             	system('smbpasswd -a ' . $user['name'] . ' -P ' . $this->in['password_to'] . '>>/dev/null &');
             }
             system('/usr/sbin/setusboxsmbd');
+            write_audit('信息','设置','成功',$this->L["setting_member"].':编辑'.$user['name']);
             show_json($this->L['success']);
         }
+         write_audit('警告','设置','失败',$this->L["setting_member"].':编辑'.$this->in['name'].$this->L['error_repeat']);
         show_json($this->L['error_repeat'],false);
     }
 
@@ -85,6 +91,7 @@ class member extends Controller{
             system('/usr/sbin/setusboxftpd');
             system('smbpasswd -x ' . $name . '>>/dev/null &');
             system('/usr/sbin/setusboxsmbd');
+            write_audit('信息','设置','成功',$this->L["setting_member"].':删除'.$name);
             show_json($this->L['success']);
         }
         show_json($this->L['error'],false);

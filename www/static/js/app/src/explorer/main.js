@@ -134,6 +134,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				i = 0,
 				n = $(".frame-left"),
 				s = $(".frame-left .bottom_box"),
+				q = $(".frame-left .bottom_box_share"),
 				o = $(".frame-resize"),
 				r = $(".frame-right");
 			o.die("mousedown").live("mousedown", function(e) {
@@ -150,7 +151,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 					if (!e) return !0;
 					var c = l.pageX - t,
 						d = a + c;
-					i > d && (d = i), d > $(document).width() - 200 && (d = $(document).width() - 200), n.css("width", d), s.css("width", d), o.css("left", d - 5), r.css("left", d + 1), ui.setStyle()
+					i > d && (d = i), d > $(document).width() - 200 && (d = $(document).width() - 200), n.css("width", d), s.css("width", d),q.css("width", d), o.css("left", d - 5), r.css("left", d + 1), ui.setStyle()
 				},
 				d = function() {
 					return e ? (e = !1, o.removeClass("active"), Global.frameLeftWidth = $(".frame-left").width(), void 0) : !1
@@ -550,7 +551,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 						var n = i[0] + "/",
 							s = t.replace(/@1@/g, n),
 							o = i[0];
-						"" != i[0] && ("*share*" == o ? o = LNG.my_share : "*usbox*" == o ? o = LNG.secros_name_desc : "*recycle*" == o && (o = LNG.recycle)), s = s.replace("{$2}", i.length), s = s.replace("{$3}", o);
+						"" != i[0] && ("*shared*" == o ? o = LNG.share_area : "*usbox*" == o ? o = LNG.secros_name_desc : "*recycle*" == o && (o = LNG.recycle)), s = s.replace("{$2}", i.length), s = s.replace("{$3}", o);
 						for (var r = s, l = 1, c = i.length - 1; i.length > l; l++, c--) n += i[l] + "/", s = a.replace(/@1@/g, n), s = s.replace("{$2}", c), s = s.replace("{$3}", i[l]), r += s;
 						return '<ul class="yarnball">' + r + "</ul>"
 					};
@@ -3716,7 +3717,11 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 								showusages.push(firstfol[k].name);
 							}
 						}
+						t[0].children.forEach(function(item) {
+							item.icon = '/static/images/file_16/usb.png';
+						});
 						getdiskusages();
+						getshareusages();
 					}
 					$.fn.zTree.init($("#folderList"), c, t), s = $.fn.zTree.getZTreeObj("folderList")
 				}
@@ -3964,7 +3969,7 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 				// console.log("连接成功！");
 				mqttclient.subscribe("sample-values/USBOX/usbevent/#");
 				mqttclient.subscribe("sample-values/USBOX/avscan/#");
-				mqttclient.subscribe("sample-values/USBOX/virus/#");
+				mqttclient.subscribe("sample-values/+/virus/#");
 				mqttclient.subscribe("sample-values/USBOX/avupdate/progress");
 				mqttclient.subscribe("sample-values/USBOX/CAVP/status");
 				mqttclient.subscribe("sample-values/USBOX/upgrade/progress");
@@ -4025,52 +4030,55 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 							}
 
 							if(json.value == 1){
-							var ckin = true;
-							$.ajax({
-								url: "index.php?explorer/cksecret&usbid="+json.channelId+"&direct=in",
-								dataType: "json",
-								async:false,
-								error: function() {},
-								success: function(e) {
-									console.log(e);
-									ckin = e.data;
+								var ckin = true;
+								$.ajax({
+									url: "index.php?explorer/cksecret&usbid="+json.channelId+"&direct=in",
+									dataType: "json",
+									async:false,
+									error: function() {},
+									success: function(e) {
+										//console.log(e);
+										ckin = e.data;
+									}
+								});
+								if(!ckin){
+									return;
 								}
-							});
-							if(!ckin){
-								return;
-							}
-
-								$("#usbname_loading").text(json.channelId + "挂载中");
-								$(".usb_mount").removeClass('hidden');
-								if(!Config.usbMountTime){
-									Config.usbMountTime = setTimeout(() => {
-									$(".usb_mount").addClass('hidden');
-									ui.tree.init();//刷新树目录
-									Config.usbMountTime = null;
-									// cleanusbevent();
-									}, 10000);
-								}else{
-									clearTimeout(Config.usbMountTime);
-									Config.usbMountTime = setTimeout(() => {
+								if (!json.user || json.user == G.user_name){
+									$("#usbname_loading").text(json.channelId + "挂载中");
+									$(".usb_mount").removeClass('hidden');
+									if(!Config.usbMountTime){
+										Config.usbMountTime = setTimeout(() => {
 										$(".usb_mount").addClass('hidden');
-									ui.tree.init();//刷新树目录
-									Config.usbMountTime = null;
-									// cleanusbevent();
-									}, 10000);
+										ui.tree.init();//刷新树目录
+										Config.usbMountTime = null;
+										// cleanusbevent();
+										}, 10000);
+									}else{
+										clearTimeout(Config.usbMountTime);
+										Config.usbMountTime = setTimeout(() => {
+											$(".usb_mount").addClass('hidden');
+										ui.tree.init();//刷新树目录
+										Config.usbMountTime = null;
+										// cleanusbevent();
+										}, 10000);
+									}
 								}
 							}
 							//usb+容量接口
 							if (json.value == 0) {//拔出某个U盘
-								let sindex = showusages.indexOf(json.channelId);
-								if(sindex >= 0){
-									showusages.splice(sindex,1);
-								}
-								ui.tree.init();//刷新树目录
-								let nowpath = $('#yarnball_input #path').val();
-								let lsarr = nowpath.split('/');
-								core.tips.tips(json.channelId + '已经拔出', true);
-								if (lsarr[1] == json.channelId) {
-									ui.path.list('*usbox*');
+								if (!json.user || json.user == G.user_name){
+									let sindex = showusages.indexOf(json.channelId);
+									if(sindex >= 0){
+										showusages.splice(sindex,1);
+									}
+									ui.tree.init();//刷新树目录
+									let nowpath = $('#yarnball_input #path').val();
+									let lsarr = nowpath.split('/');
+									core.tips.tips(json.channelId + '已经拔出', true);
+									if (lsarr[1] == json.channelId) {
+										ui.path.list('*usbox*');
+									}
 								}
 							}
 
@@ -4093,19 +4101,20 @@ define("app/src/explorer/main", ["lib/jquery-lib", "lib/util", "lib/ztree/js/ztr
 								$(".getusbsid_frame_warning").removeClass('hidden');
 							}
 							if(json.value == -2){
-								$.ajax({
-									url: "index.php?explorer/cksession",
-									dataType: "json",
-									success: function(res) {
-										if(res.data == false){
-											if(G.secretusb.indexOf(json.channelId) == -1){
-												G.secretusb.push(json.channelId);
-												addSecretUsbFrame();
+								if (!json.user || json.user == G.user_name){
+									$.ajax({
+										url: "index.php?explorer/cksession",
+										dataType: "json",
+										success: function(res) {
+											if(res.data == false){
+												if(G.secretusb.indexOf(json.channelId) == -1){
+													G.secretusb.push(json.channelId);
+													addSecretUsbFrame();
+												}
 											}
 										}
-									}
-								});
-
+									});
+								}
 							}
 							if(json.value == -3){
 								var ckout = true;
@@ -6549,46 +6558,79 @@ $(document).on('click', '.secretframe_cancle', function () {
 
 		$(".usbStorage").empty();
 		$.ajax({
-			url: "/cgi-bin/getdiskusages.cgi",
+			url: "/cgi-bin/getdiskusages.cgi?user="+G.user_name,
 			dataType: "json",
 			error: function() {},
 			success: function(e) {
-$(".usbStorage").empty();
-if(e.data.length == 0 || showusages.length == 0){
-$(".usbStorage").addClass('hidden');
-return;
-}else{
-$(".usbStorage").removeClass('hidden');
-}
-for(let k=0;k<e.data.length;k++){
-	if(showusages.indexOf(e.data[k].name) >= 0){
-		$(".usbStorage").append('<div>'+e.data[k].name+'</div>')
-		for(let g=0;g<e.data[k].usages.length;g++){
-			let color = "";
-							if(e.data[k].usages[g].usage < 50){
-									color = "background:green!important;";
-							}else{
-								if(e.data[k].usages[g].usage < 80){
-									color = "background:orange!important;";
-								}
-							}
-							let dev = e.data[k].usages[g].dev;
-							if(dev.length > 4){
-								dev =  dev.substr(dev.length-4);
-							}
-			$(".usbStorage").append('<div class="usbRow"><div>'+dev+'</div><div class="usbProgress"><div style="width:'+e.data[k].usages[g].usage+'%;'+color+'"></div></div><div class="usbPercent">'+e.data[k].usages[g].usage+'%</div></div>');
-		}
-	}
-}
-setTimeout(() => {
-	let bottom = 100 + $(".usbStorage").height();
-	$(".frame-main .frame-left #folderList").css("bottom",bottom + "px");
-}, 2000);
+				$(".usbStorage").empty();
+				if(e.data.length == 0 || showusages.length == 0){
+				$(".usbStorage").addClass('hidden');
+				return;
+				}else{
+					if(G.share_area ==1){
+						$(".usbStorage").css("bottom",  "176px")
+					}
+				$(".usbStorage").removeClass('hidden');
+				}
+				for(let k=0;k<e.data.length;k++){
+					if(showusages.indexOf(e.data[k].name) >= 0){
+						$(".usbStorage").append('<div>'+e.data[k].name+'</div>')
+						for(let g=0;g<e.data[k].usages.length;g++){
+							let color = "";
+											if(e.data[k].usages[g].usage < 50){
+													color = "background:green!important;";
+											}else{
+												if(e.data[k].usages[g].usage < 80){
+													color = "background:orange!important;";
+												}
+											}
+											let dev = e.data[k].usages[g].dev;
+											if(dev.length > 4){
+												dev =  dev.substr(dev.length-4);
+											}
+							$(".usbStorage").append('<div class="usbRow"><div>'+dev+'</div><div class="usbProgress"><div style="width:'+e.data[k].usages[g].usage+'%;'+color+'"></div></div><div class="usbPercent">'+e.data[k].usages[g].usage+'%</div></div>');
+						}
+					}
+				}
+				setTimeout(() => {
+					let shareHeight
+					if(G.share_area ==1){
+						shareHeight = $(".bottom_box_share").height()
+					}else{
+						shareHeight = 0
+					}
+					let bottom = 100 + $(".usbStorage").height()+shareHeight;
+					$(".frame-main .frame-left #folderList").css("bottom",bottom + "px");
+				}, 2000);
 			}
 		});
 
 	}
 
+	function getshareusages(){
+		if(G.share_area==1){
+			$.ajax({
+				url: "/cgi-bin/getshareusages.cgi",
+				dataType: "json",
+				error: function() {},
+				success: function(e) {
+					let usage =e.data.usage
+					$("#share_persent").attr("title",usage+'%')
+					let width = usage+"%"
+					$("#share_persent_color").css("width",width)
+					if(usage <50){
+						$("#share_persent_color").css("background-color","green")
+					}else if(usage <80) {
+						$("#share_persent_color").css("background-color","orange")
+					}else{
+						$("#share_persent_color").css("background-color","red")
+					}
+				}
+			});
+		}
+		
+	
+	}
 	function get_time(s) {
 		return s < 10 ? '0' + s: s;
 	}

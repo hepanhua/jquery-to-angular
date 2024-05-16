@@ -34,6 +34,7 @@
 		$licencetype = 1;
 	}
 	$antivirus  = config_get_unsign_int_from_file('/etc/system/quota.conf','antivirus');
+	$shared  = config_get_unsign_int_from_file('/etc/system/quota.conf','shared');
 	/*if (file_exists('/mnt/config/antivirus.conf')){
 		$currenttime = strtotime("now");
 		$expiretime = config_get_value_from_file('/mnt/config/antivirus.conf','License_expireGMT');
@@ -118,13 +119,31 @@
 			
 			<div class="usbStorage hidden">
 			</div>
-
-			<div class="bottom_box">
-				<div class="box_content">
-					<a href="javascript:ui.path.list('*recycle*');" class="cell menuRecycleButton"><i class="font-icon icon-bug"></i><span><?php echo $L['recycle'];?></span></a>
+			<?php if ($shared == 1){?>
+			<div class="bottom_box_share">
+				<div class="box_content_share">
+					<a href="javascript:ui.path.list('*shared*');" class="cell menuRecycleButton">
+						<i class="font-icon icon-archive"></i>
+						<span><?php echo $L['share_area'];?></span>
+						
+					</a>
+					<a title="sshsss" id="share_persent">
+						<div style="position :relative;width: 85px; margin:10px;border: 1px solid #ccc;border-radius: 15px;overflow: hidden;height: 6px; top:-5px" >
+							<div id="share_persent_color"style=" height:100%;"></div>
+						</div>
+					</a>
 					<div style="clear:both"></div>
 				</div>
 			</div>
+			<?php }?>
+			<div class="bottom_box">
+				<div class="box_content">
+					<a href="javascript:ui.path.list('*recycle*');" class="cell menuRecycleButton"><i class="font-icon icon-warning-sign"></i><span><?php echo $L['recycle'];?></span></a>
+					<div style="clear:both"></div>
+				</div>
+			</div>
+			
+
 		</div><!-- / frame-left end-->
 		<div class='frame-resize'></div>
 		<div class='frame-right'>

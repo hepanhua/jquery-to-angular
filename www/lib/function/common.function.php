@@ -748,3 +748,4 @@ function pkcs5_pad($text, $block = 8){
 	$pad = $block - (strlen($text) % $block);
 	return $text . str_repeat(chr($pad), $pad);
 } 
+

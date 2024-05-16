@@ -46,6 +46,7 @@ input[type="radio"],input[type="checkbox"] { border: none; background: none;}
 .topbar .content .topbar_menu:hover,.topbar .content .topbar_menu.this { background: #6b8ac3;}
 .topbar .content .topbar_menu.title { font-size: 20px; width: 200px; padding: 0; text-align: center;}
 .topbar .content .topbar_menu.title:hover { background: none;}
+.topbar .content .topbar_menu.go_back:hover img{filter: drop-shadow(2px 2px 2px #000);}
 .topbar .content .menu-desktop:before { content: "\f108";}
 .topbar .content .menu-explorer:before { content: "\f0ae";}
 .topbar .content .menu-editor:before { content: "\f044";}
@@ -242,6 +243,7 @@ input[type="radio"],input[type="checkbox"] { border: none; background: none;}
 .file_upload .btns { margin-bottom: 10px; font-size: 13px; height: 28px;}
 .file_upload .btns .tips { float: right; line-height: 30px;}
 .file_upload .btns #picker { width: 100px; float: left;}
+.file_upload .btns #pickerfol { width: 100px; float: left;}
 .file_upload .upload_box_limit_tips { float: left; line-height: 34px; color: #03b3b2;}
 .file_upload .upload_box_tips { float: right; line-height: 34px; color: #888;}
 .file_upload .upload_box_tips a { text-decoration: none; color: #888;}

@@ -1,6 +1,7 @@
 <div class='h1'><i class="font-icon icon-user"></i><?php echo $L['system_setting'];?></div>
 <div class="nav">
     <a href="javascript:;"  class="this" data-page="setting"><?php echo $L['system_setting'];?></a>
+	<a href="javascript:;" id="system_resource"  data-page="system_resource"><?php echo $L['system_resource'];?></a>
 	<a href="javascript:;" data-page="system_config"><?php echo $L['system_config_title'];?></a>
 	<?php if (TIME_ON == 1) {  ?>
 		<a href="javascript:;" id="system_timesetting" data-page="system_timesetting"><?php echo $L['system_timesetting'];?></a>
@@ -70,6 +71,9 @@
 				case "4":
 					$xmodel =  $L['xmodel_gm'];
 					break;
+				case "5":
+					$xmodel =  $L['xmodel_gd'];
+					break;
 				default:
 					break;
 			}
@@ -97,6 +101,10 @@
    <a href="javascript:void(0);" class="reboot button"><?php echo $L['reboot'];?></a>
   </div>
   <div style="clear:both;"></div>
+</div>
+
+<div class="section system_resource hidden">
+	<div id="graph" style="width: 600px;height:400px; margin:0 auto;"></div>
 </div>
 
 <div class="section system_config hidden">

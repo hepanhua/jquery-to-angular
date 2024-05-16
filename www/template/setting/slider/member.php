@@ -57,8 +57,8 @@
         <a href="javascript:;" class="button warning path_ext_tips" title='<?php echo $L['group_role_ext_warning'];?>' style="margin-left: 20px;padding: 3px 5px;background: #ccc;border:none;color:#fff;"><i class="icon-warning-sign"></i><?php echo $L['tips'];?>!</a>
         <div style="clear:both;"></div>-->
     </div>
-    <!--<div class="together">
-        <div class="title"><i><?php echo $L['group_role_file'];?></i></div> 
+    <div class="together">
+        <div class="title"><i><?php echo $L['group_role_fileop];?></i></div> 
         <div class="tagdiv" style="margin:2px 0 5px">
             <a class="tag" href="javascript:;" data-role='explorer:mkfile;app:user_app'>
                 <input type="checkbox" class="checkbox"><span><?php echo $L['group_role_mkfile'];?></span>
@@ -69,12 +69,12 @@
             <a class="tag" href="javascript:;" data-role='explorer:pathRname'>
                 <input type="checkbox" class="checkbox"><span><?php echo $L['group_role_pathrname'];?></span>
             </a>
-            <a class="tag" href="javascript:;" data-role='explorer:pathDelete'>
+            <!--<a class="tag" href="javascript:;" data-role='explorer:pathDelete'>
                 <input type="checkbox" class="checkbox"><span><?php echo $L['group_role_pathdelete'];?></span>
             </a>
             <a class="tag" href="javascript:;" data-role='explorer:pathInfo;explorer:pathInfoMuti'>
                 <input type="checkbox" class="checkbox"><span><?php echo $L['group_role_pathinfo'];?></span>
-            </a>
+            </a>-->
 
             <a class="tag" href="javascript:;" 
             data-role='explorer:pathCopy;explorer:pathCute;explorer:pathCuteDrag;explorer:clipboard;explorer:pathPast'>
@@ -92,11 +92,11 @@
             </a> 
             <a class="tag" href="javascript:;" data-role='editor:fileSave'>
                 <input type="checkbox" class="checkbox"><span><?php echo $L['group_role_filesave'];?></span>
-            </a>
+            </a>-->
             <div style="clear:both;"></div>
         </div>
         <div style="clear:both;"></div>
-    </div>-->
+    </div>
     <div class="together">
         <div class="title"><i><?php echo $L['group_role_file'];?></i></div>
         <a class="tag" href="javascript:;" data-role='explorer:pathDelete'>

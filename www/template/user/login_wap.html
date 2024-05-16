@@ -1,4 +1,4 @@
-<!--user login-->
+﻿<!--user login-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -16,6 +16,8 @@
 		$image = STATIC_PATH."images/wall_page/secros.jpg";
 		$loginimage = STATIC_PATH.'images/secros-login.png';
 		$oem  = config_get_value_from_file('/etc/system/oem.conf','OEM');
+		$noc_status  = config_get_value_from_file('/var/run/roswan','noc_connected');
+		$tfa  = config_get_value_from_file('/mnt/config/usbpolicy.conf','tfa');
 		if (isset($oem)){
 			$image = STATIC_PATH."images/wall_page/".$oem.".jpg";
 			$loginimage = STATIC_PATH."images/".$oem."-login.png";
@@ -45,6 +47,14 @@
 					<div style="clear:both;"></div>
 				</div>				
 				<?php }?>-->
+				
+				<?php if($noc_status == '1' && $tfa == '1'){?>
+					<div>
+						<span><?php echo $L['login_code'];?>：</span>
+						<input name='check_code' class="check_code" type="text" placeholder="<?php echo $L['login_code'];?>" required />
+						<div style="clear:both;"></div>
+					</div>
+				<?php }?>
 			</div>
 			<div class="actions">
 				<input type="submit" id="submit" value="<?php echo $L['login'];?>" />
